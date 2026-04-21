@@ -37,6 +37,10 @@ public class ExcelTestReportWriter {
             "No", "Case ID", "Test Name", "Description", "Expected Result",
             "Type", "Aranan Index", "UAT Status", "Sonuç"
     };
+    private static final String[] HEADERS_BULGU = {
+            "No", "Case ID", "Test Name", "Expected Result",
+            "Type", "UAT Status", "Sonuç"
+    };
     private static final String[] HEADERS_CMP = {
             "No", "Case ID", "Test Name", "Description", "Expected Result",
             "Gen. Tip", "Gen. İndeks", "Gen. Status", "Gen. Sonuç",
@@ -111,6 +115,113 @@ public class ExcelTestReportWriter {
     // ── Karşılaştırma satırı var mı? ─────────────────────────────────────────────
     private static boolean hasComparison(List<TestResultRow> rows) {
         return rows.stream().anyMatch(r -> r.specificStatus() != null);
+    }
+
+    // =========================================================================
+    // ENTRY POINT — BulguFinal / BulguFinal2 (yalnızca "Tüm Testler", daraltılmış sütunlar)
+    // =========================================================================
+    public static void writeBulgu(List<TestResultRow> rows) {
+        String fileName = "TestReport_" + LocalDateTime.now().format(TS) + ".xlsx";
+        Path outPath = Path.of(System.getProperty("user.dir"), fileName);
+
+        try (Workbook wb = new XSSFWorkbook()) {
+            StyleBundle styles = buildStyles(wb);
+            writeBulguSheet(wb, "Tüm Testler", rows, styles);
+
+            try (FileOutputStream fos = new FileOutputStream(outPath.toFile())) {
+                wb.write(fos);
+            }
+            System.out.println("📊 Rapor oluşturuldu: " + outPath.getFileName());
+        } catch (Exception e) {
+            throw new RuntimeException("Excel raporu yazılamadı: " + e.getMessage(), e);
+        }
+    }
+
+    private static void writeBulguSheet(Workbook wb, String sheetName,
+                                        List<TestResultRow> rows, StyleBundle s) {
+        Sheet sheet = wb.createSheet(sheetName);
+        int currentRow = 0;
+
+        Row titleRow = sheet.createRow(currentRow++);
+        titleRow.setHeightInPoints(22f);
+        Cell titleCell = titleRow.createCell(0);
+        titleCell.setCellValue("MUUD TEST SONUÇ ÖZETİ — " + sheetName.toUpperCase());
+        titleCell.setCellStyle(s.title);
+        sheet.addMergedRegion(new CellRangeAddress(0, 0, 0, 4));
+
+        Row sumHeadRow = sheet.createRow(currentRow++);
+        sumHeadRow.setHeightInPoints(18f);
+        for (int i = 0; i < SUMMARY_HEADERS.length; i++) {
+            Cell c = sumHeadRow.createCell(i);
+            c.setCellValue(SUMMARY_HEADERS[i]);
+            c.setCellStyle(s.tableHeader);
+        }
+
+        int grandTotal = 0, grandPass = 0, summaryCounter = 1;
+        Map<String, List<TestResultRow>> byType = rows.stream()
+                .collect(Collectors.groupingBy(r -> r.type() == null ? "Diğer" : r.type()));
+        for (String type : byType.keySet().stream().sorted().toList()) {
+            List<TestResultRow> typeRows = byType.get(type);
+            int total = typeRows.size();
+            int pass  = (int) typeRows.stream().filter(r -> "OK".equalsIgnoreCase(r.uatStatus())).count();
+            grandTotal += total;
+            grandPass  += pass;
+            writeSummaryRow(sheet, currentRow++, summaryCounter++, type, total, pass, s);
+        }
+
+        int grandFail = grandTotal - grandPass;
+        int grandRate = grandTotal == 0 ? 0 : (int) Math.round((grandPass * 100.0) / grandTotal);
+        Row grandRow = sheet.createRow(currentRow++);
+        grandRow.setHeightInPoints(18f);
+        createCell(grandRow, 0, "GENEL TOPLAM", s.grandTotal);
+        createCell(grandRow, 1, grandTotal,      s.grandTotal);
+        createCell(grandRow, 2, grandPass,        s.grandTotal);
+        createCell(grandRow, 3, grandFail,        s.grandTotal);
+        createCell(grandRow, 4, "%" + grandRate,  s.grandTotal);
+
+        currentRow++;
+
+        int listHeaderRowIndex = currentRow;
+        Row listHeaderRow = sheet.createRow(currentRow++);
+        listHeaderRow.setHeightInPoints(18f);
+        for (int c = 0; c < HEADERS_BULGU.length; c++) {
+            Cell cell = listHeaderRow.createCell(c);
+            cell.setCellValue(HEADERS_BULGU[c]);
+            cell.setCellStyle(s.tableHeader);
+        }
+
+        int caseNo = 1;
+        for (TestResultRow r : rows) {
+            Row row = sheet.createRow(currentRow++);
+            row.setHeightInPoints(45f);
+            boolean isEven = (caseNo % 2 == 0);
+            CellStyle base     = isEven ? s.grey     : s.white;
+            CellStyle centered = isEven ? s.greyCentered : s.whiteCentered;
+
+            int col = 0;
+            createCell(row, col++, caseNo++,                     centered);
+            createCell(row, col++, nullSafe(r.caseId()),         centered);
+            createCell(row, col++, nullSafe(r.testName()),       base);
+            createCell(row, col++, nullSafe(r.expectedResult()), base);
+            createCell(row, col++, nullSafe(r.type()),           base);
+            Cell cUat = row.createCell(col++);
+            cUat.setCellValue(nullSafe(r.uatStatus()));
+            cUat.setCellStyle(statusStyleFor(r.uatStatus(), s.ok, s.nok, centered));
+            createCell(row, col++, nullSafe(r.sonuc()),          base);
+        }
+
+        if (currentRow > listHeaderRowIndex + 1) {
+            sheet.setAutoFilter(new CellRangeAddress(
+                    listHeaderRowIndex, currentRow - 1, 0, HEADERS_BULGU.length - 1));
+        }
+
+        sheet.autoSizeColumn(0);
+        sheet.setColumnWidth(1, 12 * 256);
+        sheet.setColumnWidth(2, 30 * 256);
+        sheet.setColumnWidth(3, 45 * 256);
+        sheet.setColumnWidth(4, 15 * 256);
+        sheet.setColumnWidth(5, 12 * 256);
+        sheet.setColumnWidth(6, 70 * 256);
     }
 
     // =========================================================================

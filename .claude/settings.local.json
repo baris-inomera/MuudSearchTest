@@ -3,7 +3,21 @@
     "allow": [
       "Read(//mnt/c/Users/baris/IdeaProjects/**)",
       "Bash(mvn compile:*)",
-      "Bash(cmd.exe:*)"
+      "Bash(cmd.exe:*)",
+      "Bash(python3 -c ' *)",
+      "Bash(python3 -c \"import openpyxl; print\\(openpyxl.__version__\\)\")",
+      "Bash(where python *)",
+      "Bash(where python3 *)",
+      "Bash(where java *)",
+      "Read(//c/Users/baris/AppData/Local/Programs/**)",
+      "Bash(powershell -Command ' *)",
+      "Bash(powershell.exe *)",
+      "Bash(mvn -f \"C:/Users/baris/IdeaProjects/MuudSearchTest/pom.xml\" dependency:resolve -q)",
+      "Bash(javac -cp \"C:/Users/baris/.m2/repository/org/apache/poi/poi-ooxml/5.2.5/poi-ooxml-5.2.5.jar;C:/Users/baris/.m2/repository/org/apache/poi/poi/5.2.5/poi-5.2.5.jar\" ReadExcel.java)",
+      "Bash(where javac *)",
+      "Read(//c/Program Files/**)",
+      "Bash(C:/Users/baris/.jdks/ms-17.0.18/bin/javac.exe *)",
+      "Bash(taskkill /F /IM EXCEL.EXE)"
     ]
   }
 }
