@@ -193,7 +193,7 @@ public class ExcelTestReportWriter {
         int caseNo = 1;
         for (TestResultRow r : rows) {
             Row row = sheet.createRow(currentRow++);
-            row.setHeightInPoints(45f);
+            row.setHeightInPoints(rowHeightFor(nullSafe(r.sonuc())));
             boolean isEven = (caseNo % 2 == 0);
             CellStyle base     = isEven ? s.grey     : s.white;
             CellStyle centered = isEven ? s.greyCentered : s.whiteCentered;
@@ -733,4 +733,13 @@ public class ExcelTestReportWriter {
     }
 
     private static String nullSafe(String s) { return s == null ? "" : s; }
+
+    private static float rowHeightFor(String sonuc) {
+        if (sonuc == null || sonuc.isEmpty()) return 20f;
+        int lines = 1;
+        for (int i = 0; i < sonuc.length(); i++) {
+            if (sonuc.charAt(i) == '\n') lines++;
+        }
+        return Math.max(20f, lines * 17f);
+    }
 }
