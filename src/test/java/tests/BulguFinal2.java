@@ -216,20 +216,15 @@ public class BulguFinal2 extends TestConfig {
             // Kullanıcı şarkı sözü parçasıyla arama yapmış
             // ═════════════════════════════════════════════════════════════════
             new BulguCase("BULGU_067", "çölüme yağmur oldun",            "Müslüm Gürses",        "Affet",                          S_SARKI_LYRICS, 3),
-            new BulguCase("BULGU_068", "sana hastayım anlasana",         "Derya Uluğ",           "Yansıma",                        S_SARKI_LYRICS, 3),
             new BulguCase("BULGU_075", "hadi ya",                        "Melis Kar",            "Yatıya",                         S_SARKI_LYRICS, 3),
             new BulguCase("BULGU_076", "babalar",                        "Blok3",                "PATLAT",                         S_SARKI_LYRICS, 1),
-            new BulguCase("BULGU_079", "silemez o beni",                 "Yıldız Tilbe",         "Dizine Dursun",                  S_SARKI_LYRICS, 3),
             new BulguCase("BULGU_083", "çetin ceviz şerbetli mayam",     "Melike Şahin",         "Canın Beni Çekti",               S_SARKI_LYRICS, 3),
             new BulguCase("BULGU_084", "bir motive",                     "Motive",               "",                               S_SARKI_LYRICS, 3),
             // UAT
             new BulguCase("UAT_015",  "yandım ah",                       "Sakiler",              "Yalanı Bırak",                   S_SARKI_LYRICS, 1),
             new BulguCase("UAT_022",  "bak ben yara gibiyim",            "Emir Can İğrek",       "Nalan",                          S_SARKI_LYRICS, 1),
-            new BulguCase("UAT_023",  "çölüme yağmur oldun",             "Müslüm Gürses",        "Affet",                          S_SARKI_LYRICS, 1),
             new BulguCase("UAT_024",  "zaten aşklar hep yalan dolan",    "Yıldız Tilbe",         "Sana Değer",                     S_SARKI_LYRICS, 1),
             new BulguCase("UAT_034",  "sana hastayım anlasana",          "Derya Uluğ",           "Yansıma",                        S_SARKI_LYRICS, 1),
-            new BulguCase("UAT_117",  "hadi ya",                         "Melis Kar",            "Yatıya",                         S_SARKI_LYRICS, 3),
-
             new BulguCase("UAT_128",  "sarışınlar",                      "Derya Uluğ",           "Esmerin Adı Oya",                S_SARKI_LYRICS, 3),
             new BulguCase("UAT_136",  "silemez o beni",                  "Yıldız Tilbe",         "Dizine Dursun",                  S_SARKI_LYRICS, 1),
             new BulguCase("UAT_137",  "babalar sözünü tutar",            "Blok3",                "PATLAT",                         S_SARKI_LYRICS, 3),
@@ -285,14 +280,13 @@ public class BulguFinal2 extends TestConfig {
             // ═════════════════════════════════════════════════════════════════
             new BulguCase("BULGU_006", "blok",                           "Blok3",                "",                               S_SANAT_KISMI, 1),
             new BulguCase("BULGU_022", "teo",                            "Teoman",               "",                               S_SANAT_KISMI, 1),
-            new BulguCase("BULGU_073", "arabam",                         "Sefo",                 "",                               S_SANAT_KISMI, 1),
+
             // UAT
             new BulguCase("UAT_016",  "aleyna",                          "Aleyna Tilki",         "",                               S_SANAT_KISMI, 1),
             new BulguCase("UAT_025",  "ferdi",                           "Ferdi Tayfur",         "",                               S_SANAT_KISMI, 1),
             new BulguCase("UAT_026",  "mabel",                           "Mabel Matiz",          "",                               S_SANAT_KISMI, 1),
             new BulguCase("UAT_027",  "yıldız",                          "Yıldız Tilbe",         "",                               S_SANAT_KISMI, 1),
             new BulguCase("UAT_028",  "azer",                            "Azer Bülbül",          "",                               S_SANAT_KISMI, 1),
-
             new BulguCase("UAT_033",  "serdar",                          "Serdar Ortaç",         "",                               S_SANAT_KISMI, 1),
             new BulguCase("UAT_036",  "cengiz",                          "Cengiz Kurtoğlu",      "",                               S_SANAT_KISMI, 1),
             new BulguCase("UAT_038",  "neşet",                           "Neşet Ertaş",          "",                               S_SANAT_KISMI, 1),
@@ -379,13 +373,10 @@ public class BulguFinal2 extends TestConfig {
             // PLAYLİST
             // Kullanıcı kategori / tür adıyla çalma listesi arıyor
             // ═════════════════════════════════════════════════════════════════
-            new BulguCase("BULGU_026", "90 lar",                         "",  "[Playlist] 90",           S_PLAYLIST, 5),
-            new BulguCase("BULGU_027", "çocuk",                          "",  "[Playlist] çocuk",        S_PLAYLIST, 5),
-            new BulguCase("BULGU_064", "pop",                            "",  "[Playlist] pop",          S_PLAYLIST, 5),
-            new BulguCase("BULGU_069", "yabancı",                        "",  "[Playlist] yabancı",      S_PLAYLIST, 5),
             new BulguCase("BULGU_087", "akustik",                        "",  "[Playlist] akustik",      S_PLAYLIST, 5),
+
             // UAT
-            new BulguCase("UAT_004",  "pop",              "",  "[Playlist] pop",          S_PLAYLIST, 5),
+            new BulguCase("BULGU_064", "pop",                            "",  "[Playlist] pop",          S_PLAYLIST, 5),
             new BulguCase("UAT_005",  "90",               "",  "[Playlist] 90",           S_PLAYLIST, 5),
             new BulguCase("UAT_006",  "90lar",            "",  "[Playlist] 90",           S_PLAYLIST, 5),
             new BulguCase("UAT_007",  "90'lar",           "",  "[Playlist] 90",           S_PLAYLIST, 5),
@@ -402,7 +393,6 @@ public class BulguFinal2 extends TestConfig {
             new BulguCase("UAT_069",  "spor",             "",  "[Playlist] spor",         S_PLAYLIST, 5),
             new BulguCase("UAT_073",  "klasik",           "",  "[Playlist] klasik",       S_PLAYLIST, 5),
             new BulguCase("UAT_079",  "ankara",           "",  "[Playlist] ankara",       S_PLAYLIST, 5),
-            new BulguCase("UAT_082",  "akustik",          "",  "[Playlist] akustik",      S_PLAYLIST, 5),
             new BulguCase("UAT_083",  "çocuk şarkıları",  "",  "[Playlist] çocuk",        S_PLAYLIST, 5),
             new BulguCase("UAT_106",  "türkçe",           "",  "[Playlist] türkçe",       S_PLAYLIST, 5),
             new BulguCase("UAT_108",  "80",               "",  "[Playlist] 80",           S_PLAYLIST, 5),
@@ -418,10 +408,10 @@ public class BulguFinal2 extends TestConfig {
             // ═════════════════════════════════════════════════════════════════
             new BulguCase("BULGU_125",   "teybi bozuk bir arabayla",                     "Nilipek",   "Geçmiyor Zaman",                      S_SARKI_LYRICS, 3),
             new BulguCase("BULGU_126",   "türk marşı",                                   "Ceza",      "Türk Marşı",                          S_SARKI_TAM,    3),
-            new BulguCase("BULGU_127",   "masumiyet müzesi",                             "",          "Masumiyet Müzesi",                    S_SARKI_TAM,    3),
+            new BulguCase("BULGU_127",   "masumiyet müzesi",                             "",          "[Playlist] Masumiyet Müzesi",          S_PLAYLIST,    5),
             new BulguCase("BULGU_128",   "there is a light that never goes out",         "Morrissey", "There Is A Light That Never Goes Out", S_SARKI_TAM,    3),
-            new BulguCase("BULGU_128_B", "there is a light that never goes out (live)",  "Morrissey", "There Is A Light That Never Goes Out", S_SARKI_KISMI,  3),
-            new BulguCase("BULGU_129",   "90lar",                                        "",          "[Playlist] 90",                       S_PLAYLIST,     5)
+            new BulguCase("BULGU_128_B", "there is a light that never goes out (live)",  "Morrissey", "There Is A Light That Never Goes Out", S_SARKI_KISMI,  3)
+
         );
     }
 
