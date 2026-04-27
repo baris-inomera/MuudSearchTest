@@ -509,22 +509,26 @@ public class BulguFinal2 extends TestConfig {
     // ─────────────────────────────────────────────────────────────────────────
 
     private String[] evalFirstArtist(BulguCase bc, JsonPath jp, String base) {
-        String expected    = "1. sırada '" + bc.expArtist() + "' sanatçısı gelmeli.";
-        String firstArtist = MuudSearchUtils.safeStr(jp.getString(base + "[0].data.performerName"));
+        int    n        = bc.topN();
+        String expected = n == 1
+                ? "1. sırada '" + bc.expArtist() + "' sanatçısı gelmeli."
+                : "İlk " + n + " içinde '" + bc.expArtist() + "' sanatçısı gelmeli.";
 
-        if (MuudSearchUtils.containsTRInsensitive(firstArtist, bc.expArtist())) {
+        int pos = MuudSearchUtils.findArtistIndex(jp, n, bc.expArtist());
+
+        if (pos != -1) {
+            String fa = MuudSearchUtils.safeStr(jp.getString(base + "[" + pos + "].data.performerName"));
             return new String[]{expected, "OK",
-                    "Başarılı — 1. sırada '" + firstArtist + "' geldi."};
+                    "Başarılı — " + (pos + 1) + ". sırada '" + fa + "' geldi."};
         }
 
-        int    pos   = MuudSearchUtils.findArtistIndex(jp, TOP_N, bc.expArtist());
-        String where = pos == -1
-                ? "top-" + TOP_N + "'da bulunamadı"
-                : (pos + 1) + ". sırada bulundu";
-
+        int    fullPos  = MuudSearchUtils.findArtistIndex(jp, TOP_N, bc.expArtist());
+        String where    = fullPos == -1
+                ? "top-" + TOP_N + "'da da bulunamadı"
+                : (fullPos + 1) + ". sırada bulundu";
         return new String[]{expected, "NOK",
-                "1. sırada '" + firstItemDesc(jp, base) + "' geldi — '"
-                        + bc.expArtist() + "': " + where + "."};
+                "İlk " + n + "'da yok — " + bc.expArtist() + ": " + where + ".\n"
+                        + top5Desc(jp, base)};
     }
 
     // ─────────────────────────────────────────────────────────────────────────
@@ -532,12 +536,13 @@ public class BulguFinal2 extends TestConfig {
     // ─────────────────────────────────────────────────────────────────────────
 
     private String[] evalArtistAndTrack(BulguCase bc, JsonPath jp, String base) {
-        String expStr   = bc.expArtist().isEmpty()
+        int    n      = bc.topN();
+        String expStr = bc.expArtist().isEmpty()
                 ? "'" + bc.expTrack() + "'"
                 : "'" + bc.expArtist() + "' – '" + bc.expTrack() + "'";
-        String expected = "Top-" + TOP_N + " içinde " + expStr + " eşleşmesi bulunmalı.";
+        String expected = "Top-" + n + " içinde " + expStr + " eşleşmesi bulunmalı.";
 
-        int idx = MuudSearchUtils.findArtistAndTrackIndex(jp, TOP_N, bc.expArtist(), bc.expTrack());
+        int idx = MuudSearchUtils.findArtistAndTrackIndex(jp, n, bc.expArtist(), bc.expTrack());
 
         if (idx != -1) {
             String fa = MuudSearchUtils.safeStr(jp.getString(base + "[" + idx + "].data.performerName"));
@@ -549,8 +554,13 @@ public class BulguFinal2 extends TestConfig {
                     "Başarılı — " + (idx + 1) + ". sırada: '" + label + "'."};
         }
 
+        int    fullIdx  = MuudSearchUtils.findArtistAndTrackIndex(jp, TOP_N, bc.expArtist(), bc.expTrack());
+        String where    = fullIdx == -1
+                ? "top-" + TOP_N + "'da da bulunamadı"
+                : (fullIdx + 1) + ". sırada bulundu";
         return new String[]{expected, "NOK",
-                "Top-" + TOP_N + "'da bulunamadı. 1. sırada: " + firstItemDesc(jp, base) + "."};
+                "Top-" + n + "'da yok — " + expStr + ": " + where + ".\n"
+                        + top5Desc(jp, base)};
     }
 
     // ─────────────────────────────────────────────────────────────────────────
@@ -558,10 +568,11 @@ public class BulguFinal2 extends TestConfig {
     // ─────────────────────────────────────────────────────────────────────────
 
     private String[] evalPlaylist(BulguCase bc, JsonPath jp, String base) {
+        int    n        = bc.topN();
         String keyword  = bc.expTrack().substring("[Playlist] ".length());
-        String expected = "Top-" + TOP_N + " içinde '" + keyword + "' adını içeren playlist bulunmalı.";
+        String expected = "Top-" + n + " içinde '" + keyword + "' adını içeren playlist bulunmalı.";
 
-        for (int i = 0; i < TOP_N; i++) {
+        for (int i = 0; i < n; i++) {
             String pl = MuudSearchUtils.safeStr(jp.getString(base + "[" + i + "].data.playlistName"));
             if (!pl.isEmpty() && MuudSearchUtils.containsTRInsensitive(pl, keyword)) {
                 return new String[]{expected, "OK",
@@ -569,24 +580,31 @@ public class BulguFinal2 extends TestConfig {
             }
         }
 
+        int fullPos = -1;
+        for (int i = 0; i < TOP_N; i++) {
+            String pl = MuudSearchUtils.safeStr(jp.getString(base + "[" + i + "].data.playlistName"));
+            if (!pl.isEmpty() && MuudSearchUtils.containsTRInsensitive(pl, keyword)) {
+                fullPos = i;
+                break;
+            }
+        }
+        String where = fullPos == -1
+                ? "top-" + TOP_N + "'da da bulunamadı"
+                : (fullPos + 1) + ". sırada bulundu";
         return new String[]{expected, "NOK",
-                "Top-" + TOP_N + "'da '" + keyword
-                        + "' içeren playlist bulunamadı. 1. sırada: " + firstItemDesc(jp, base) + "."};
+                "Top-" + n + "'da yok — '" + keyword + "': " + where + ".\n"
+                        + top5Desc(jp, base)};
     }
 
     // =========================================================================
-    // YARDIMCI — "Ne görüldü?" kısa açıklaması
+    // YARDIMCI — NOK mesajları için "İlk 5 sonuç" listesi
     // =========================================================================
 
-    /**
-     * 1. sıradaki sonucun insan-okunur kısa açıklamasını üretir.
-     * Sadece NOK mesajlarında "1. sırada X geldi" ifadesini doldurmak için kullanılır.
-     */
-    private String firstItemDesc(JsonPath jp, String base) {
-        String song      = MuudSearchUtils.safeStr(jp.getString(base + "[0].data.songName"));
-        String album     = MuudSearchUtils.safeStr(jp.getString(base + "[0].data.albumName"));
-        String playlist  = MuudSearchUtils.safeStr(jp.getString(base + "[0].data.playlistName"));
-        String performer = MuudSearchUtils.safeStr(jp.getString(base + "[0].data.performerName"));
+    private String itemDesc(JsonPath jp, String base, int i) {
+        String song      = MuudSearchUtils.safeStr(jp.getString(base + "[" + i + "].data.songName"));
+        String album     = MuudSearchUtils.safeStr(jp.getString(base + "[" + i + "].data.albumName"));
+        String playlist  = MuudSearchUtils.safeStr(jp.getString(base + "[" + i + "].data.playlistName"));
+        String performer = MuudSearchUtils.safeStr(jp.getString(base + "[" + i + "].data.performerName"));
 
         if (!song.isEmpty())
             return performer.isEmpty() ? "'" + song + "'" : "'" + performer + " – " + song + "'";
@@ -597,5 +615,13 @@ public class BulguFinal2 extends TestConfig {
         if (!performer.isEmpty())
             return "[Sanatçı] '" + performer + "'";
         return "(boş)";
+    }
+
+    private String top5Desc(JsonPath jp, String base) {
+        StringBuilder sb = new StringBuilder("İlk 5 sonuç:");
+        for (int i = 0; i < 5; i++) {
+            sb.append("\n  ").append(i + 1).append(". ").append(itemDesc(jp, base, i));
+        }
+        return sb.toString();
     }
 }

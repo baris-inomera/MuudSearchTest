@@ -740,6 +740,7 @@ public class ExcelTestReportWriter {
         for (int i = 0; i < sonuc.length(); i++) {
             if (sonuc.charAt(i) == '\n') lines++;
         }
-        return Math.max(20f, lines * 17f);
+        // Her satır için 15f, üst+alt padding için 10f ekle
+        return Math.max(20f, lines * 15f + 10f);
     }
 }
