@@ -44,7 +44,7 @@ import java.util.stream.Stream;
  * ─────────────────────────────────────────────────────────────────────────────
  */
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-public class BulguFinal2 extends TestConfig {
+public class Bulgu_UAT_OrtakExcel extends TestConfig {
 
     private static final int    TOP_N = 10;
     private static final Locale TR    = Locale.forLanguageTag("tr");
