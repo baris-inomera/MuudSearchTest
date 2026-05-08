@@ -618,6 +618,8 @@ public class YapayZekaEgitme extends TestConfig {
         Object scoreObj   = jp.get(base + "[" + i + "].score");
         String score      = scoreObj != null ? scoreObj.toString() : "-";
 
+        String createTime = MuudSearchUtils.safeStr(jp.getString(base + "[" + i + "].data.createTime"));
+
         String metrics;
         if ("performers".equals(kind)) {
             Object popularSongCountObj = jp.get(base + "[" + i + "].data.popularSongCount");
@@ -637,6 +639,9 @@ public class YapayZekaEgitme extends TestConfig {
                     + " | performerPopularity=" + perfPop
                     + " | popularity=" + popularity
                     + " | score=" + score;
+        }
+        if (!createTime.isEmpty()) {
+            metrics += " | createTime=" + createTime;
         }
 
         return kindPrefix + label + "\n     " + metrics;
