@@ -5,7 +5,7 @@ import io.restassured.response.Response;
 
 public class MuudSearchApi {
 
-    private static final String BASE_URL = "https://mirketgateway.apps.erdek.paas.turktelekom.intra";
+    private static final String BASE_URL =  "https://searchapi.turktelekom.com.tr";
 
     public Response search(String term, String indexId, int limit) {
 
@@ -37,8 +37,8 @@ public class MuudSearchApi {
                 .relaxedHTTPSValidation()
                 .header("Content-Type", "application/json")
                 .header("Accept", "*/*")
-                .header("X-SEARCH-APP-KEY","muudelk9")
-                .header("Authorization", "Basic V1BQZUhMeWc6NUt5Y09ESlp4aFFxQXZtNQ==")
+                .header("X-SEARCH-APP-KEY","muud")
+                .header("Authorization", "Basic QkRHVTc5a206ckpnNzBZaTd6VGxreVF2UQ==")
                 .body(apiQueryBody)
                 .when()
                 .post(new_path)

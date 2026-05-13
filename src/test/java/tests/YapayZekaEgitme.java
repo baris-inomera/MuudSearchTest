@@ -591,7 +591,7 @@ public class YapayZekaEgitme extends TestConfig {
     }
 
     // =========================================================================
-    // YARDIMCI — Her case için "İlk 5 sonuç" listesi (popularityScore, numPlays,
+    // YARDIMCI — Her case için "İlk 5 sonuç" listesi (numPlays,
     //            performerPopularity, popularity, score alt parametreleriyle)
     // =========================================================================
 
@@ -626,16 +626,14 @@ public class YapayZekaEgitme extends TestConfig {
             String popularSongCount = popularSongCountObj != null ? popularSongCountObj.toString() : "-";
             metrics = "popularSongCount=" + popularSongCount + " | score=" + score;
         } else {
-            Object popScoreObj   = jp.get(base + "[" + i + "].data.popularityScore");
+
             Object numPlaysObj   = jp.get(base + "[" + i + "].data.numPlays");
             Object perfPopObj    = jp.get(base + "[" + i + "].data.performerPopularity");
             Object popularityObj = jp.get(base + "[" + i + "].data.popularity");
-            String popScore   = popScoreObj   != null ? popScoreObj.toString()   : "-";
             String numPlays   = numPlaysObj   != null ? numPlaysObj.toString()   : "-";
             String perfPop    = perfPopObj    != null ? perfPopObj.toString()    : "-";
             String popularity = popularityObj != null ? popularityObj.toString() : "-";
-            metrics = "popularityScore=" + popScore
-                    + " | numPlays=" + numPlays
+            metrics = " | numPlays=" + numPlays
                     + " | performerPopularity=" + perfPop
                     + " | popularity=" + popularity
                     + " | score=" + score;
