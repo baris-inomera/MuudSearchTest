@@ -19,7 +19,7 @@ public record TestResultRow(
         String sonuc,          // Genel test detay mesajı
         // ---- Karşılaştırma alanları (AktifIndexTest sub-sheetleri için) ----
         String specificType,        // "performer" / "songs" / "playlist"  (null = yok)
-        String specificIndexName,   // "10" / "48" / "11"
+        String specificIndexName,   // "3" / "5" / "4" (Mayıs 2026 güncel ID'leri)
         String specificStatus,      // "OK" / "NOK"
         String specificSonuc        // Tekli test detay mesajı
 ) {

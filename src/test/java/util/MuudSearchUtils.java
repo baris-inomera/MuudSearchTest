@@ -23,10 +23,18 @@ public class MuudSearchUtils {
     public static String getIndexName(String excelType) {
         String t = excelType == null ? "" : excelType.toLowerCase(Locale.ROOT);
         return switch (t) {
-            case "performer" -> "10";
-            case "playlist"  -> "11";
-            case "album"     -> "9";
-            case "songs", "song" -> "48"; // Şarkılar 44 numaralı indekste
+            // Güncel aktif index ID'leri (Mayıs 2026)
+            //   Albums       → 2   (muud_album_flat_v2)
+            //   Performers   → 3   (muud_performer_flat_v2)
+            //   Playlists    → 4   (muud_playlist_flat_v2)
+            //   Songs        → 5   (muud_song_flat_v2)
+            //   Videos       → 6   (muud_video_flat_v2)
+            case "album"     -> "2";
+            case "performer" -> "3";
+            case "playlist"  -> "4";
+            case "songs", "song" -> "5";
+            case "video", "videos" -> "6";
+          //  case "SongVector", "Vector" -> "49";
             case "general"   -> "active-indices"; // Tüm aktif indekslerde ara
             default -> "active-indices"; // Tanımsızsa yine tüm aktiflerde ara
         };

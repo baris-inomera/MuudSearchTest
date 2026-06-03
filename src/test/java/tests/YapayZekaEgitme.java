@@ -410,9 +410,20 @@ public class YapayZekaEgitme extends TestConfig {
                 new BulguCase("BULGU_126",   "türk marşı",                                   "Ceza",      "Türk Marşı",                          S_SARKI_TAM,    3),
                 new BulguCase("BULGU_127",   "masumiyet müzesi",                             "",          "[Playlist] Masumiyet Müzesi",          S_PLAYLIST,    5),
                 new BulguCase("BULGU_128",   "there is a light that never goes out",         "Morrissey", "There Is A Light That Never Goes Out", S_SARKI_TAM,    3),
-                new BulguCase("BULGU_128_B", "there is a light that never goes out (live)",  "Morrissey", "There Is A Light That Never Goes Out", S_SARKI_KISMI,  3)
+                new BulguCase("BULGU_128_B", "there is a light that never goes out (live)",  "Morrissey", "There Is A Light That Never Goes Out", S_SARKI_KISMI,  3),
 
-        );
+                new BulguCase("CAGKAN_1",   "ölek mi",                                           "",   "Ölek mi?",                      S_SARKI_LYRICS, 3),
+                new BulguCase("CAGKAN_2",   "ölek mi?",                                         "",   "Ölek mi?",                      S_SARKI_LYRICS, 3),
+                new BulguCase("CAGKAN_3",   "dai",                                              "",   "Dai Dai",                      S_SARKI_LYRICS, 3),
+                new BulguCase("CAGKAN_3",   "dia",                                              "",   "Dai Dai",                      S_SARKI_LYRICS, 3),
+                new BulguCase("CAGKAN_4",   "Murat yeter magusa",                               "",   "Mağusa Limanı",                      S_SARKI_LYRICS, 3),
+                new BulguCase("CAGKAN_5",   "Sen Anlat Geçen Yüzyıl",                           "",   "Sen Anlat Geçen Yüzyıl",                      S_SARKI_LYRICS, 3),
+                new BulguCase("CAGKAN_6",   "Sinem Yalçınkaya kenar süsü",                      "",   "Kenar Süsü",                      S_SARKI_LYRICS, 3)
+
+
+
+
+                );
     }
 
     // =========================================================================

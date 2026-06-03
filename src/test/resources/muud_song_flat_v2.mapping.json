@@ -1,0 +1,144 @@
+{
+  "muud_song_flat_v2": {
+    "mappings": {
+      "properties": {
+        "albumDetail": {
+          "type": "text"
+        },
+        "createTime": {
+          "type": "date"
+        },
+        "downloadableMobileSaturn": {
+          "type": "boolean"
+        },
+        "downloadableWebSaturn": {
+          "type": "boolean"
+        },
+        "genreId": {
+          "type": "keyword"
+        },
+        "genreName": {
+          "type": "text"
+        },
+        "hasLyrics": {
+          "type": "boolean"
+        },
+        "hasSubtitle": {
+          "type": "boolean"
+        },
+        "id": {
+          "type": "keyword"
+        },
+        "isActive": {
+          "type": "boolean"
+        },
+        "isDuet": {
+          "type": "boolean"
+        },
+        "isForeign": {
+          "type": "boolean"
+        },
+        "isPublishable": {
+          "type": "boolean"
+        },
+        "isRestricted": {
+          "type": "boolean"
+        },
+        "lyrics": {
+          "type": "text"
+        },
+        "manualScoreBoost": {
+          "type": "long"
+        },
+        "muud_dym": {
+          "type": "text"
+        },
+        "muud_song_name_completion": {
+          "type": "completion"
+        },
+        "numPlays": {
+          "type": "long"
+        },
+        "performerId": {
+          "type": "keyword"
+        },
+        "performerName": {
+          "type": "text"
+        },
+        "performerNames": {
+          "type": "text"
+        },
+        "performerPopularity": {
+          "type": "long"
+        },
+        "performers": {
+          "properties": {
+            "performerId": {
+              "type": "keyword"
+            },
+            "performerName": {
+              "type": "text"
+            },
+            "performerType": {
+              "type": "keyword"
+            }
+          }
+        },
+        "popularity": {
+          "type": "float"
+        },
+        "popularityScore": {
+          "type": "long"
+        },
+        "providerId": {
+          "type": "keyword"
+        },
+        "publishableMobile": {
+          "type": "boolean"
+        },
+        "publishableWeb": {
+          "type": "boolean"
+        },
+        "releaseDate": {
+          "type": "long"
+        },
+        "songName": {
+          "type": "text"
+        },
+        "songNameClean": {
+          "type": "text"
+        },
+        "songTime": {
+          "type": "long"
+        },
+        "songsPopularity": {
+          "type": "long"
+        },
+        "streamableMobile": {
+          "type": "boolean"
+        },
+        "streamableMobileSaturn": {
+          "type": "boolean"
+        },
+        "streamableVideo": {
+          "type": "boolean"
+        },
+        "streamableVideoMobile": {
+          "type": "boolean"
+        },
+        "streamableVideoMobileSaturn": {
+          "type": "boolean"
+        },
+        "streamableVideoSaturn": {
+          "type": "boolean"
+        },
+        "streamableWeb": {
+          "type": "boolean"
+        },
+        "streamableWebSaturn": {
+          "type": "boolean"
+        }
+      }
+    }
+  }
+}
