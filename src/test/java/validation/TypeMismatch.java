@@ -16,7 +16,7 @@ public record TypeMismatch(
         Status status,          // PASS / FAIL / MISSING / NULL
         String note             // opsiyonel açıklama
 ) {
-    public enum Status { PASS, FAIL, MISSING_IN_MAPPING, NULL_VALUE }
+    public enum Status { PASS, FAIL, MISSING_IN_MAPPING, NULL_VALUE, MISSING_IN_RESPONSE }
 
     public boolean isFailure() {
         return status == Status.FAIL;

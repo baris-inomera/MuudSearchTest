@@ -9,9 +9,13 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashSet;
 import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * ES mapping ile bir search response'unu karşılaştırır.
@@ -41,6 +45,13 @@ public class MappingTypeValidator {
 
     /** Sadece belirli alanları kontrol etmek istersen buraya eklenir. */
     private final List<String> includeOnly = new ArrayList<>();
+
+    /**
+     * Response'larda en az bir kez görülen mapping field path'leri.
+     * Discovery test'in coverage kontrolü için kullanılır.
+     * "data.numPlays" gibi prefix'siz (iç) path'leri tutar.
+     */
+    private final Set<String> seenFields = new LinkedHashSet<>();
 
     private MappingTypeValidator() {}
 
@@ -116,6 +127,30 @@ public class MappingTypeValidator {
 
     public Map<String, String> getFlatExpectedTypes() {
         return flatExpectedTypes;
+    }
+
+    /**
+     * Response'larda görülen field path'leri (prefix'siz, iç yol).
+     * Discovery test biter bitmez çağırarak hangi mapping field'larının
+     * hiç response'a girmediğini saptayabilirsin.
+     */
+    public Set<String> getSeenFields() {
+        return Collections.unmodifiableSet(seenFields);
+    }
+
+    /**
+     * Mapping'de tanımlı olup response'larda hiç görülmeyen field'lar.
+     * completion / binary gibi SKIP_TYPES dahil değildir — zaten
+     * API'de dönmezler ve tip kontrolü atlanır.
+     */
+    public List<String> getNeverSeenFields() {
+        List<String> result = new ArrayList<>();
+        for (String path : flatExpectedTypes.keySet()) {
+            if (!seenFields.contains(path) && !ESTypeMapper.isSkippable(flatExpectedTypes.get(path))) {
+                result.add(path);
+            }
+        }
+        return result;
     }
 
     // ---------------------------------------------------------------------
@@ -240,6 +275,11 @@ public class MappingTypeValidator {
 
             String expected = flatExpectedTypes.get(path);
 
+            // Field response'da göründü — coverage tracking
+            if (expected != null) {
+                seenFields.add(path);
+            }
+
             if (expected == null) {
                 out.add(new TypeMismatch(docId, fullPath(path), "(none)",
                         ESTypeMapper.jsonTypeName(value), trim(value),
@@ -300,6 +340,55 @@ public class MappingTypeValidator {
                     ok ? TypeMismatch.Status.PASS : TypeMismatch.Status.FAIL,
                     ok ? "" : "Beklenen tip ile uyuşmuyor"));
         }
+
+        // -----------------------------------------------------------------
+        // MISSING_IN_RESPONSE: mapping'de tanımlı ama bu doc'ta hiç gelmeyen
+        // leaf field'ları raporla (object/nested ve skip tipler hariç).
+        // -----------------------------------------------------------------
+        Set<String> presentKeys = new HashSet<>();
+        for (Object k : node.keySet()) {
+            presentKeys.add(String.valueOf(k));
+        }
+        for (Map.Entry<String, String> exp : flatExpectedTypes.entrySet()) {
+            String expPath = exp.getKey();
+            String expType = exp.getValue();
+
+            // Sadece bu prefix'in doğrudan çocuklarını kontrol et
+            if (!isDirectChildOf(expPath, prefix)) continue;
+
+            // Skip: completion/binary gibi API'de zaten dönmeyen tipler
+            if (ESTypeMapper.isSkippable(expType)) continue;
+
+            // Skip: object/nested — var/yok durumu kendi recursion'larında yakalanır
+            if (ESTypeMapper.isObjectOrNested(expType)) continue;
+
+            String leafName = leafName(expPath, prefix);
+
+            if (!includeOnly.isEmpty() && !matchesIncludeFilter(expPath)) continue;
+
+            if (!presentKeys.contains(leafName)) {
+                out.add(new TypeMismatch(docId, fullPath(expPath), expType,
+                        "ABSENT", "absent",
+                        TypeMismatch.Status.MISSING_IN_RESPONSE,
+                        "Mapping'de tanımlı ama response'da yok"));
+            }
+        }
+    }
+
+    /** expPath'in prefix'in tam bir seviye altındaki çocuğu olup olmadığını kontrol eder. */
+    private boolean isDirectChildOf(String expPath, String prefix) {
+        if (prefix.isEmpty()) {
+            return !expPath.contains(".");
+        }
+        if (!expPath.startsWith(prefix + ".")) return false;
+        String remainder = expPath.substring(prefix.length() + 1);
+        return !remainder.contains(".");
+    }
+
+    /** prefix'e göre leaf field adını döner. */
+    private String leafName(String expPath, String prefix) {
+        if (prefix.isEmpty()) return expPath;
+        return expPath.substring(prefix.length() + 1);
     }
 
     private boolean matchesIncludeFilter(String path) {

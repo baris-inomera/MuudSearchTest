@@ -105,6 +105,19 @@ public class MuudSearchMappingDiscoveryTest extends TestConfig {
     private static final List<DiscoveryViolation> ALL_VIOLATIONS = new ArrayList<>();
     private static final List<DiscoveryCoverage> COVERAGE = new ArrayList<>();
 
+    /**
+     * (esIndex + "|" + fieldPath) → kaç benzersiz doc'ta MISSING_IN_RESPONSE gördük.
+     * Tüm doc'larda absent olan field'ları yakalamak için kullanılır.
+     */
+    private static final Map<String, Set<String>> MISSING_FIELD_DOCS  = new LinkedHashMap<>();
+    private static final Map<String, String>      MISSING_FIELD_INDEX_LABEL = new LinkedHashMap<>();
+
+    /**
+     * (esIndex + "|" + fieldPath) → field'ın geldiği benzersiz doc ID'leri.
+     * "manualScoreBoost sadece 3 doc'ta var, ID'leri: X, Y, Z" gibi sorulara cevap verir.
+     */
+    private static final Map<String, Set<String>> PRESENT_FIELD_DOCS  = new LinkedHashMap<>();
+
     @BeforeAll
     static void setup() {
         api = new MuudSearchApi();
@@ -183,17 +196,30 @@ public class MuudSearchMappingDiscoveryTest extends TestConfig {
                     globalSeenDocs.add(idx.esIndex + "|" + d);
                 }
 
-                // Sadece FAIL'leri biriktir
+                // FAIL, MISSING_IN_RESPONSE ve PRESENT tracking
                 for (TypeMismatch tm : mismatches) {
-                    if (tm.status() != TypeMismatch.Status.FAIL) continue;
-                    ALL_VIOLATIONS.add(new DiscoveryViolation(
-                            idx.label, idx.esIndex, idx.indexId, term,
-                            tm.docId(), tm.fieldPath(),
-                            tm.expectedEsType(), tm.actualJsonType(),
-                            String.valueOf(tm.actualValue()),
-                            tm.note()
-                    ));
-                    violationCount++;
+                    if (tm.status() == TypeMismatch.Status.FAIL) {
+                        ALL_VIOLATIONS.add(new DiscoveryViolation(
+                                idx.label, idx.esIndex, idx.indexId, term,
+                                tm.docId(), tm.fieldPath(),
+                                tm.expectedEsType(), tm.actualJsonType(),
+                                String.valueOf(tm.actualValue()),
+                                tm.note()
+                        ));
+                        violationCount++;
+                    } else if (tm.status() == TypeMismatch.Status.MISSING_IN_RESPONSE) {
+                        String key = idx.esIndex + "|" + tm.fieldPath();
+                        MISSING_FIELD_DOCS
+                                .computeIfAbsent(key, k -> new HashSet<>())
+                                .add(tm.docId());
+                        MISSING_FIELD_INDEX_LABEL.putIfAbsent(key, idx.label);
+                    } else {
+                        // PASS / FAIL / NULL_VALUE → field bu doc'ta GELDİ
+                        String key = idx.esIndex + "|" + tm.fieldPath();
+                        PRESENT_FIELD_DOCS
+                                .computeIfAbsent(key, k -> new HashSet<>())
+                                .add(tm.docId());
+                    }
                 }
             }
 
@@ -230,6 +256,55 @@ public class MuudSearchMappingDiscoveryTest extends TestConfig {
                         fs.expectedType(), fs.actualType(),
                         fs.affectedDocs().size()));
 
+        // -- Coverage: mapping'de olup response'da hiç görülmeyen field'lar ------
+        System.out.println();
+        System.out.println("=== COVERAGE — HİÇ GÖRÜLMEDİ (mapping'de var, response'da yok) ===");
+        boolean allCovered = true;
+        for (IndexDef idx : INDICES) {
+            MappingTypeValidator v = validators.get(idx.indexId);
+            if (v == null) continue;
+            List<String> neverSeen = v.getNeverSeenFields();
+            int total = v.getFlatExpectedTypes().size();
+            int seen  = v.getSeenFields().size();
+            System.out.printf("[%-11s] %d/%d field görüldü", idx.label, seen, total);
+            if (neverSeen.isEmpty()) {
+                System.out.println(" ✓ Tüm field'lar kapsandı");
+            } else {
+                allCovered = false;
+                System.out.println(" — " + neverSeen.size() + " field HİÇ GÖRÜLMEDİ:");
+                neverSeen.forEach(f -> System.out.println("    ✗ " + f));
+            }
+        }
+        if (allCovered) {
+            System.out.println("→ Tüm indexlerde tüm field'lar en az bir response'da görüldü.");
+        }
+
+        // -- MISSING_IN_RESPONSE: doc bazında hangi field'lar ne sıklıkta yok? --
+        System.out.println();
+        System.out.println("=== MISSING IN RESPONSE — DOC BAZINDA YOKLUK ===");
+        if (MISSING_FIELD_DOCS.isEmpty()) {
+            System.out.println("→ Hiçbir doc'ta beklenmeyen field yokluğu tespit edilmedi.");
+        } else {
+            // Index başına grupla
+            Map<String, List<String>> byIndex = new LinkedHashMap<>();
+            for (String key : MISSING_FIELD_DOCS.keySet()) {
+                String label = MISSING_FIELD_INDEX_LABEL.getOrDefault(key, "?");
+                byIndex.computeIfAbsent(label, k -> new ArrayList<>()).add(key);
+            }
+            for (Map.Entry<String, List<String>> entry : byIndex.entrySet()) {
+                System.out.println("[" + entry.getKey() + "]");
+                entry.getValue().stream()
+                        .sorted((a, b) -> Integer.compare(
+                                MISSING_FIELD_DOCS.get(b).size(),
+                                MISSING_FIELD_DOCS.get(a).size()))
+                        .forEach(key -> {
+                            String fieldPath = key.substring(key.indexOf('|') + 1);
+                            int absentCount  = MISSING_FIELD_DOCS.get(key).size();
+                            System.out.printf("  ✗ %-50s  %d doc'ta yok%n", fieldPath, absentCount);
+                        });
+            }
+        }
+
         // Test PASS kabul edilir — discovery raporlama amaçlı, bug bulması doğal
         // (CI'da fail etmesini istersen aşağıdaki Assertions.fail satırını aç)
         // if (!fieldSummaries.isEmpty()) {
@@ -264,11 +339,22 @@ public class MuudSearchMappingDiscoveryTest extends TestConfig {
             return;
         }
         Map<String, DiscoveryFieldSummary> summaries = aggregateByField(ALL_VIOLATIONS);
+
+        // Coverage'dan index başına toplam benzersiz doc sayısını çıkar
+        Map<String, Integer> totalUniqueDocsByIdx = new java.util.HashMap<>();
+        for (DiscoveryCoverage c : COVERAGE) {
+            totalUniqueDocsByIdx.put(c.indexLabel(), c.uniqueDocs());
+        }
+
         MappingDiscoveryReportWriter.write(
                 new ArrayList<>(summaries.values()),
                 ALL_VIOLATIONS,
                 COVERAGE,
-                TERMS
+                TERMS,
+                MISSING_FIELD_DOCS,
+                MISSING_FIELD_INDEX_LABEL,
+                totalUniqueDocsByIdx,
+                PRESENT_FIELD_DOCS
         );
     }
 }

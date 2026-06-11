@@ -445,6 +445,7 @@ public final class TypeValidationReportWriter {
             case FAIL -> s.nok;
             case MISSING_IN_MAPPING -> s.warn;
             case NULL_VALUE -> s.warn;
+            case MISSING_IN_RESPONSE -> s.warn;
         };
     }
 

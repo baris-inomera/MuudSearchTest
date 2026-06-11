@@ -13,6 +13,8 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
@@ -32,10 +34,31 @@ public final class MappingDiscoveryReportWriter {
 
     private MappingDiscoveryReportWriter() {}
 
+    /**
+     * MISSING_IN_RESPONSE verisi olmadan (geriye dönük uyumluluk).
+     */
     public static void write(List<DiscoveryFieldSummary> fieldSummaries,
                              List<DiscoveryViolation> allViolations,
                              List<DiscoveryCoverage> coverage,
                              List<String> terms) {
+        write(fieldSummaries, allViolations, coverage, terms, Map.of(), Map.of(), Map.of(), Map.of());
+    }
+
+    /**
+     * MISSING_IN_RESPONSE verisiyle tam rapor.
+     *
+     * @param missingFieldDocs      (esIndex|fieldPath) → Set&lt;docId&gt;
+     * @param missingFieldLabel     (esIndex|fieldPath) → indexLabel
+     * @param totalUniqueDocsByIdx  indexLabel → toplam benzersiz doc sayısı (Coverage'dan)
+     */
+    public static void write(List<DiscoveryFieldSummary> fieldSummaries,
+                             List<DiscoveryViolation> allViolations,
+                             List<DiscoveryCoverage> coverage,
+                             List<String> terms,
+                             Map<String, Set<String>> missingFieldDocs,
+                             Map<String, String> missingFieldLabel,
+                             Map<String, Integer> totalUniqueDocsByIdx,
+                             Map<String, Set<String>> presentFieldDocs) {
         String fileName = "MappingDiscoveryReport_" + LocalDateTime.now().format(TS) + ".xlsx";
         Path outPath = Path.of(System.getProperty("user.dir"), fileName);
 
@@ -47,6 +70,7 @@ public final class MappingDiscoveryReportWriter {
             writeFieldSummarySheet(wb, s, fieldSummaries);
             writeAllViolationsSheet(wb, s, allViolations);
             writeCoverageSheet(wb, s, coverage);
+            writeMissingInResponseSheet(wb, s, missingFieldDocs, missingFieldLabel, totalUniqueDocsByIdx, presentFieldDocs);
             writeTermsSheet(wb, s, terms);
 
             wb.write(fos);
@@ -259,7 +283,110 @@ public final class MappingDiscoveryReportWriter {
     }
 
     // ------------------------------------------------------------------
-    // SHEET 4 — TERMS
+    // SHEET 4 — MISSING IN RESPONSE
+    // ------------------------------------------------------------------
+    private static void writeMissingInResponseSheet(Workbook wb, Styles s,
+                                                    Map<String, Set<String>> missingFieldDocs,
+                                                    Map<String, String> missingFieldLabel,
+                                                    Map<String, Integer> totalUniqueDocsByIdx,
+                                                    Map<String, Set<String>> presentFieldDocs) {
+        Sheet sheet = wb.createSheet("Missing in Response");
+        int r = 0;
+
+        Row titleRow = sheet.createRow(r++);
+        titleRow.setHeightInPoints(22f);
+        Cell title = titleRow.createCell(0);
+        title.setCellValue("MAPPING'DE TANIMLI AMA RESPONSE'DA GELMEYEN FIELD'LAR");
+        title.setCellStyle(s.title);
+        sheet.addMergedRegion(new CellRangeAddress(0, 0, 0, 6));
+
+        Row descRow = sheet.createRow(r++);
+        descRow.createCell(0).setCellValue(
+                "Sarı = field hiçbir (ya da neredeyse hiç) doc'ta gelmiyor. "
+                + "Mavi = bazı doc'larda geliyor. "
+                + "'Field'ı Olan Doc ID'leri' sütunu az sayıda doc'ta gelenler için ID listesi gösterir.");
+        sheet.addMergedRegion(new CellRangeAddress(r - 1, r - 1, 0, 6));
+        r++;
+
+        String[] headers = {
+            "No", "Index", "Field Path",
+            "Absent Doc", "Toplam Doc", "Oran (%)",
+            "Field'ı Olan Doc ID'leri (ilk 30)"
+        };
+        int headerRowIndex = r;
+        Row hr = sheet.createRow(r++);
+        hr.setHeightInPoints(18f);
+        for (int i = 0; i < headers.length; i++) {
+            Cell c = hr.createCell(i);
+            c.setCellValue(headers[i]);
+            c.setCellStyle(s.tableHeader);
+        }
+
+        if (missingFieldDocs.isEmpty()) {
+            Row row = sheet.createRow(r++);
+            Cell c = row.createCell(0);
+            c.setCellValue("✓ Tüm mapping field'ları en az bir response'da görüldü.");
+            c.setCellStyle(s.ok);
+            sheet.addMergedRegion(new CellRangeAddress(r - 1, r - 1, 0, 6));
+        } else {
+            List<Map.Entry<String, Set<String>>> sorted = missingFieldDocs.entrySet().stream()
+                    .sorted((a, b) -> Integer.compare(b.getValue().size(), a.getValue().size()))
+                    .toList();
+
+            int no = 1;
+            for (Map.Entry<String, Set<String>> entry : sorted) {
+                String key       = entry.getKey();
+                String label     = missingFieldLabel.getOrDefault(key, "?");
+                String fieldPath = key.substring(key.indexOf('|') + 1);
+                int absentCount  = entry.getValue().size();
+                int totalDocs    = totalUniqueDocsByIdx.getOrDefault(label, 0);
+                double pct       = totalDocs > 0 ? (absentCount * 100.0 / totalDocs) : 0;
+
+                // Sarı: %99+ absent (hep yok), Mavi: bazı doc'larda var
+                CellStyle st = pct >= 99 ? s.warn : s.info;
+
+                // Field'ı olan doc'lar
+                Set<String> presentDocs = presentFieldDocs.getOrDefault(key, Set.of());
+                String presentDocIds;
+                if (presentDocs.isEmpty()) {
+                    presentDocIds = "— (hiç gelmedi)";
+                } else {
+                    presentDocIds = presentDocs.stream()
+                            .sorted()
+                            .limit(30)
+                            .collect(Collectors.joining(", "));
+                    if (presentDocs.size() > 30) {
+                        presentDocIds += " ... (" + presentDocs.size() + " toplam)";
+                    }
+                }
+
+                Row row = sheet.createRow(r++);
+                createCell(row, 0, no++, st);
+                createCell(row, 1, label, st);
+                createCell(row, 2, fieldPath, st);
+                createCell(row, 3, absentCount, st);
+                createCell(row, 4, totalDocs, st);
+                createCell(row, 5, String.format("%.1f%%", pct), st);
+                createCell(row, 6, presentDocIds, st);
+            }
+        }
+
+        if (r > headerRowIndex + 1) {
+            sheet.setAutoFilter(new CellRangeAddress(headerRowIndex, r - 1, 0, headers.length - 1));
+        }
+
+        sheet.setColumnWidth(0,  6 * 256);
+        sheet.setColumnWidth(1, 14 * 256);
+        sheet.setColumnWidth(2, 46 * 256);
+        sheet.setColumnWidth(3, 16 * 256);
+        sheet.setColumnWidth(4, 14 * 256);
+        sheet.setColumnWidth(5, 12 * 256);
+        sheet.setColumnWidth(6, 80 * 256);
+        sheet.createFreezePane(0, headerRowIndex + 1);
+    }
+
+    // ------------------------------------------------------------------
+    // SHEET 5 — TERMS
     // ------------------------------------------------------------------
     private static void writeTermsSheet(Workbook wb, Styles s, List<String> terms) {
         Sheet sheet = wb.createSheet("Terms");

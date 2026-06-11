@@ -29,12 +29,14 @@ public class MuudSearchUtils {
             //   Playlists    → 4   (muud_playlist_flat_v2)
             //   Songs        → 5   (muud_song_flat_v2)
             //   Videos       → 6   (muud_video_flat_v2)
+            //   Vektors      → 49  (muud_song_vector_v4)
             case "album"     -> "2";
             case "performer" -> "3";
             case "playlist"  -> "4";
-            case "songs", "song" -> "5";
+
+                  case "songs", "song" -> "5";
             case "video", "videos" -> "6";
-          //  case "SongVector", "Vector" -> "49";
+            //    case "vector", "vectors" -> "49";
             case "general"   -> "active-indices"; // Tüm aktif indekslerde ara
             default -> "active-indices"; // Tanımsızsa yine tüm aktiflerde ara
         };
