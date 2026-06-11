@@ -34,9 +34,9 @@ public class MuudSearchUtils {
             case "performer" -> "3";
             case "playlist"  -> "4";
 
-                  case "songs", "song" -> "5";
+            //     case "songs", "song" -> "5";
             case "video", "videos" -> "6";
-            //    case "vector", "vectors" -> "49";
+              case "vector", "vectors" -> "49";
             case "general"   -> "active-indices"; // Tüm aktif indekslerde ara
             default -> "active-indices"; // Tanımsızsa yine tüm aktiflerde ara
         };
@@ -49,6 +49,18 @@ public class MuudSearchUtils {
 
     public static String safeStr(String s) {
         return s == null ? "" : s;
+    }
+
+    /**
+     * performerName (flat indeks) veya performerNames (vector indeks) alanından
+     * sanatçı adını okur. İkisini de dener, doldurulan birini döndürür.
+     */
+    public static String getPerformerName(JsonPath jp, String dataPath) {
+        String name = safeStr(jp.getString(dataPath + ".performerName"));
+        if (name.isEmpty()) {
+            name = safeStr(jp.getString(dataPath + ".performerNames"));
+        }
+        return name;
     }
 
     /**
@@ -79,7 +91,7 @@ public class MuudSearchUtils {
     public static int findArtistIndex(JsonPath jp, int n, String expArtist) {
         String basePath = getBasePath(jp);
         for (int i = 0; i < Math.max(0, n); i++) {
-            String artist = safeStr(jp.getString(basePath + "[" + i + "].data.performerName"));
+            String artist = getPerformerName(jp, basePath + "[" + i + "].data");
             if (containsTRInsensitive(artist, expArtist)) return i;
         }
         return -1;
@@ -88,7 +100,7 @@ public class MuudSearchUtils {
     public static int findArtistAndTrackIndex(JsonPath jp, int n, String expArtist, String expTrack) {
         String basePath = getBasePath(jp);
         for (int i = 0; i < Math.max(0, n); i++) {
-            String artist = safeStr(jp.getString(basePath + "[" + i + "].data.performerName"));
+            String artist = getPerformerName(jp, basePath + "[" + i + "].data");
 
             // Active-indices karışık içerik döner: şarkı, albüm ve sanatçı kayıtları.
             //
@@ -126,7 +138,7 @@ public class MuudSearchUtils {
             String albumName    = safeStr(jp.getString(basePath + "[" + i + "].data.albumName"));
             String playlistName = safeStr(jp.getString(basePath + "[" + i + "].data.playlistName"));
             String songName     = safeStr(jp.getString(basePath + "[" + i + "].data.songName"));
-            String perfName     = safeStr(jp.getString(basePath + "[" + i + "].data.performerName"));
+            String perfName     = getPerformerName(jp, basePath + "[" + i + "].data");
 
             if (containsTRInsensitive(albumName, keyword)
                     || containsTRInsensitive(playlistName, keyword)

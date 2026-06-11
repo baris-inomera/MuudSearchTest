@@ -8,6 +8,14 @@ public class MuudSearchApi {
     private static final String BASE_URL = "https://mirketgateway.apps.erdek.paas.turktelekom.intra";
 
     public Response search(String term, String indexId, int limit) {
+        return search(term, indexId, limit, true);
+    }
+
+    public Response search(String term, String indexId, int limit, boolean correction) {
+        return search(term, indexId, limit, correction, true);
+    }
+
+    public Response search(String term, String indexId, int limit, boolean correction, boolean suggestion) {
 
         String path;
         if ("active-indices".equals(indexId)) {
@@ -19,15 +27,14 @@ public class MuudSearchApi {
         String new_path = BASE_URL + path;
         int safeLimit = limit <= 0 ? 10 : limit;
 
-        // İŞTE ÇÖZÜM BURADA: Basit replace yerine, görünmez karakterleri ezen metodumuzu kullanıyoruz!
         String safeTerm = escapeJsonForApi(term);
 
         String apiQueryBody = "{\n" +
                 "  \"text\": \"" + safeTerm + "\",\n" +
                 "  \"filters\": null,\n" +
                 "  \"fields\": null,\n" +
-                "  \"suggestion\": true,\n" +
-                "  \"correction\": true,\n" +
+                "  \"suggestion\": " + suggestion + ",\n" +
+                "  \"correction\": " + correction + ",\n" +
                 "  \"limit\": " + safeLimit + ",\n" +
                 "  \"offset\": 0\n" +
                 "}";

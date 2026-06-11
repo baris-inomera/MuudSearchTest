@@ -392,7 +392,7 @@ public class YapayZekaEgitmeVektor extends TestConfig {
         String[] result = new String[]{"(beklenen tanımlanmamış)", "NOK", "API hatası"};
 
         try {
-            Response res = api.search(bc.term(), VEKTOR_INDEX, TOP_N); // ← sadece bu satır farklı
+            Response res = api.search(bc.term(), VEKTOR_INDEX, TOP_N, false, false); // vector indeksi correction ve suggestion desteklemiyor
             JsonPath jp  = res.jsonPath();
             result = evaluate(bc, jp);
         } catch (Exception e) {
@@ -460,7 +460,7 @@ public class YapayZekaEgitmeVektor extends TestConfig {
         int pos = MuudSearchUtils.findArtistIndex(jp, n, bc.expArtist());
 
         if (pos != -1) {
-            String fa = MuudSearchUtils.safeStr(jp.getString(base + "[" + pos + "].data.performerName"));
+            String fa = MuudSearchUtils.getPerformerName(jp, base + "[" + pos + "].data");
             return new String[]{expected, "OK",
                     "Başarılı — " + (pos + 1) + ". sırada '" + fa + "' geldi.\n"
                     + top5Desc(jp, base)};
@@ -485,7 +485,7 @@ public class YapayZekaEgitmeVektor extends TestConfig {
         int idx = MuudSearchUtils.findArtistAndTrackIndex(jp, n, bc.expArtist(), bc.expTrack());
 
         if (idx != -1) {
-            String fa = MuudSearchUtils.safeStr(jp.getString(base + "[" + idx + "].data.performerName"));
+            String fa = MuudSearchUtils.getPerformerName(jp, base + "[" + idx + "].data");
             String ft = MuudSearchUtils.safeStr(jp.getString(base + "[" + idx + "].data.songName"));
             if (ft.isEmpty())
                 ft = MuudSearchUtils.safeStr(jp.getString(base + "[" + idx + "].data.albumName"));
@@ -538,7 +538,7 @@ public class YapayZekaEgitmeVektor extends TestConfig {
         String song      = MuudSearchUtils.safeStr(jp.getString(base + "[" + i + "].data.songName"));
         String album     = MuudSearchUtils.safeStr(jp.getString(base + "[" + i + "].data.albumName"));
         String playlist  = MuudSearchUtils.safeStr(jp.getString(base + "[" + i + "].data.playlistName"));
-        String performer = MuudSearchUtils.safeStr(jp.getString(base + "[" + i + "].data.performerName"));
+        String performer = MuudSearchUtils.getPerformerName(jp, base + "[" + i + "].data");
         String kind      = MuudSearchUtils.safeStr(jp.getString(base + "[" + i + "].data.kind"));
 
         String label;
