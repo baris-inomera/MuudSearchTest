@@ -44,7 +44,7 @@ import java.util.stream.Stream;
  * ─────────────────────────────────────────────────────────────────────────────
  */
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-public class YapayZekaEgitme extends TestConfig {
+public class MainCases extends TestConfig {
 
     private static final int    TOP_N = 10;
     private static final Locale TR    = Locale.forLanguageTag("tr");

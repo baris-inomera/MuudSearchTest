@@ -34,9 +34,9 @@ public class MuudSearchUtils {
             case "performer" -> "3";
             case "playlist"  -> "4";
 
-            //     case "songs", "song" -> "5";
+                 case "songs", "song" -> "5";
             case "video", "videos" -> "6";
-              case "vector", "vectors" -> "49";
+            //   case "vector", "vectors" -> "49";
             case "general"   -> "active-indices"; // Tüm aktif indekslerde ara
             default -> "active-indices"; // Tanımsızsa yine tüm aktiflerde ara
         };
