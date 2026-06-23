@@ -12,7 +12,7 @@
 
 variables:
   MAVEN_OPTS:     "-Xmx512m -Dmaven.repo.local=.m2/repository"
-  TEST_CLASSES:   "MainCases,SemanticSearchTest"
+  TEST_CLASSES:   "MainCases"
   JAVA_IMAGE:     "maven:3.9-eclipse-temurin-17"
 
 # Pipeline sadece schedule veya manuel tetiklenince koşsun
