@@ -7,7 +7,7 @@
 #    Eklenmesi gereken değişkenler:
 #      BASE_URL      → https://mirketgateway.apps.erdek.paas.turktelekom.intra
 #      SEARCH_TOKEN  → Basic xxxx... (Authorization header değerin)
-#      SLACK_WEBHOOK → https://hooks.slack.com/services/xxx/yyy/zzz
+#  Mail bildirimi → Settings → Integrations → Pipeline status emails
 # =============================================================================
 
 variables:
@@ -24,7 +24,6 @@ workflow:
 
 stages:
   - test
-  - notify
 
 # =============================================================================
 #  STAGE 1 — Testleri koştur
@@ -58,53 +57,4 @@ run-tests:
     expire_in: 30 days   # 30 gün sonra otomatik silinir
     when: always         # test başarısız olsa bile kaydet
 
-  # Hata olursa bile notify stage'i çalışsın
   allow_failure: false
-
-# =============================================================================
-#  STAGE 2 — Bildirim gönder (Slack + Mail)
-# =============================================================================
-notify-slack:
-  stage: notify
-  image: alpine:latest
-  when: always   # test başarısız olsa bile bildirim gitsin
-
-  before_script:
-    - apk add --no-cache curl --quiet
-
-  script:
-    - |
-      # Önceki stage'in durumuna göre renk ve mesaj belirle
-      if [ "$CI_JOB_STATUS" = "failed" ]; then
-        STATUS="BAŞARISIZ ❌"
-        COLOR="danger"
-      else
-        STATUS="BAŞARILI ✅"
-        COLOR="good"
-      fi
-
-      PIPELINE_URL="$CI_PROJECT_URL/-/pipelines/$CI_PIPELINE_ID"
-      ARTIFACT_URL="$CI_PROJECT_URL/-/jobs/artifacts/$CI_COMMIT_REF_NAME/browse?job=run-tests"
-
-      curl -s -X POST "$SLACK_WEBHOOK" \
-        -H 'Content-type: application/json' \
-        --data "{
-          \"attachments\": [{
-            \"color\": \"$COLOR\",
-            \"title\": \"MUUD Arama Test Raporu — $STATUS\",
-            \"fields\": [
-              {\"title\": \"Proje\",   \"value\": \"$CI_PROJECT_NAME\",    \"short\": true},
-              {\"title\": \"Tarih\",   \"value\": \"$(date '+%d.%m.%Y %H:%M')\", \"short\": true},
-              {\"title\": \"Testler\", \"value\": \"$TEST_CLASSES\",       \"short\": false}
-            ],
-            \"actions\": [
-              {\"type\": \"button\", \"text\": \"Pipeline Detayı\", \"url\": \"$PIPELINE_URL\"},
-              {\"type\": \"button\", \"text\": \"Excel Raporları\",  \"url\": \"$ARTIFACT_URL\"}
-            ],
-            \"footer\": \"GitLab CI | Otomatik bildirim\"
-          }]
-        }"
-
-      echo "✅ Slack bildirimi gönderildi"
-
-  dependencies: []
