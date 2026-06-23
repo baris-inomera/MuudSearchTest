@@ -43,9 +43,9 @@ run-tests:
     - echo "▶ Testler başlıyor — $TEST_CLASSES"
     - |
       mvn test \
-        -Dtest=$TEST_CLASSES \
-        -DbaseUrl=$BASE_URL \
-        -Dtoken=$SEARCH_TOKEN \
+        -Dtest="$TEST_CLASSES" \
+        -DbaseUrl="$BASE_URL" \
+        -Dtoken="$SEARCH_TOKEN" \
         --no-transfer-progress \
         -q
     - echo "✅ Testler tamamlandı"

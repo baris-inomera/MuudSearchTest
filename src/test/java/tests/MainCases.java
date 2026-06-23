@@ -17,19 +17,6 @@ import java.util.Locale;
 import java.util.stream.Stream;
 
 /**
- * ─────────────────────────────────────────────────────────────────────────────
- *  BULGU FINAL 2 — Arama Tipi Bazlı Kapsayıcı Regresyon Testi
- * ─────────────────────────────────────────────────────────────────────────────
- *
- *  BulguSnapshotV2Detail'den alınan tüm case'leri MuudSearchApiKapsayiciUATTest
- *  mantığıyla değerlendirir. BulguFinal'dan farkı: bölümler 10 granüler arama
- *  tipi taksonomisine göre ayrılmıştır — böylece Excel raporunda şu tür
- *  analizler yapılabilir:
- *
- *    "Şarkı · Lyrics başarı oranı %20 → lirik indeksleme önceliklendirilmeli"
- *    "Sanatçı · Yazım Toleransı %45  → fuzzy-match iyileştirmesi gerekli"
- *    "Şarkı · Tam Eşleşme %85        → temel arama sağlıklı"
- *
  *  Her case için:
  *    • Kural otomatik türetilir (FIRST_ARTIST_IS / TOPN_HAS_ARTIST_AND_TRACK
  *                                / TOPN_RELATED_PLAYLIST)
@@ -43,6 +30,7 @@ import java.util.stream.Stream;
  *    Çıktı: proje kök dizininde TestReport_YYYYMMDD_HHmmss.xlsx
  * ─────────────────────────────────────────────────────────────────────────────
  */
+
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class MainCases extends TestConfig {
 
