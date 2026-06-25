@@ -24,6 +24,7 @@ workflow:
 
 stages:
   - test
+  - notify
 
 # =============================================================================
 #  STAGE 1 — Testleri koştur
@@ -58,3 +59,53 @@ run-tests:
     when: always         # test başarısız olsa bile kaydet
 
   allow_failure: false
+
+# =============================================================================
+#  STAGE 2 — Mail bildirimi
+# =============================================================================
+notify-mail:
+  stage: notify
+  image: alpine:latest
+  when: always
+
+  before_script:
+    - apk add --no-cache curl --quiet
+
+  script:
+    - |
+      if [ "$CI_JOB_STATUS" = "failed" ]; then
+        STATUS="BAŞARISIZ ❌"
+      else
+        STATUS="BAŞARILI ✅"
+      fi
+
+      PIPELINE_URL="$CI_PROJECT_URL/-/pipelines/$CI_PIPELINE_ID"
+      ARTIFACT_URL="$CI_PROJECT_URL/-/jobs/artifacts/$CI_COMMIT_REF_NAME/browse?job=run-tests"
+      DATE=$(date '+%d.%m.%Y %H:%M')
+
+      cat > /tmp/mail.txt << EOF
+      From: ddp@turktelekom.com.tr
+      To: baris.durak@partner.turktelekom.com.tr
+      Subject: MUUD Arama Test Raporu - $STATUS - $DATE
+      Content-Type: text/plain; charset=UTF-8
+
+      MUUD Arama Otomasyon Test Raporu
+      =================================
+      Durum  : $STATUS
+      Tarih  : $DATE
+      Branch : $CI_COMMIT_REF_NAME
+
+      Pipeline: $PIPELINE_URL
+      Excel Rapor: $ARTIFACT_URL
+      EOF
+
+      curl --url "smtp://10.234.204.10:587" \
+        --mail-from "ddp@turktelekom.com.tr" \
+        --mail-rcpt "baris.durak@partner.turktelekom.com.tr" \
+        --user "mobilodeme@turktelekom.com.tr:$SMTP_PASSWORD" \
+        --upload-file /tmp/mail.txt \
+        --silent
+
+      echo "✅ Mail gönderildi"
+
+  dependencies: []
