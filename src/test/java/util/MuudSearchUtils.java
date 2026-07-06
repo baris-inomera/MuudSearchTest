@@ -3,13 +3,37 @@ package util;
 import domain.Rule;
 import io.restassured.path.json.JsonPath;
 
+import java.text.Normalizer;
 import java.util.List;
 import java.util.Locale;
+import java.util.regex.Pattern;
 
 public class MuudSearchUtils {
 
     // Türkçe Locale — büyük/küçük harf normalizasyonu için
     private static final Locale TR = new Locale("tr", "TR");
+
+    // NFD normalizasyonu sonrası kaldırılacak birleştirici karakterler:
+    // yalnızca yabancı aksanlar (grave, acute, circumflex, tilde).
+    // Türkçe diacritic'ler (cedilla U+0327 → ş/ç, breve U+0306 → ğ,
+    // diaeresis U+0308 → ü/ö, dot above U+0307 → İ) KORUNUR.
+    private static final Pattern FOREIGN_ACCENTS =
+            Pattern.compile("[̀́̂̃]"); // grave, acute, circumflex, tilde
+
+    // Root Locale — Türkçe I/İ/ı dönüşümü OLMADAN karşılaştırma için
+    private static final Locale ROOT = Locale.ROOT;
+
+    /**
+     * Karşılaştırma öncesi normalizasyon:
+     * NFD → yabancı aksan kaldır (é→e, è→e, â→a, ñ→n) → NFC
+     * Türkçe karakterler (ş, ç, ğ, ü, ö, ı, İ) değişmeden kalır.
+     */
+    private static String normalizeForMatch(String s) {
+        if (s == null) return null;
+        String nfd      = Normalizer.normalize(s, Normalizer.Form.NFD);
+        String noAccent = FOREIGN_ACCENTS.matcher(nfd).replaceAll("");
+        return Normalizer.normalize(noAccent, Normalizer.Form.NFC);
+    }
 
     // --- YENİ EKLENEN DİNAMİK YOL BULUCU ---
     // Gateway'in huyuna göre JSON'da topHits varsa onu, yoksa content'i seçer
@@ -33,9 +57,11 @@ public class MuudSearchUtils {
             case "album"     -> "2";
             case "performer" -> "3";
             case "playlist"  -> "4";
-        //  case "songs", "song" -> "5";
-            case "video", "videos" -> "6";
-            case "vector", "vectors" -> "49";
+          //case "songs", "song" -> "5";
+            case "songs", "song" -> "5";
+
+        //    case "video", "videos" -> "6";
+       //     case "vector", "vectors" -> "49";
             case "general"   -> "active-indices"; // Tüm aktif indekslerde ara
             default -> "active-indices"; // Tanımsızsa yine tüm aktiflerde ara
         };
@@ -74,10 +100,24 @@ public class MuudSearchUtils {
      * Bu sayede G14 (büyük/küçük harf) ve G15 (ASCII alternatif) testleri gerçekçi sonuç
      * verir; dönüşümü test edilen şey test yardımcısı değil, arama motoru olur.
      */
+    /**
+     * Büyük/küçük harf DUYARSIZ, yabancı aksan DUYARSIZ karşılaştırma.
+     *
+     * İKİ LOCALE stratejisi (OR):
+     *   - TR locale   → "ÇIKAR" → "çıkar" (I→ı, Türkçe dotless doğru)
+     *   - ROOT locale → "MAVI"  → "mavi"  (I→i, yabancı kelimeler doğru)
+     * Birinde eşleşirse TRUE döner.
+     *
+     * Bilinçli olarak FALSE kalması gereken durum:
+     *   - "Sila" ≠ "Sıla" (i≠ı), her iki locale'de de eşleşmez → gerçek NOK
+     */
     public static boolean containsTRInsensitive(String actual, String expected) {
         if (expected == null || expected.isBlank()) return true;
         if (actual == null) return false;
-        return actual.toLowerCase(TR).contains(expected.toLowerCase(TR));
+        String a = normalizeForMatch(actual);
+        String e = normalizeForMatch(expected);
+        return a.toLowerCase(TR).contains(e.toLowerCase(TR))
+                || a.toLowerCase(ROOT).contains(e.toLowerCase(ROOT));
     }
 
     public static String prettyRule(Rule rule) {

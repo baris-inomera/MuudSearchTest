@@ -5,17 +5,9 @@ import io.restassured.response.Response;
 
 public class MuudSearchApi {
 
-    private static final String BASE_URL = "https://mirketgateway.apps.erdek.paas.turktelekom.intra";
+    private static final String BASE_URL =  "https://searchapi.turktelekom.com.tr";
 
     public Response search(String term, String indexId, int limit) {
-        return search(term, indexId, limit, true);
-    }
-
-    public Response search(String term, String indexId, int limit, boolean correction) {
-        return search(term, indexId, limit, correction, true);
-    }
-
-    public Response search(String term, String indexId, int limit, boolean correction, boolean suggestion) {
 
         String path;
         if ("active-indices".equals(indexId)) {
@@ -27,14 +19,15 @@ public class MuudSearchApi {
         String new_path = BASE_URL + path;
         int safeLimit = limit <= 0 ? 10 : limit;
 
+        // İŞTE ÇÖZÜM BURADA: Basit replace yerine, görünmez karakterleri ezen metodumuzu kullanıyoruz!
         String safeTerm = escapeJsonForApi(term);
 
         String apiQueryBody = "{\n" +
                 "  \"text\": \"" + safeTerm + "\",\n" +
                 "  \"filters\": null,\n" +
                 "  \"fields\": null,\n" +
-                "  \"suggestion\": " + suggestion + ",\n" +
-                "  \"correction\": " + correction + ",\n" +
+                "  \"suggestion\": true,\n" +
+                "  \"correction\": true,\n" +
                 "  \"limit\": " + safeLimit + ",\n" +
                 "  \"offset\": 0\n" +
                 "}";
@@ -44,8 +37,8 @@ public class MuudSearchApi {
                 .relaxedHTTPSValidation()
                 .header("Content-Type", "application/json")
                 .header("Accept", "*/*")
-                .header("X-SEARCH-APP-KEY","muudelk9")
-                .header("Authorization", "Basic V1BQZUhMeWc6NUt5Y09ESlp4aFFxQXZtNQ==")
+                .header("X-SEARCH-APP-KEY","muud")
+                .header("Authorization", "Basic QkRHVTc5a206ckpnNzBZaTd6VGxreVF2UQ==")
                 .body(apiQueryBody)
                 .when()
                 .post(new_path)

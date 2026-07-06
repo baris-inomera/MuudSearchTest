@@ -1,0 +1,21 @@
+apiVersion: v1
+kind: Secret
+metadata:
+  name: muud-test-secrets
+  namespace: ddp-fixed-test
+type: Opaque
+stringData:
+  smtp-pass: "A4ac2fen"
+  mail-to: "baris.durak@partner.turktelekom.com.tr"
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: muud-test-results
+  namespace: ddp-fixed-test
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1Gi

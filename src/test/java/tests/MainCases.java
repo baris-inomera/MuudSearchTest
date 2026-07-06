@@ -90,6 +90,7 @@ public class MainCases extends TestConfig {
                 new BulguCase("BULGU_005", "çıkmaz bir sokakta",             "",                     "Çıkmaz Bir Sokakta",             S_SARKI_TAM, 3),
                 new BulguCase("BULGU_007", "kusura bakma",                   "Blok3",                "Kusura Bakma",                   S_SARKI_TAM, 3),
                 new BulguCase("BULGU_010", "maraton",                        "Ati242",               "Maraton",                        S_SARKI_TAM, 3),
+
                 new BulguCase("BULGU_011", "geri ver",                       "Wegh",                 "Geri Ver",                       S_SARKI_TAM, 1),
                 new BulguCase("BULGU_012", "saygımdan",                      "Bengü",                "Saygımdan",                      S_SARKI_TAM, 1),
                 new BulguCase("BULGU_013", "meğerse",                        "Linet",                "Meğerse",                        S_SARKI_TAM, 3),
@@ -207,7 +208,7 @@ public class MainCases extends TestConfig {
                 new BulguCase("BULGU_075", "hadi ya",                        "Melis Kar",            "Yatıya",                         S_SARKI_LYRICS, 3),
                 new BulguCase("BULGU_076", "babalar",                        "Blok3",                "PATLAT",                         S_SARKI_LYRICS, 1),
                 new BulguCase("BULGU_083", "çetin ceviz şerbetli mayam",     "Melike Şahin",         "Canın Beni Çekti",               S_SARKI_LYRICS, 3),
-                new BulguCase("BULGU_084", "bir motive",                     "Motive",               "",                               S_SARKI_LYRICS, 3),
+                new BulguCase("BULGU_084", "bir motive",                     "Motive",               "bir",                            S_SARKI_LYRICS, 3),
                 // UAT
                 new BulguCase("UAT_015",  "yandım ah",                       "Sakiler",              "Yalanı Bırak",                   S_SARKI_LYRICS, 1),
                 new BulguCase("UAT_022",  "bak ben yara gibiyim",            "Emir Can İğrek",       "Nalan",                          S_SARKI_LYRICS, 1),
@@ -407,6 +408,10 @@ public class MainCases extends TestConfig {
                 new BulguCase("CAGKAN_4",   "Murat yeter magusa",                               "",   "Mağusa Limanı",                      S_SARKI_LYRICS, 3),
                 new BulguCase("CAGKAN_5",   "Sen Anlat Geçen Yüzyıl",                           "",   "Sen Anlat Geçen Yüzyıl",                      S_SARKI_LYRICS, 3),
                 new BulguCase("CAGKAN_6",   "Sinem Yalçınkaya kenar süsü",                      "",   "Kenar Süsü",                      S_SARKI_LYRICS, 3)
+
+       // new BulguCase("sena_1",   "tarkn",                      "Tarkan",   "",                      S_SARKI_LYRICS, 3),
+       // new BulguCase("sena_2",   "sezn aksu",                      "Sezen Aksu",   "",                      S_SARKI_LYRICS, 3),
+      //  new BulguCase("sena_3",   "kürtçe",                      "",   "Kürtçe",                      S_SARKI_LYRICS, 3)
 
 
 

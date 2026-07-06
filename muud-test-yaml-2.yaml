@@ -1,0 +1,607 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: muud-test-script
+  namespace: ddp-fixed-test
+data:
+  run_tests.py: |
+    #!/usr/bin/env python3
+    """MUUD Search Test Runner - OpenShift CronJob"""
+    import os, datetime, warnings, smtplib
+    from email.mime.multipart import MIMEMultipart
+    from email.mime.base import MIMEBase
+    from email.mime.text import MIMEText
+    from email import encoders
+    import requests, openpyxl
+    from openpyxl.styles import PatternFill, Font, Alignment, Border, Side
+    from openpyxl.utils import get_column_letter
+    from collections import Counter
+    warnings.filterwarnings("ignore")
+    
+    API_URL   = "https://mirketgateway.apps.erdek.paas.turktelekom.intra/gateway/search/rest/v10/active-indices/search"
+    HEADERS   = {"Content-Type":"application/json","Accept":"*/*",
+                 "X-SEARCH-APP-KEY":"muudelk9",
+                 "Authorization":"Basic V1BQZUhMeWc6NUt5Y09ESlp4aFFxQXZtNQ=="}
+    TOP_N     = 10
+    OUT_DIR   = os.environ.get("RESULTS_DIR","/tmp/results")
+    SMTP_HOST = os.environ.get("SMTP_HOST","10.234.204.10")
+    SMTP_PORT = int(os.environ.get("SMTP_PORT","587"))
+    SMTP_USER = os.environ.get("SMTP_USER","mobilodeme@turktelekom.com.tr")
+    SMTP_PASS = os.environ.get("SMTP_PASS","")
+    MAIL_FROM = os.environ.get("MAIL_FROM","ddp@turktelekom.com.tr")
+    MAIL_TO   = os.environ.get("MAIL_TO","baris.durak@partner.turktelekom.com.tr")
+    
+    CASES = [
+        ("BULGU_002","a canım","Mabel Matiz","A Canım","Sarki · Tam Esleme",3),
+        ("BULGU_004","olmazlara vuruluyorum","Mert Demir","Olmazlara Vuruluyorum","Sarki · Tam Esleme",3),
+        ("BULGU_005","çıkmaz bir sokakta","","Çıkmaz Bir Sokakta","Sarki · Tam Esleme",3),
+        ("BULGU_007","kusura bakma","Blok3","Kusura Bakma","Sarki · Tam Esleme",3),
+        ("BULGU_010","maraton","Ati242","Maraton","Sarki · Tam Esleme",3),
+        ("BULGU_011","geri ver","Wegh","Geri Ver","Sarki · Tam Esleme",1),
+        ("BULGU_012","saygımdan","Bengü","Saygımdan","Sarki · Tam Esleme",1),
+        ("BULGU_013","meğerse","Linet","Meğerse","Sarki · Tam Esleme",3),
+        ("BULGU_015","dacia","Lvbel C5","DACIA","Sarki · Tam Esleme",3),
+        ("BULGU_020","yalnızlığın çaresini bulmuşlar","","Yalnızlığın Çaresini Bulmuşlar","Sarki · Tam Esleme",3),
+        ("BULGU_023","yapar mısın","Poizi","YAPAR MISIN?","Sarki · Tam Esleme",1),
+        ("BULGU_025","yerinde dur","Sefo","Yerinde Dur","Sarki · Tam Esleme",1),
+        ("BULGU_028","ey aşk","Sezen Aksu","Ey Aşk","Sarki · Tam Esleme",1),
+        ("BULGU_030","şımarık","Tarkan","Şımarık","Sarki · Tam Esleme",1),
+        ("BULGU_031","giderim kırağınan","Onur Şan","Giderim Kırağınan","Sarki · Tam Esleme",3),
+        ("BULGU_033","ara beni lütfen","Kenan Doğulu","Ara Beni Lütfen","Sarki · Tam Esleme",1),
+        ("BULGU_035","aşk yok olmaktır","","Aşk Yok Olmaktır","Sarki · Tam Esleme",1),
+        ("BULGU_036","can efendim","","Can Efendim","Sarki · Tam Esleme",3),
+        ("BULGU_038","çıt çıt çedene","Barış Manço","Çıt Çıt Çedene","Sarki · Tam Esleme",3),
+        ("BULGU_039","çıkar biri karşıma","Poizi","Çıkar Biri Karşıma","Sarki · Tam Esleme",3),
+        ("BULGU_042","sen yanlış yaptın","Şahin Kendirci","Sen Yanlış Yaptın","Sarki · Tam Esleme",3),
+        ("BULGU_043","vay dayı","Aynur Polat","Vay Dayı","Sarki · Tam Esleme",3),
+        ("BULGU_044","silinmez","Mansur Ark","Silinmez","Sarki · Tam Esleme",1),
+        ("BULGU_045","halbuki","Yalın","Halbuki","Sarki · Tam Esleme",3),
+        ("BULGU_047","duydun mu","Yusuf Güney","Duydun Mu?","Sarki · Tam Esleme",1),
+        ("BULGU_048","sana güvenmiyorum","Dedublüman","Sana Güvenmiyorum","Sarki · Tam Esleme",1),
+        ("BULGU_049","yasemen","Afra","Yasemen","Sarki · Tam Esleme",1),
+        ("BULGU_050","düşer o","İzel","Düşer O","Sarki · Tam Esleme",3),
+        ("BULGU_051","kömür","Mabel Matiz","Kömür","Sarki · Tam Esleme",1),
+        ("BULGU_054","just the way you are","","Just The Way You Are","Sarki · Tam Esleme",3),
+        ("BULGU_056","snap","Manifest","Snap","Sarki · Tam Esleme",3),
+        ("BULGU_059","ama başaramadım","Burak Bulut","Ama Başaramadım","Sarki · Tam Esleme",1),
+        ("BULGU_061","adına bir çizik çektim","","Adına Bir Çizik Çektim","Sarki · Tam Esleme",1),
+        ("BULGU_062","yaramızda kalsın","Merve Özbey","Yaramızda Kalsın","Sarki · Tam Esleme",1),
+        ("BULGU_063","sev yeter","","Sev Yeter","Sarki · Tam Esleme",3),
+        ("BULGU_065","kaybolurum gülüşünde","İkilem","Kaybolurum Gülüşünde","Sarki · Tam Esleme",1),
+        ("BULGU_071","ağlama ben ağlarım","Canozan","Ağlama Ben Ağlarım","Sarki · Tam Esleme",1),
+        ("BULGU_080","şikayetim var","","Şikayetim Var","Sarki · Tam Esleme",3),
+        ("BULGU_081","bunca yıl","Dedublüman","Bunca Yıl","Sarki · Tam Esleme",3),
+        ("BULGU_082","düldül","Mabel Matiz","Düldül","Sarki · Tam Esleme",3),
+        ("BULGU_086","perde","Poizi","Perde","Sarki · Tam Esleme",1),
+        ("BULGU_089","phonk","DEHA INC.","Phonk","Sarki · Tam Esleme",3),
+        ("BULGU_092","sonbahar","Era7Capone","SONBAHAR","Sarki · Tam Esleme",3),
+        ("BULGU_093","acem kızı","","Acem Kızı","Sarki · Tam Esleme",3),
+        ("BULGU_094","hacel obası","","Hacel Obası","Sarki · Tam Esleme",3),
+        ("BULGU_095","yalan","","Yalan","Sarki · Tam Esleme",1),
+        ("BULGU_096","bana sor","Ferdi Tayfur","Bana Sor","Sarki · Tam Esleme",3),
+        ("BULGU_098","rüya","Manifest","Rüya","Sarki · Tam Esleme",3),
+        ("BULGU_100","ara","Zeynep Bastık","Ara","Sarki · Tam Esleme",1),
+        ("BULGU_101","14 bahar","Mert Demir","14 Bahar","Sarki · Tam Esleme",3),
+        ("BULGU_103","ela mana","","Ela Mana","Sarki · Tam Esleme",1),
+        ("BULGU_104","yekten","Demet Akalın","Yekten","Sarki · Tam Esleme",3),
+        ("BULGU_105","erik dalı","","Erik Dalı","Sarki · Tam Esleme",3),
+        ("BULGU_106","elfida","Haluk Levent","Elfida","Sarki · Tam Esleme",1),
+        ("BULGU_107","yazan kalem siyah","","Yazan Kalem Siyah","Sarki · Tam Esleme",3),
+        ("BULGU_108","Mihriban","","Mihriban","Sarki · Tam Esleme",3),
+        ("BULGU_111","merdo","","Merdo","Sarki · Tam Esleme",3),
+        ("BULGU_113","sigara","","Sigara","Sarki · Tam Esleme",3),
+        ("BULGU_119_C","farzet","İlyas Yalçıntaş","Farzet","Sarki · Tam Esleme",3),
+        ("BULGU_121","misket","","Misket","Sarki · Tam Esleme",1),
+        ("BULGU_122","kara sevda","","Kara Sevda","Sarki · Tam Esleme",3),
+        ("BULGU_123","parla","","Parla","Sarki · Tam Esleme",3),
+        ("BULGU_124","kırmızı balık","","Kırmızı Balık","Sarki · Tam Esleme",3),
+        ("UAT_011","nasır","Melike Şahin","Nasır","Sarki · Tam Esleme",1),
+        ("UAT_019","bodrum","Yüzyüzeyken Konuşuruz","Bodrum","Sarki · Tam Esleme",1),
+        ("UAT_126","gözlerime bak","Mert Demir","Gözlerime Bak","Sarki · Tam Esleme",3),
+        ("BULGU_001","Hermes","Batuflex","Hermès","Sarki · Kismi Ad",1),
+        ("BULGU_019","yalnızlığın çaresini","gripin","Yalnızlığın Çaresini Bulmuşlar","Sarki · Kismi Ad",3),
+        ("BULGU_024","yerinde","Sefo","Yerinde Dur","Sarki · Kismi Ad",1),
+        ("BULGU_034","vidrado em","Dj Guuga","Vidrado Em Você","Sarki · Kismi Ad",3),
+        ("BULGU_037","çıt çıt","Barış Manço","Çıt Çıt Çedene","Sarki · Kismi Ad",3),
+        ("BULGU_072","ağlama ben","Canozan","Ağlama Ben Ağlarım","Sarki · Kismi Ad",1),
+        ("BULGU_074","erik","","Erik Dalı","Sarki · Kismi Ad",1),
+        ("BULGU_078","doğuştan","Lvbel C5","Doğuştan Beri Haklıyım","Sarki · Kismi Ad",3),
+        ("BULGU_114","dandini","Ninni Bebek","Dandini Dandini Dastana","Sarki · Kismi Ad",3),
+        ("UAT_017","sus","Ceza","Suspus","Sarki · Kismi Ad",1),
+        ("UAT_018","pus","Ceza","Suspus","Sarki · Kismi Ad",5),
+        ("UAT_141","kalbimin sahibine","İrem Derici","Kalbimin Tek Sahibine","Sarki · Kismi Ad",3),
+        ("BULGU_041","messy lola young","Lola Young","Messy","Sarki · Sanatci + Sarki",3),
+        ("BULGU_052","mabel kömür","Mabel Matiz","Kömür","Sarki · Sanatci + Sarki",1),
+        ("BULGU_058","y poizi","Poizi","Y","Sarki · Sanatci + Sarki",3),
+        ("BULGU_060","kts manifest","Manifest","KTS","Sarki · Sanatci + Sarki",1),
+        ("BULGU_070","Dua Lipa Shine","Cédric","Shine","Sarki · Sanatci + Sarki",3),
+        ("BULGU_097","rüya manifest","Manifest","Rüya","Sarki · Sanatci + Sarki",1),
+        ("BULGU_003","acanım","Mabel Matiz","A Canım","Sarki · Yazim Toleransi",3),
+        ("BULGU_014","çok pardon","Lvbel C5","COOOK PARDON","Sarki · Yazim Toleransi",3),
+        ("BULGU_029","simarik","Tarkan","Şımarık","Sarki · Yazim Toleransi",1),
+        ("BULGU_032","dame un grr","Fantomel","Dame Un Grrr","Sarki · Yazim Toleransi",3),
+        ("BULGU_040","hav hav","Lvbel C5","Havhavhav","Sarki · Yazim Toleransi",3),
+        ("BULGU_077","karakedi","Melis Fis","Kara Kedi","Sarki · Yazim Toleransi",3),
+        ("UAT_054","illede sen","Azer Bülbül","İlle De Sen","Sarki · Yazim Toleransi",1),
+        ("UAT_068","arabam","Sefo","Araba","Sarki · Yazim Toleransi",3),
+        ("UAT_145","lacivert eceler","Ferhat Göçer","Lacivert Geceler","Sarki · Yazim Toleransi",3),
+        ("UAT_148","güldün ne güzel","Pinhani","Ne Güzel Güldün","Sarki · Yazim Toleransi",3),
+        ("BULGU_067","çölüme yağmur oldun","Müslüm Gürses","Affet","Sarki · Lyrics",3),
+        ("BULGU_075","hadi ya","Melis Kar","Yatıya","Sarki · Lyrics",3),
+        ("BULGU_076","babalar","Blok3","PATLAT","Sarki · Lyrics",1),
+        ("BULGU_083","çetin ceviz şerbetli mayam","Melike Şahin","Canın Beni Çekti","Sarki · Lyrics",3),
+        ("BULGU_084","bir motive","Motive","bir","Sarki · Lyrics",3),
+        ("UAT_015","yandım ah","Sakiler","Yalanı Bırak","Sarki · Lyrics",1),
+        ("UAT_022","bak ben yara gibiyim","Emir Can İğrek","Nalan","Sarki · Lyrics",1),
+        ("UAT_024","zaten aşklar hep yalan dolan","Yıldız Tilbe","Sana Değer","Sarki · Lyrics",1),
+        ("UAT_034","sana hastayım anlasana","Derya Uluğ","Yansıma","Sarki · Lyrics",1),
+        ("UAT_128","sarışınlar","Derya Uluğ","Esmerin Adı Oya","Sarki · Lyrics",3),
+        ("UAT_136","silemez o beni","Yıldız Tilbe","Dizine Dursun","Sarki · Lyrics",1),
+        ("UAT_137","babalar sözünü tutar","Blok3","PATLAT","Sarki · Lyrics",3),
+        ("UAT_143","çok geç şmdi","Edis","Yalan","Sarki · Lyrics",3),
+        ("UAT_144","affet bu gece istedim ölmek","Model","Pembe Mezarlık","Sarki · Lyrics",3),
+        ("BULGU_008","mfö","MFÖ","","Sanatci · Tam Esleme",1),
+        ("BULGU_0088","mfo","MFÖ","","Sanatci · Tam Esleme",1),
+        ("BULGU_016","Manifest","Manifest","","Sanatci · Tam Esleme",1),
+        ("BULGU_017","semicenk","Semicenk","","Sanatci · Tam Esleme",1),
+        ("BULGU_055","utku akkaya","Utku Akkaya","","Sanatci · Tam Esleme",1),
+        ("BULGU_088","derya bedavacı","Derya Bedavacı","","Sanatci · Tam Esleme",1),
+        ("BULGU_090","ceza","Ceza","","Sanatci · Tam Esleme",3),
+        ("BULGU_102","yaşar","Yaşar","","Sanatci · Tam Esleme",1),
+        ("BULGU_112","Gökhan Özen","Gökhan Özen","","Sanatci · Tam Esleme",1),
+        ("BULGU_118","çelik","Çelik","","Sanatci · Tam Esleme",1),
+        ("BULGU_119_B","Haluk Levent","Haluk Levent","","Sanatci · Tam Esleme",1),
+        ("BULGU_120","Mustafa Yıldızdoğan","Mustafa Yıldızdoğan","","Sanatci · Tam Esleme",1),
+        ("UAT_001","u2","u2","","Sanatci · Tam Esleme",1),
+        ("UAT_010","edis","Edis","","Sanatci · Tam Esleme",1),
+        ("UAT_013","uzi","UZI","","Sanatci · Tam Esleme",1),
+        ("UAT_030","sıla","Sıla","","Sanatci · Tam Esleme",1),
+        ("UAT_045","eminem","Eminem","","Sanatci · Tam Esleme",1),
+        ("UAT_051","güneş","Güneş","","Sanatci · Tam Esleme",1),
+        ("UAT_052","dua lipa","Dua Lipa","","Sanatci · Tam Esleme",1),
+        ("UAT_059","mero","Mero","","Sanatci · Tam Esleme",3),
+        ("UAT_061","murda","Murda","","Sanatci · Tam Esleme",3),
+        ("UAT_064","inna","Inna","","Sanatci · Tam Esleme",3),
+        ("UAT_067","adele","Adele","","Sanatci · Tam Esleme",3),
+        ("UAT_070","mor ve ötesi","mor ve ötesi","","Sanatci · Tam Esleme",3),
+        ("UAT_075","patron","Patron","","Sanatci · Tam Esleme",3),
+        ("UAT_076","tefo","Tefo","","Sanatci · Tam Esleme",3),
+        ("UAT_077","doğuş","Doğuş","","Sanatci · Tam Esleme",3),
+        ("UAT_084","ben fero","Ben Fero","","Sanatci · Tam Esleme",3),
+        ("UAT_086","inji","INJI","","Sanatci · Tam Esleme",3),
+        ("UAT_087","rihanna","Rihanna","","Sanatci · Tam Esleme",3),
+        ("UAT_089","mavi","Mavi","","Sanatci · Tam Esleme",3),
+        ("UAT_090","velet","Velet","","Sanatci · Tam Esleme",3),
+        ("UAT_091","adamlar","Adamlar","","Sanatci · Tam Esleme",3),
+        ("UAT_102","blackpink","BLACKPINK","","Sanatci · Tam Esleme",3),
+        ("UAT_104","sia","Sia","","Sanatci · Tam Esleme",3),
+        ("UAT_110","shakira","Shakira","","Sanatci · Tam Esleme",3),
+        ("UAT_139","madonna","Madonna","","Sanatci · Tam Esleme",3),
+        ("BULGU_006","blok","Blok3","","Sanatci · Kismi Ad",1),
+        ("BULGU_022","teo","Teoman","","Sanatci · Kismi Ad",1),
+        ("UAT_016","aleyna","Aleyna Tilki","","Sanatci · Kismi Ad",1),
+        ("UAT_025","ferdi","Ferdi Tayfur","","Sanatci · Kismi Ad",1),
+        ("UAT_026","mabel","Mabel Matiz","","Sanatci · Kismi Ad",1),
+        ("UAT_027","yıldız","Yıldız Tilbe","","Sanatci · Kismi Ad",1),
+        ("UAT_028","azer","Azer Bülbül","","Sanatci · Kismi Ad",1),
+        ("UAT_033","serdar","Serdar Ortaç","","Sanatci · Kismi Ad",1),
+        ("UAT_036","cengiz","Cengiz Kurtoğlu","","Sanatci · Kismi Ad",1),
+        ("UAT_038","neşet","Neşet Ertaş","","Sanatci · Kismi Ad",1),
+        ("UAT_039","melike","Melike Şahin","","Sanatci · Kismi Ad",1),
+        ("UAT_042","orhan","Orhan Gencebay","","Sanatci · Kismi Ad",1),
+        ("UAT_049","soner","Soner Sarıkabadayı","","Sanatci · Kismi Ad",1),
+        ("UAT_050","ati","Ati242","","Sanatci · Kismi Ad",1),
+        ("UAT_053","norm","Norm Ender","","Sanatci · Kismi Ad",1),
+        ("UAT_055","sibel","Sibel Can","","Sanatci · Kismi Ad",1),
+        ("UAT_056","irem","İrem Derici","","Sanatci · Kismi Ad",1),
+        ("UAT_058","musa","Musa Eroğlu","","Sanatci · Kismi Ad",1),
+        ("UAT_062","kurtuluş","Kurtuluş Kuş","","Sanatci · Kismi Ad",1),
+        ("UAT_063","cash","Cash Flow","","Sanatci · Kismi Ad",1),
+        ("UAT_071","reyn","Reynmen","","Sanatci · Kismi Ad",1),
+        ("UAT_072","mahsun","Mahsun Kırmızıgül","","Sanatci · Kismi Ad",1),
+        ("UAT_078","funda","Funda Arar","","Sanatci · Kismi Ad",1),
+        ("UAT_080","sura","Sura İskenderli","","Sanatci · Kismi Ad",1),
+        ("UAT_081","rafet","Rafet El Roman","","Sanatci · Kismi Ad",1),
+        ("UAT_085","haluk","Haluk Levent","","Sanatci · Kismi Ad",1),
+        ("UAT_088","lvbel","Lvbel C5","","Sanatci · Kismi Ad",1),
+        ("UAT_092","zerrin","Zerrin Özer","","Sanatci · Kismi Ad",1),
+        ("UAT_093","selda","Selda Bağcan","","Sanatci · Kismi Ad",1),
+        ("UAT_094","bilal","Bilal Sonses","","Sanatci · Kismi Ad",1),
+        ("UAT_096","gülden","Gülden Karaböcek","","Sanatci · Kismi Ad",1),
+        ("UAT_097","ibrahim tat","İbrahim Tatlıses","","Sanatci · Kismi Ad",1),
+        ("UAT_098","engin","Engin Nurşani","","Sanatci · Kismi Ad",1),
+        ("UAT_099","şebnem","Şebnem Ferah","","Sanatci · Kismi Ad",1),
+        ("UAT_100","ayaz","Ayaz Erdoğan","","Sanatci · Kismi Ad",1),
+        ("UAT_101","ajda","Ajda Pekkan","","Sanatci · Kismi Ad",1),
+        ("UAT_107","aynur","Aynur Aydın","","Sanatci · Kismi Ad",1),
+        ("UAT_109","hayko","Hayko Cepkin","","Sanatci · Kismi Ad",1),
+        ("UAT_113","koray","Koray Avcı","","Sanatci · Kismi Ad",1),
+        ("UAT_114","ümit","Ümit Besen","","Sanatci · Kismi Ad",1),
+        ("UAT_115","elif buse","Elif Buse Doğan","","Sanatci · Kismi Ad",1),
+        ("UAT_123","özcan","Özcan Deniz","","Sanatci · Kismi Ad",1),
+        ("UAT_125","deha","DEHA INC.","","Sanatci · Kismi Ad",1),
+        ("UAT_129","taylor","Taylor Swift","","Sanatci · Kismi Ad",1),
+        ("BULGU_021","tarkn","Tarkan","","Sanatci · Yazim Toleransi",1),
+        ("BULGU_053","kök$l","kök$vl","","Sanatci · Yazim Toleransi",3),
+        ("BULGU_099","çakal","cakal","","Sanatci · Yazim Toleransi",1),
+        ("BULGU_115","pozi","Poizi","","Sanatci · Yazim Toleransi",1),
+        ("BULGU_119","hşdra","Hidra","","Sanatci · Yazim Toleransi",3),
+        ("UAT_003","goksel","Göksel","","Sanatci · Yazim Toleransi",1),
+        ("UAT_014","can ozan","Canozan","","Sanatci · Yazim Toleransi",1),
+        ("UAT_020","ezel","Ezhel","","Sanatci · Yazim Toleransi",1),
+        ("UAT_035","reymen","Reynmen","","Sanatci · Yazim Toleransi",3),
+        ("UAT_047","emircan","Emir Can İğrek","","Sanatci · Yazim Toleransi",1),
+        ("UAT_074","emircan iğrek","Emir Can İğrek","","Sanatci · Yazim Toleransi",3),
+        ("UAT_105","izel","İzel","","Sanatci · Yazim Toleransi",3),
+        ("UAT_118","hejan","Heijan","","Sanatci · Yazim Toleransi",3),
+        ("UAT_127","Semicek","Semicenk","","Sanatci · Yazim Toleransi",1),
+        ("UAT_130","beyonce","Beyoncé","","Sanatci · Yazim Toleransi",3),
+        ("UAT_131","emre gel","Emre Fel","","Sanatci · Yazim Toleransi",3),
+        ("UAT_133","sibelcan","Sibel Can","","Sanatci · Yazim Toleransi",3),
+        ("UAT_135","kofn","KÖFN","","Sanatci · Yazim Toleransi",3),
+        ("UAT_142","sertap","Sertab Erener","","Sanatci · Yazim Toleransi",3),
+        ("UAT_146","mr ve ötei","Mor ve Ötesi","","Sanatci · Yazim Toleransi",3),
+        ("UAT_147","dolu kadhi tut","Dolu Kadehi Ters Tut","","Sanatci · Yazim Toleransi",3),
+        ("BULGU_110","lvc5","Lvbel C5","","Sanatci · Kisaltma / Alias",3),
+        ("BULGU_116","level c5","Lvbel C5","","Sanatci · Kisaltma / Alias",3),
+        ("BULGU_117","levelc5","Lvbel C5","","Sanatci · Kisaltma / Alias",3),
+        ("UAT_002","84","seksendört","","Sanatci · Kisaltma / Alias",1),
+        ("UAT_046","sago","Sagopa Kajmer","","Sanatci · Kisaltma / Alias",1),
+        ("UAT_103","no1","No.1","","Sanatci · Kisaltma / Alias",3),
+        ("UAT_111","halo","Halodayı","","Sanatci · Kisaltma / Alias",3),
+        ("UAT_112","50","50 Cent","","Sanatci · Kisaltma / Alias",3),
+        ("UAT_120","no 1","No.1","","Sanatci · Kisaltma / Alias",3),
+        ("UAT_149","dktt","Dolu Kadehi Ters Tut","","Sanatci · Kisaltma / Alias",3),
+        ("BULGU_087","akustik","","[Playlist] akustik","Playlist",5),
+        ("BULGU_064","pop","","[Playlist] pop","Playlist",5),
+        ("UAT_005","90","","[Playlist] 90","Playlist",5),
+        ("UAT_006","90lar","","[Playlist] 90","Playlist",5),
+        ("UAT_007","90'lar","","[Playlist] 90","Playlist",5),
+        ("UAT_008","90s","","[Playlist] 90","Playlist",5),
+        ("UAT_009","90 lar","","[Playlist] 90","Playlist",5),
+        ("UAT_029","arabesk","","[Playlist] arabesk","Playlist",5),
+        ("UAT_031","ilahi","","[Playlist] ilahi","Playlist",5),
+        ("UAT_037","karadeniz","","[Playlist] karadeniz","Playlist",5),
+        ("UAT_040","halay","","[Playlist] halay","Playlist",5),
+        ("UAT_043","yabancı","","[Playlist] yabancı","Playlist",5),
+        ("UAT_044","roman","","[Playlist] roman","Playlist",5),
+        ("UAT_048","çocuk","","[Playlist] çocuk","Playlist",5),
+        ("UAT_065","oyun hava","","[Playlist] oyun hava","Playlist",5),
+        ("UAT_069","spor","","[Playlist] spor","Playlist",5),
+        ("UAT_073","klasik","","[Playlist] klasik","Playlist",5),
+        ("UAT_079","ankara","","[Playlist] ankara","Playlist",5),
+        ("UAT_083","çocuk şarkıları","","[Playlist] çocuk","Playlist",5),
+        ("UAT_106","türkçe","","[Playlist] türkçe","Playlist",5),
+        ("UAT_108","80","","[Playlist] 80","Playlist",5),
+        ("UAT_116","rock","","[Playlist] rock","Playlist",5),
+        ("UAT_121","dans","","[Playlist] dans","Playlist",5),
+        ("UAT_122","türk sanat","","[Playlist] türk sanat","Playlist",5),
+        ("UAT_134","meditasyon","","[Playlist] meditasyon","Playlist",5),
+        ("UAT_138","90 lar pop","","[Playlist] pop","Playlist",5),
+        ("UAT_140","ramazan","","[Playlist] ramazan","Playlist",5),
+        ("BULGU_125","teybi bozuk bir arabayla","Nilipek","Geçmiyor Zaman","Sarki · Lyrics",3),
+        ("BULGU_126","türk marşı","Ceza","Türk Marşı","Sarki · Tam Esleme",3),
+        ("BULGU_127","masumiyet müzesi","","[Playlist] Masumiyet Müzesi","Playlist",5),
+        ("BULGU_128","there is a light that never goes out","Morrissey","There Is A Light That Never Goes Out","Sarki · Tam Esleme",3),
+        ("BULGU_128_B","there is a light that never goes out (live)","Morrissey","There Is A Light That Never Goes Out","Sarki · Kismi Ad",3),
+        ("CAGKAN_1","ölek mi","","Ölek mi?","Sarki · Lyrics",3),
+        ("CAGKAN_2","ölek mi?","","Ölek mi?","Sarki · Lyrics",3),
+        ("CAGKAN_3","dai","","Dai Dai","Sarki · Lyrics",3),
+        ("CAGKAN_3","dia","","Dai Dai","Sarki · Lyrics",3),
+        ("CAGKAN_4","Murat yeter magusa","","Mağusa Limanı","Sarki · Lyrics",3),
+        ("CAGKAN_5","Sen Anlat Geçen Yüzyıl","","Sen Anlat Geçen Yüzyıl","Sarki · Lyrics",3),
+        ("CAGKAN_6","Sinem Yalçınkaya kenar süsü","","Kenar Süsü","Sarki · Lyrics",3),
+    ]
+    
+    def tr_lower(s):
+        if not s: return ""
+        return s.replace("İ","i").replace("I","ı").lower()
+    
+    def contains_tr(actual, expected):
+        if not expected: return True
+        if not actual:   return False
+        return tr_lower(expected) in tr_lower(actual)
+    
+    def get_artist(d):
+        return d.get("performerName") or d.get("performerNames") or ""
+    
+    def search_api(term, n):
+        body = {"text":term,"filters":None,"fields":None,
+                "suggestion":True,"correction":True,"limit":n,"offset":0}
+        try:
+            r = requests.post(API_URL, json=body, headers=HEADERS, verify=False, timeout=15)
+            d = r.json()
+            return d.get("topHits") or d.get("content") or []
+        except Exception as e:
+            print(f"  API HATA '{term}': {e}")
+            return None
+    
+    def find_artist(items, n, exp):
+        for i,it in enumerate(items[:n]):
+            if contains_tr(get_artist(it.get("data",{})), exp): return i
+        return -1
+    
+    def find_track(items, n, exp_a, exp_t):
+        for i,it in enumerate(items[:n]):
+            d = it.get("data",{})
+            artist = get_artist(d)
+            track  = d.get("songName") or d.get("albumName") or ""
+            if (not exp_a or contains_tr(artist,exp_a)) and \
+               (not exp_t or contains_tr(track,exp_t)):
+                return i
+        return -1
+    
+    def find_playlist(items, n, kw):
+        for i,it in enumerate(items[:n]):
+            d = it.get("data",{})
+            for f in ["albumName","playlistName","songName"]:
+                if contains_tr(d.get(f,""),kw): return i
+            if contains_tr(get_artist(d),kw): return i
+        return -1
+    
+    def evaluate(cid, term, exp_a, exp_t, section, top_n, items):
+        if items is None: return "NOK","API hatasi"
+        if not items:     return "NOK","Sonuc donmedi"
+        if exp_t.startswith("[Playlist] "):
+            kw  = exp_t[len("[Playlist] "):]
+            pos = find_playlist(items, top_n, kw)
+            if pos != -1: return "OK", f"{pos+1}. sirada '{kw}' bulundu"
+            return "NOK", f"Ilk {top_n}'da '{kw}' iceren kayit yok"
+        if exp_a and not exp_t:
+            pos = find_artist(items, top_n, exp_a)
+            if pos != -1:
+                return "OK", f"{pos+1}. sirada '{get_artist(items[pos].get('data',{}))}'"
+            pos2 = find_artist(items, TOP_N, exp_a)
+            where = f"{pos2+1}. sirada" if pos2!=-1 else f"top-{TOP_N}'da bulunamadi"
+            d0 = items[0].get("data",{})
+            return "NOK", f"'{exp_a}' yok ({where}). 1.sira: '{get_artist(d0)}' - '{d0.get('songName') or d0.get('albumName','?')}'"
+        pos = find_track(items, top_n, exp_a, exp_t)
+        if pos != -1:
+            d = items[pos].get("data",{})
+            return "OK", f"{pos+1}. sirada '{d.get('songName') or d.get('albumName','?')}' [{get_artist(d)}]"
+        pos2 = find_track(items, TOP_N, exp_a, exp_t)
+        where = f"{pos2+1}. sirada" if pos2!=-1 else f"top-{TOP_N}'da bulunamadi"
+        d0 = items[0].get("data",{})
+        return "NOK", f"'{exp_t}' yok ({where}). 1.sira: '{d0.get('songName') or d0.get('albumName','?')}' [{get_artist(d0)}]"
+    
+    def write_excel(results):
+        wb = openpyxl.Workbook()
+        ws = wb.active
+        ws.title = "Tüm Testler"
+        ok_fill    = PatternFill("solid", fgColor="C8E6C9")
+        nok_fill   = PatternFill("solid", fgColor="FFCDD2")
+        hdr_fill   = PatternFill("solid", fgColor="1F5C99")
+        total_fill = PatternFill("solid", fgColor="2E75B6")
+        thin = Border(
+            left=Side(style="thin",color="CCCCCC"),
+            right=Side(style="thin",color="CCCCCC"),
+            top=Side(style="thin",color="CCCCCC"),
+            bottom=Side(style="thin",color="CCCCCC"))
+        ok_count = sum(1 for r in results if r[6]=="OK")
+        total    = len(results)
+        pct      = round(ok_count/total*100) if total else 0
+        sec_ok   = Counter(r[4] for r in results if r[6]=="OK")
+        sec_nok  = Counter(r[4] for r in results if r[6]=="NOK")
+        secs     = sorted(set(list(sec_ok)+list(sec_nok)))
+        # --- Ozet baslik ---
+        ws.append(["MUUD TEST SONUÇ ÖZETİ — TÜM TESTLER","","","",""])
+        ws.merge_cells("A1:E1")
+        c = ws.cell(1,1)
+        c.font = Font(bold=True,color="FFFFFF",size=13)
+        c.fill = hdr_fill
+        c.alignment = Alignment(horizontal="center",vertical="center")
+        ws.row_dimensions[1].height = 22
+        # --- Ozet sutun basliklari ---
+        ws.append(["Kategori","Toplam","Başarılı","Hata","Başarı Oranı"])
+        for col in range(1,6):
+            c = ws.cell(2,col)
+            c.font = Font(bold=True,color="FFFFFF",size=11)
+            c.fill = hdr_fill
+            c.alignment = Alignment(horizontal="center",vertical="center")
+            c.border = thin
+        # --- Kategori satirlari ---
+        for s in secs:
+            ok_c  = sec_ok.get(s,0)
+            tot_c = ok_c + sec_nok.get(s,0)
+            p     = round(ok_c/tot_c*100) if tot_c else 0
+            ws.append([s, tot_c, ok_c, tot_c-ok_c, f"%{p}"])
+            f = ok_fill if p>=80 else nok_fill
+            for col in range(1,6):
+                c = ws.cell(ws.max_row,col)
+                c.fill = f
+                c.alignment = Alignment(horizontal="left" if col==1 else "center",vertical="center")
+                c.border = thin
+        # --- Genel toplam ---
+        ws.append(["GENEL TOPLAM", total, ok_count, total-ok_count, f"%{pct}"])
+        sr = ws.max_row
+        for col in range(1,6):
+            c = ws.cell(sr,col)
+            c.font = Font(bold=True,color="FFFFFF",size=11)
+            c.fill = total_fill
+            c.alignment = Alignment(horizontal="left" if col==1 else "center",vertical="center")
+            c.border = thin
+        # --- Bos satir ---
+        ws.append([])
+        # --- Detay baslik ---
+        det_row = ws.max_row + 1
+        ws.append(["No","Case ID","Test Adı","Beklenen Sonuç","Tip","Durum","Detay"])
+        for col in range(1,8):
+            c = ws.cell(ws.max_row,col)
+            c.font = Font(bold=True,color="FFFFFF",size=11)
+            c.fill = hdr_fill
+            c.alignment = Alignment(horizontal="center",vertical="center")
+            c.border = thin
+        # --- Detay satirlari ---
+        for i,row in enumerate(results,1):
+            cid,term,exp_a,exp_t,section,top_n,status,detail = row
+            test_name = f'"{term}" araması yapılır'
+            if exp_t.startswith("[Playlist] "):
+                kw = exp_t[len("[Playlist] "):]
+                exp_result = f"İlk {top_n}'da '{kw}' playlist bulunmalı."
+            elif exp_a and not exp_t:
+                exp_result = f"İlk {top_n}'da '{exp_a}' sanatçısı bulunmalı."
+            else:
+                parts = []
+                if exp_a: parts.append(f"'{exp_a}'")
+                if exp_t: parts.append(f"'{exp_t}'")
+                exp_result = f"Top-{top_n} içinde {' – '.join(parts)} eşleşmesi bulunmalı."
+            ws.append([i, cid, test_name, exp_result, section, status, detail])
+            f = ok_fill if status=="OK" else nok_fill
+            for col in range(1,8):
+                c = ws.cell(ws.max_row,col)
+                c.fill = f
+                c.alignment = Alignment(wrap_text=True,vertical="top")
+                c.border = thin
+        # --- Sutun genislikleri ---
+        for col,w in zip("ABCDEFG",[6,14,28,40,26,9,55]):
+            ws.column_dimensions[col].width = w
+        ws.freeze_panes = "A3"
+        os.makedirs(OUT_DIR, exist_ok=True)
+        fname = f"TestReport_{datetime.datetime.now().strftime('%Y%m%d_%H%M%S')}.xlsx"
+        fpath = os.path.join(OUT_DIR, fname)
+        wb.save(fpath)
+        print(f"Excel kaydedildi: {fpath}")
+        return fpath, ok_count, total, pct
+    
+    def send_email(results, ok_count, total, pct, fpath):
+        sec_ok  = Counter(r[4] for r in results if r[6]=="OK")
+        sec_nok = Counter(r[4] for r in results if r[6]=="NOK")
+        secs    = sorted(set(list(sec_ok)+list(sec_nok)))
+        date_str  = datetime.datetime.now().strftime("%d.%m.%Y %H:%M")
+        icon_main = "BASARILI" if pct>=80 else ("DIKKAT" if pct>=70 else "BASARISIZ")
+        sep = "-" * 52
+        header_line = f"{'Kategori':<32} {'Toplam':>6} {'Basarili':>8} {'Hata':>5} {'Oran':>6}"
+        rows = []
+        for s in secs:
+            ok_c  = sec_ok.get(s,0)
+            tot_c = ok_c + sec_nok.get(s,0)
+            p     = round(ok_c/tot_c*100) if tot_c else 0
+            rows.append(f"{s:<32} {tot_c:>6} {ok_c:>8} {tot_c-ok_c:>5} %{p:>4}")
+        rows.append(sep)
+        rows.append(f"{'GENEL TOPLAM':<32} {total:>6} {ok_count:>8} {total-ok_count:>5} %{pct:>4}")
+        body = f"""MUUD Arama Test Raporu - {date_str}
+
+GENEL SONUC: {icon_main}
+Basarili: {ok_count}/{total} = %{pct}
+
+KATEGORI DETAY:
+{sep}
+{header_line}
+{sep}
+{chr(10).join(rows)}
+
+---
+Excel raporu ektedir: {os.path.basename(fpath)}
+"""
+        msg = MIMEMultipart()
+        msg["From"]    = MAIL_FROM
+        msg["To"]      = MAIL_TO
+        msg["Subject"] = f"MUUD Test Raporu - {date_str} - %{pct}"
+        msg.attach(MIMEText(body, "plain", "utf-8"))
+        with open(fpath, "rb") as f:
+            part = MIMEBase("application","octet-stream")
+            part.set_payload(f.read())
+            encoders.encode_base64(part)
+            part.add_header("Content-Disposition",
+                            f"attachment; filename={os.path.basename(fpath)}")
+            msg.attach(part)
+        try:
+            with smtplib.SMTP(SMTP_HOST, SMTP_PORT, timeout=30) as s:
+                s.ehlo()
+                try:
+                    s.starttls()
+                    s.ehlo()
+                except Exception:
+                    pass
+                try:
+                    if SMTP_PASS:
+                        s.login(SMTP_USER, SMTP_PASS)
+                except Exception as auth_err:
+                    print(f"Auth atildi, relay denenecek: {auth_err}")
+                s.sendmail(MAIL_FROM, MAIL_TO, msg.as_string())
+            print(f"Email gonderildi: {MAIL_TO}")
+        except Exception as e:
+            print(f"Email hatasi: {e}")
+    
+    def main():
+        print(f"MUUD Test basliyor — {len(CASES)} case — {datetime.datetime.now()}")
+        results = []
+        for i,(cid,term,exp_a,exp_t,section,top_n) in enumerate(CASES):
+            items = search_api(term, max(top_n+5, TOP_N))
+            status, detail = evaluate(cid,term,exp_a,exp_t,section,top_n,items)
+            results.append((cid,term,exp_a,exp_t,section,top_n,status,detail))
+            mark = "OK" if status=="OK" else "NOK"
+            if (i+1) % 20 == 0:
+                print(f"  [{i+1}/{len(CASES)}] devam ediyor...")
+        fpath, ok_count, total, pct = write_excel(results)
+        send_email(results, ok_count, total, pct, fpath)
+        print(f"\nTAMAMLANDI: {ok_count}/{total} = %{pct}")
+    
+    if __name__ == "__main__":
+        main()
+    
+---
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: muud-search-test
+  namespace: ddp-fixed-test
+spec:
+  schedule: "0 8 * * 1-5"
+  concurrencyPolicy: Forbid
+  successfulJobsHistoryLimit: 3
+  failedJobsHistoryLimit: 3
+  jobTemplate:
+    spec:
+      backoffLimit: 1
+      template:
+        spec:
+          restartPolicy: Never
+          containers:
+          - name: muud-test
+            image: python:3.11-slim
+            command: ["/bin/sh", "-c"]
+            args:
+            - |
+              pip install requests openpyxl --quiet &&
+              python3 /scripts/run_tests.py
+            env:
+            - name: RESULTS_DIR
+              value: /results
+            - name: SMTP_HOST
+              value: "10.234.204.10"
+            - name: SMTP_PORT
+              value: "587"
+            - name: SMTP_USER
+              value: "mobilodeme@turktelekom.com.tr"
+            - name: SMTP_PASS
+              valueFrom:
+                secretKeyRef:
+                  name: muud-test-secrets
+                  key: smtp-pass
+            - name: MAIL_FROM
+              value: "ddp@turktelekom.com.tr"
+            - name: MAIL_TO
+              valueFrom:
+                secretKeyRef:
+                  name: muud-test-secrets
+                  key: mail-to
+            volumeMounts:
+            - name: script
+              mountPath: /scripts
+            - name: results
+              mountPath: /results
+            resources:
+              requests:
+                memory: "512Mi"
+                cpu: "250m"
+              limits:
+                memory: "1Gi"
+                cpu: "500m"
+          volumes:
+          - name: script
+            configMap:
+              name: muud-test-script
+          - name: results
+            persistentVolumeClaim:
+              claimName: muud-test-results
