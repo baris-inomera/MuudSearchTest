@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>Muud Search Test</title>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"/>
+<style>
+  body { background: #f4f6f9; }
+  .navbar { background: #1a1a2e !important; }
+  .navbar-brand { color: #e94560 !important; font-weight: 700; font-size: 1.3rem; }
+  .card { border: none; border-radius: 12px; box-shadow: 0 2px 12px rgba(0,0,0,0.08); }
+  .section-badge { font-size: 0.7rem; padding: 3px 8px; border-radius: 20px; white-space: nowrap; }
+  .btn-run { background: #e94560; border: none; padding: 10px 30px; font-weight: 600; }
+  .btn-run:hover { background: #c73652; }
+  .status-running { color: #f39c12; }
+  .status-done { color: #27ae60; }
+  .status-error { color: #e74c3c; }
+  #logBox { background: #1a1a2e; color: #a8d8ea; font-size: 0.78rem; height: 220px;
+            overflow-y: auto; border-radius: 8px; padding: 12px; font-family: monospace; }
+  .table th { background: #1a1a2e; color: #fff; font-weight: 500; font-size: 0.85rem; }
+  .table td { font-size: 0.83rem; vertical-align: middle; }
+  .actions-col { white-space: nowrap; }
+  #sectionFilter { max-width: 280px; }
+  .empty-track { color: #aaa; font-style: italic; }
+</style>
+</head>
+<body>
+
+<!-- NAVBAR -->
+<nav class="navbar navbar-dark px-4 py-2 mb-4">
+  <span class="navbar-brand">🎵 Muud Search Test UI</span>
+  <div class="d-flex gap-2 align-items-center">
+    <span id="caseCount" class="text-white-50 small"></span>
+    <button class="btn btn-outline-light btn-sm" onclick="showConfig()">⚙ Ayarlar</button>
+    <button class="btn btn-run text-white btn-sm" onclick="runTests()">▶ Testleri Çalıştır</button>
+  </div>
+</nav>
+
+<div class="container-fluid px-4">
+
+  <!-- CONFIG MODAL -->
+  <div class="modal fade" id="configModal" tabindex="-1">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header"><h5 class="modal-title">⚙ API Ayarları</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button></div>
+        <div class="modal-body">
+          <div class="mb-3">
+            <label class="form-label fw-semibold">Base URL</label>
+            <input type="text" class="form-control" id="cfgBaseUrl" placeholder="https://api.example.com"/>
+          </div>
+          <div class="mb-3">
+            <label class="form-label fw-semibold">Token</label>
+            <input type="text" class="form-control" id="cfgToken" placeholder="Bearer ..."/>
+          </div>
+          <div class="mb-3">
+            <label class="form-label fw-semibold">Search Path</label>
+            <input type="text" class="form-control" id="cfgSearchPath"/>
+          </div>
+          <div class="mb-3">
+            <label class="form-label fw-semibold">Limit</label>
+            <input type="number" class="form-control" id="cfgLimit"/>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button class="btn btn-secondary" data-bs-dismiss="modal">İptal</button>
+          <button class="btn btn-primary" onclick="saveConfig()">Kaydet</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CASE MODAL -->
+  <div class="modal fade" id="caseModal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="caseModalTitle">Case</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          <div class="row g-3">
+            <div class="col-md-4">
+              <label class="form-label fw-semibold">Case ID *</label>
+              <input type="text" class="form-control" id="fcCaseId" placeholder="BULGU_999"/>
+            </div>
+            <div class="col-md-8">
+              <label class="form-label fw-semibold">Arama Terimi *</label>
+              <input type="text" class="form-control" id="fcTerm" placeholder="tarkan şımarık"/>
+            </div>
+            <div class="col-md-6">
+              <label class="form-label fw-semibold">Beklenen Sanatçı</label>
+              <input type="text" class="form-control" id="fcArtist" placeholder="Tarkan"/>
+            </div>
+            <div class="col-md-6">
+              <label class="form-label fw-semibold">Beklenen Şarkı / Playlist</label>
+              <input type="text" class="form-control" id="fcTrack" placeholder="Şımarık veya [Playlist] pop"/>
+            </div>
+            <div class="col-md-8">
+              <label class="form-label fw-semibold">Bölüm *</label>
+              <select class="form-select" id="fcSection">
+                <option>Şarkı · Tam Eşleşme</option>
+                <option>Şarkı · Kısmi Ad</option>
+                <option>Şarkı · Sanatçı + Şarkı</option>
+                <option>Şarkı · Yazım Toleransı</option>
+                <option>Şarkı · Lyrics</option>
+                <option>Sanatçı · Tam Eşleşme</option>
+                <option>Sanatçı · Kısmi Ad</option>
+                <option>Sanatçı · Yazım Toleransı</option>
+                <option>Sanatçı · Kısaltma / Alias</option>
+                <option>Playlist</option>
+              </select>
+            </div>
+            <div class="col-md-4">
+              <label class="form-label fw-semibold">Top-N</label>
+              <input type="number" class="form-control" id="fcTopN" value="3" min="1" max="20"/>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button class="btn btn-secondary" data-bs-dismiss="modal">İptal</button>
+          <button class="btn btn-primary" id="caseModalSave" onclick="saveCase()">Kaydet</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- RUN STATUS PANEL -->
+  <div id="runPanel" class="card mb-4 p-3" style="display:none!important">
+    <div class="d-flex justify-content-between align-items-center mb-2">
+      <div>
+        <span class="fw-semibold">Test Durumu: </span>
+        <span id="runStatus" class="status-running fw-semibold">Çalışıyor...</span>
+      </div>
+      <a id="downloadBtn" class="btn btn-success btn-sm" style="display:none" href="#">
+        ⬇ Raporu İndir
+      </a>
+    </div>
+    <div id="logBox"></div>
+  </div>
+
+  <!-- CASES TABLE -->
+  <div class="card p-3">
+    <div class="d-flex justify-content-between align-items-center mb-3 flex-wrap gap-2">
+      <h6 class="mb-0 fw-bold">Test Case'leri</h6>
+      <div class="d-flex gap-2">
+        <select class="form-select form-select-sm" id="sectionFilter" onchange="renderTable()">
+          <option value="">— Tüm Bölümler —</option>
+          <option>Şarkı · Tam Eşleşme</option>
+          <option>Şarkı · Kısmi Ad</option>
+          <option>Şarkı · Sanatçı + Şarkı</option>
+          <option>Şarkı · Yazım Toleransı</option>
+          <option>Şarkı · Lyrics</option>
+          <option>Sanatçı · Tam Eşleşme</option>
+          <option>Sanatçı · Kısmi Ad</option>
+          <option>Sanatçı · Yazım Toleransı</option>
+          <option>Sanatçı · Kısaltma / Alias</option>
+          <option>Playlist</option>
+        </select>
+        <input type="text" class="form-control form-control-sm" id="searchBox"
+               placeholder="🔍 Ara..." oninput="renderTable()" style="max-width:180px"/>
+        <button class="btn btn-primary btn-sm" onclick="openAddModal()">+ Case Ekle</button>
+      </div>
+    </div>
+    <div class="table-responsive">
+      <table class="table table-hover table-bordered mb-0" id="casesTable">
+        <thead>
+          <tr>
+            <th style="width:110px">Case ID</th>
+            <th>Arama Terimi</th>
+            <th>Beklenen Sanatçı</th>
+            <th>Beklenen Şarkı</th>
+            <th style="width:190px">Bölüm</th>
+            <th style="width:60px">Top-N</th>
+            <th style="width:90px">İşlemler</th>
+          </tr>
+        </thead>
+        <tbody id="tableBody"></tbody>
+      </table>
+    </div>
+  </div>
+
+</div><!-- /container -->
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+let allCases = [];
+let editingCaseId = null;
+let configModal, caseModal;
+let pollInterval = null;
+
+const SECTION_COLORS = {
+  'Şarkı · Tam Eşleşme':       'bg-primary text-white',
+  'Şarkı · Kısmi Ad':          'bg-info text-white',
+  'Şarkı · Sanatçı + Şarkı':   'bg-success text-white',
+  'Şarkı · Yazım Toleransı':   'bg-warning text-dark',
+  'Şarkı · Lyrics':            'bg-secondary text-white',
+  'Sanatçı · Tam Eşleşme':     'bg-danger text-white',
+  'Sanatçı · Kısmi Ad':        'bg-danger bg-opacity-75 text-white',
+  'Sanatçı · Yazım Toleransı': 'bg-orange text-white',
+  'Sanatçı · Kısaltma / Alias':'bg-dark text-white',
+  'Playlist':                   'bg-purple text-white',
+};
+
+document.addEventListener('DOMContentLoaded', () => {
+  configModal = new bootstrap.Modal(document.getElementById('configModal'));
+  caseModal   = new bootstrap.Modal(document.getElementById('caseModal'));
+  loadCases();
+});
+
+async function loadCases() {
+  const res = await fetch('/api/cases');
+  allCases = await res.json();
+  document.getElementById('caseCount').textContent = allCases.length + ' case';
+  renderTable();
+}
+
+function renderTable() {
+  const filter  = document.getElementById('sectionFilter').value;
+  const search  = document.getElementById('searchBox').value.toLowerCase();
+  const tbody   = document.getElementById('tableBody');
+
+  let filtered = allCases.filter(c => {
+    if (filter && c.section !== filter) return false;
+    if (search) {
+      const hay = (c.caseId + c.term + c.expArtist + c.expTrack).toLowerCase();
+      if (!hay.includes(search)) return false;
+    }
+    return true;
+  });
+
+  tbody.innerHTML = filtered.map(c => {
+    const color = SECTION_COLORS[c.section] || 'bg-secondary text-white';
+    const track = c.expTrack || `<span class="empty-track">—</span>`;
+    const artist= c.expArtist || `<span class="empty-track">—</span>`;
+    return `<tr>
+      <td><code>${esc(c.caseId)}</code></td>
+      <td><strong>${esc(c.term)}</strong></td>
+      <td>${artist}</td>
+      <td>${track}</td>
+      <td><span class="section-badge ${color}">${esc(c.section)}</span></td>
+      <td class="text-center">${c.topN}</td>
+      <td class="actions-col">
+        <button class="btn btn-outline-primary btn-sm py-0 px-1" onclick='openEditModal(${JSON.stringify(c)})'>✏</button>
+        <button class="btn btn-outline-danger btn-sm py-0 px-1 ms-1" onclick="deleteCase('${esc(c.caseId)}')">🗑</button>
+      </td>
+    </tr>`;
+  }).join('');
+}
+
+function esc(s) {
+  return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+function openAddModal() {
+  editingCaseId = null;
+  document.getElementById('caseModalTitle').textContent = '+ Yeni Case Ekle';
+  document.getElementById('caseModalSave').textContent  = 'Ekle';
+  document.getElementById('fcCaseId').value   = '';
+  document.getElementById('fcTerm').value     = '';
+  document.getElementById('fcArtist').value   = '';
+  document.getElementById('fcTrack').value    = '';
+  document.getElementById('fcSection').value  = 'Şarkı · Tam Eşleşme';
+  document.getElementById('fcTopN').value     = '3';
+  document.getElementById('fcCaseId').readOnly = false;
+  caseModal.show();
+}
+
+function openEditModal(c) {
+  editingCaseId = c.caseId;
+  document.getElementById('caseModalTitle').textContent = '✏ Case Düzenle: ' + c.caseId;
+  document.getElementById('caseModalSave').textContent  = 'Güncelle';
+  document.getElementById('fcCaseId').value   = c.caseId;
+  document.getElementById('fcTerm').value     = c.term;
+  document.getElementById('fcArtist').value   = c.expArtist || '';
+  document.getElementById('fcTrack').value    = c.expTrack  || '';
+  document.getElementById('fcSection').value  = c.section;
+  document.getElementById('fcTopN').value     = c.topN;
+  document.getElementById('fcCaseId').readOnly = true;
+  caseModal.show();
+}
+
+async function saveCase() {
+  const c = {
+    caseId:    document.getElementById('fcCaseId').value.trim(),
+    term:      document.getElementById('fcTerm').value.trim(),
+    expArtist: document.getElementById('fcArtist').value.trim(),
+    expTrack:  document.getElementById('fcTrack').value.trim(),
+    section:   document.getElementById('fcSection').value,
+    topN:      parseInt(document.getElementById('fcTopN').value) || 3
+  };
+  if (!c.caseId || !c.term) { alert('Case ID ve Arama Terimi zorunlu!'); return; }
+
+  const url    = editingCaseId ? `/api/cases/${encodeURIComponent(editingCaseId)}` : '/api/cases';
+  const method = editingCaseId ? 'PUT' : 'POST';
+  await fetch(url, { method, headers: {'Content-Type':'application/json'}, body: JSON.stringify(c) });
+  caseModal.hide();
+  loadCases();
+}
+
+async function deleteCase(caseId) {
+  if (!confirm('Bu case silinsin mi? ' + caseId)) return;
+  await fetch(`/api/cases/${encodeURIComponent(caseId)}`, { method: 'DELETE' });
+  loadCases();
+}
+
+async function showConfig() {
+  const res = await fetch('/api/config');
+  const cfg = await res.json();
+  document.getElementById('cfgBaseUrl').value    = cfg.baseUrl    || '';
+  document.getElementById('cfgToken').value      = cfg.token      || '';
+  document.getElementById('cfgSearchPath').value = cfg.searchPath || '/search';
+  document.getElementById('cfgLimit').value      = cfg.limit      || 20;
+  configModal.show();
+}
+
+async function saveConfig() {
+  const cfg = {
+    baseUrl:    document.getElementById('cfgBaseUrl').value.trim(),
+    token:      document.getElementById('cfgToken').value.trim(),
+    searchPath: document.getElementById('cfgSearchPath').value.trim(),
+    limit:      parseInt(document.getElementById('cfgLimit').value) || 20
+  };
+  await fetch('/api/config', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify(cfg) });
+  configModal.hide();
+  alert('Ayarlar kaydedildi!');
+}
+
+async function runTests() {
+  if (!confirm('Testler başlatılsın mı? (' + allCases.length + ' case)')) return;
+
+  document.getElementById('runPanel').style.display = '';
+  document.getElementById('runStatus').textContent = 'Çalışıyor...';
+  document.getElementById('runStatus').className   = 'status-running fw-semibold';
+  document.getElementById('downloadBtn').style.display = 'none';
+  document.getElementById('logBox').textContent = '';
+
+  const res   = await fetch('/api/run', { method:'POST' });
+  const { jobId } = await res.json();
+
+  if (pollInterval) clearInterval(pollInterval);
+  pollInterval = setInterval(() => pollJob(jobId), 1500);
+}
+
+async function pollJob(jobId) {
+  const res  = await fetch(`/api/jobs/${jobId}`);
+  const job  = await res.json();
+
+  const logBox = document.getElementById('logBox');
+  logBox.textContent = job.output;
+  logBox.scrollTop   = logBox.scrollHeight;
+
+  if (job.status !== 'RUNNING') {
+    clearInterval(pollInterval);
+    const statusEl = document.getElementById('runStatus');
+    if (job.status === 'DONE') {
+      statusEl.textContent = '✅ Tamamlandı';
+      statusEl.className   = 'status-done fw-semibold';
+    } else {
+      statusEl.textContent = '⚠ Hata / Uyarı ile tamamlandı';
+      statusEl.className   = 'status-error fw-semibold';
+    }
+    if (job.hasReport) {
+      const btn = document.getElementById('downloadBtn');
+      btn.href  = `/api/jobs/${jobId}/report`;
+      btn.textContent = '⬇ ' + job.reportName + ' indir';
+      btn.style.display = '';
+    }
+  }
+}
+</script>
+</body>
+</html>

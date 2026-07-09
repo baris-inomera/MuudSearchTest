@@ -16,6 +16,13 @@
 
     <dependencies>
 
+        <!-- SPRING BOOT WEB (web UI) -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
+            <version>3.2.5</version>
+        </dependency>
+
         <!-- REST ASSURED -->
         <dependency>
             <groupId>io.rest-assured</groupId>
@@ -29,7 +36,6 @@
             <artifactId>poi-ooxml</artifactId>
             <version>5.2.5</version>
         </dependency>
-
 
         <!-- JUNIT 5 -->
         <dependency>
@@ -46,6 +52,14 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
                 <version>3.2.5</version>
+            </plugin>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+                <version>3.2.5</version>
+                <configuration>
+                    <mainClass>web.WebApp</mainClass>
+                </configuration>
             </plugin>
         </plugins>
     </build>

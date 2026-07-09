@@ -1,0 +1,2098 @@
+[
+  {
+    "caseId": "BULGU_002",
+    "term": "a canım",
+    "expArtist": "Mabel Matiz",
+    "expTrack": "A Canım",
+    "section": "Şarkı · Tam Eşleşme",
+    "topN": 3
+  },
+  {
+    "caseId": "BULGU_004",
+    "term": "olmazlara vuruluyorum",
+    "expArtist": "Mert Demir",
+    "expTrack": "Olmazlara Vuruluyorum",
+    "section": "Şarkı · Tam Eşleşme",
+    "topN": 3
+  },
+  {
+    "caseId": "BULGU_005",
+    "term": "çıkmaz bir sokakta",
+    "expArtist": "",
+    "expTrack": "Çıkmaz Bir Sokakta",
+    "section": "Şarkı · Tam Eşleşme",
+    "topN": 3
+  },
+  {
+    "caseId": "BULGU_007",
+    "term": "kusura bakma",
+    "expArtist": "Blok3",
+    "expTrack": "Kusura Bakma",
+    "section": "Şarkı · Tam Eşleşme",
+    "topN": 3
+  },
+  {
+    "caseId": "BULGU_010",
+    "term": "maraton",
+    "expArtist": "Ati242",
+    "expTrack": "Maraton",
+    "section": "Şarkı · Tam Eşleşme",
+    "topN": 3
+  },
+  {
+    "caseId": "BULGU_011",
+    "term": "geri ver",
+    "expArtist": "Wegh",
+    "expTrack": "Geri Ver",
+    "section": "Şarkı · Tam Eşleşme",
+    "topN": 1
+  },
+  {
+    "caseId": "BULGU_012",
+    "term": "saygımdan",
+    "expArtist": "Bengü",
+    "expTrack": "Saygımdan",
+    "section": "Şarkı · Tam Eşleşme",
+    "topN": 1
+  },
+  {
+    "caseId": "BULGU_013",
+    "term": "meğerse",
+    "expArtist": "Linet",
+    "expTrack": "Meğerse",
+    "section": "Şarkı · Tam Eşleşme",
+    "topN": 3
+  },
+  {
+    "caseId": "BULGU_015",
+    "term": "dacia",
+    "expArtist": "Lvbel C5",
+    "expTrack": "DACIA",
+    "section": "Şarkı · Tam Eşleşme",
+    "topN": 3
+  },
+  {
+    "caseId": "BULGU_020",
+    "term": "yalnızlığın çaresini bulmuşlar",
+    "expArtist": "",
+    "expTrack": "Yalnızlığın Çaresini Bulmuşlar",
+    "section": "Şarkı · Tam Eşleşme",
+    "topN": 3
+  },
+  {
+    "caseId": "BULGU_023",
+    "term": "yapar mısın",
+    "expArtist": "Poizi",
+    "expTrack": "YAPAR MISIN?",
+    "section": "Şarkı · Tam Eşleşme",
+    "topN": 1
+  },
+  {
+    "caseId": "BULGU_025",
+    "term": "yerinde dur",
+    "expArtist": "Sefo",
+    "expTrack": "Yerinde Dur",
+    "section": "Şarkı · Tam Eşleşme",
+    "topN": 1
+  },
+  {
+    "caseId": "BULGU_028",
+    "term": "ey aşk",
+    "expArtist": "Sezen Aksu",
+    "expTrack": "Ey Aşk",
+    "section": "Şarkı · Tam Eşleşme",
+    "topN": 1
+  },
+  {
+    "caseId": "BULGU_030",
+    "term": "şımarık",
+    "expArtist": "Tarkan",
+    "expTrack": "Şımarık",
+    "section": "Şarkı · Tam Eşleşme",
+    "topN": 1
+  },
+  {
+    "caseId": "BULGU_031",
+    "term": "giderim kırağınan",
+    "expArtist": "Onur Şan",
+    "expTrack": "Giderim Kırağınan",
+    "section": "Şarkı · Tam Eşleşme",
+    "topN": 3
+  },
+  {
+    "caseId": "BULGU_033",
+    "term": "ara beni lütfen",
+    "expArtist": "Kenan Doğulu",
+    "expTrack": "Ara Beni Lütfen",
+    "section": "Şarkı · Tam Eşleşme",
+    "topN": 1
+  },
+  {
+    "caseId": "BULGU_035",
+    "term": "aşk yok olmaktır",
+    "expArtist": "",
+    "expTrack": "Aşk Yok Olmaktır",
+    "section": "Şarkı · Tam Eşleşme",
+    "topN": 1
+  },
+  {
+    "caseId": "BULGU_036",
+    "term": "can efendim",
+    "expArtist": "",
+    "expTrack": "Can Efendim",
+    "section": "Şarkı · Tam Eşleşme",
+    "topN": 3
+  },
+  {
+    "caseId": "BULGU_038",
+    "term": "çıt çıt çedene",
+    "expArtist": "Barış Manço",
+    "expTrack": "Çıt Çıt Çedene",
+    "section": "Şarkı · Tam Eşleşme",
+    "topN": 3
+  },
+  {
+    "caseId": "BULGU_039",
+    "term": "çıkar biri karşıma",
+    "expArtist": "Poizi",
+    "expTrack": "Çıkar Biri Karşıma",
+    "section": "Şarkı · Tam Eşleşme",
+    "topN": 3
+  },
+  {
+    "caseId": "BULGU_042",
+    "term": "sen yanlış yaptın",
+    "expArtist": "Şahin Kendirci",
+    "expTrack": "Sen Yanlış Yaptın",
+    "section": "Şarkı · Tam Eşleşme",
+    "topN": 3
+  },
+  {
+    "caseId": "BULGU_043",
+    "term": "vay dayı",
+    "expArtist": "Aynur Polat",
+    "expTrack": "Vay Dayı",
+    "section": "Şarkı · Tam Eşleşme",
+    "topN": 3
+  },
+  {
+    "caseId": "BULGU_044",
+    "term": "silinmez",
+    "expArtist": "Mansur Ark",
+    "expTrack": "Silinmez",
+    "section": "Şarkı · Tam Eşleşme",
+    "topN": 1
+  },
+  {
+    "caseId": "BULGU_045",
+    "term": "halbuki",
+    "expArtist": "Yalın",
+    "expTrack": "Halbuki",
+    "section": "Şarkı · Tam Eşleşme",
+    "topN": 3
+  },
+  {
+    "caseId": "BULGU_047",
+    "term": "duydun mu",
+    "expArtist": "Yusuf Güney",
+    "expTrack": "Duydun Mu?",
+    "section": "Şarkı · Tam Eşleşme",
+    "topN": 1
+  },
+  {
+    "caseId": "BULGU_048",
+    "term": "sana güvenmiyorum",
+    "expArtist": "Dedublüman",
+    "expTrack": "Sana Güvenmiyorum",
+    "section": "Şarkı · Tam Eşleşme",
+    "topN": 1
+  },
+  {
+    "caseId": "BULGU_049",
+    "term": "yasemen",
+    "expArtist": "Afra",
+    "expTrack": "Yasemen",
+    "section": "Şarkı · Tam Eşleşme",
+    "topN": 1
+  },
+  {
+    "caseId": "BULGU_050",
+    "term": "düşer o",
+    "expArtist": "İzel",
+    "expTrack": "Düşer O",
+    "section": "Şarkı · Tam Eşleşme",
+    "topN": 3
+  },
+  {
+    "caseId": "BULGU_051",
+    "term": "kömür",
+    "expArtist": "Mabel Matiz",
+    "expTrack": "Kömür",
+    "section": "Şarkı · Tam Eşleşme",
+    "topN": 1
+  },
+  {
+    "caseId": "BULGU_054",
+    "term": "just the way you are",
+    "expArtist": "",
+    "expTrack": "Just The Way You Are",
+    "section": "Şarkı · Tam Eşleşme",
+    "topN": 3
+  },
+  {
+    "caseId": "BULGU_056",
+    "term": "snap",
+    "expArtist": "Manifest",
+    "expTrack": "Snap",
+    "section": "Şarkı · Tam Eşleşme",
+    "topN": 3
+  },
+  {
+    "caseId": "BULGU_059",
+    "term": "ama başaramadım",
+    "expArtist": "Burak Bulut",
+    "expTrack": "Ama Başaramadım",
+    "section": "Şarkı · Tam Eşleşme",
+    "topN": 1
+  },
+  {
+    "caseId": "BULGU_061",
+    "term": "adına bir çizik çektim",
+    "expArtist": "",
+    "expTrack": "Adına Bir Çizik Çektim",
+    "section": "Şarkı · Tam Eşleşme",
+    "topN": 1
+  },
+  {
+    "caseId": "BULGU_062",
+    "term": "yaramızda kalsın",
+    "expArtist": "Merve Özbey",
+    "expTrack": "Yaramızda Kalsın",
+    "section": "Şarkı · Tam Eşleşme",
+    "topN": 1
+  },
+  {
+    "caseId": "BULGU_063",
+    "term": "sev yeter",
+    "expArtist": "",
+    "expTrack": "Sev Yeter",
+    "section": "Şarkı · Tam Eşleşme",
+    "topN": 3
+  },
+  {
+    "caseId": "BULGU_065",
+    "term": "kaybolurum gülüşünde",
+    "expArtist": "İkilem",
+    "expTrack": "Kaybolurum Gülüşünde",
+    "section": "Şarkı · Tam Eşleşme",
+    "topN": 1
+  },
+  {
+    "caseId": "BULGU_071",
+    "term": "ağlama ben ağlarım",
+    "expArtist": "Canozan",
+    "expTrack": "Ağlama Ben Ağlarım",
+    "section": "Şarkı · Tam Eşleşme",
+    "topN": 1
+  },
+  {
+    "caseId": "BULGU_080",
+    "term": "şikayetim var",
+    "expArtist": "",
+    "expTrack": "Şikayetim Var",
+    "section": "Şarkı · Tam Eşleşme",
+    "topN": 3
+  },
+  {
+    "caseId": "BULGU_081",
+    "term": "bunca yıl",
+    "expArtist": "Dedublüman",
+    "expTrack": "Bunca Yıl",
+    "section": "Şarkı · Tam Eşleşme",
+    "topN": 3
+  },
+  {
+    "caseId": "BULGU_082",
+    "term": "düldül",
+    "expArtist": "Mabel Matiz",
+    "expTrack": "Düldül",
+    "section": "Şarkı · Tam Eşleşme",
+    "topN": 3
+  },
+  {
+    "caseId": "BULGU_086",
+    "term": "perde",
+    "expArtist": "Poizi",
+    "expTrack": "Perde",
+    "section": "Şarkı · Tam Eşleşme",
+    "topN": 1
+  },
+  {
+    "caseId": "BULGU_089",
+    "term": "phonk",
+    "expArtist": "DEHA INC.",
+    "expTrack": "Phonk",
+    "section": "Şarkı · Tam Eşleşme",
+    "topN": 3
+  },
+  {
+    "caseId": "BULGU_092",
+    "term": "sonbahar",
+    "expArtist": "Era7Capone",
+    "expTrack": "SONBAHAR",
+    "section": "Şarkı · Tam Eşleşme",
+    "topN": 3
+  },
+  {
+    "caseId": "BULGU_093",
+    "term": "acem kızı",
+    "expArtist": "",
+    "expTrack": "Acem Kızı",
+    "section": "Şarkı · Tam Eşleşme",
+    "topN": 3
+  },
+  {
+    "caseId": "BULGU_094",
+    "term": "hacel obası",
+    "expArtist": "",
+    "expTrack": "Hacel Obası",
+    "section": "Şarkı · Tam Eşleşme",
+    "topN": 3
+  },
+  {
+    "caseId": "BULGU_095",
+    "term": "yalan",
+    "expArtist": "",
+    "expTrack": "Yalan",
+    "section": "Şarkı · Tam Eşleşme",
+    "topN": 1
+  },
+  {
+    "caseId": "BULGU_096",
+    "term": "bana sor",
+    "expArtist": "Ferdi Tayfur",
+    "expTrack": "Bana Sor",
+    "section": "Şarkı · Tam Eşleşme",
+    "topN": 3
+  },
+  {
+    "caseId": "BULGU_098",
+    "term": "rüya",
+    "expArtist": "Manifest",
+    "expTrack": "Rüya",
+    "section": "Şarkı · Tam Eşleşme",
+    "topN": 3
+  },
+  {
+    "caseId": "BULGU_100",
+    "term": "ara",
+    "expArtist": "Zeynep Bastık",
+    "expTrack": "Ara",
+    "section": "Şarkı · Tam Eşleşme",
+    "topN": 1
+  },
+  {
+    "caseId": "BULGU_101",
+    "term": "14 bahar",
+    "expArtist": "Mert Demir",
+    "expTrack": "14 Bahar",
+    "section": "Şarkı · Tam Eşleşme",
+    "topN": 3
+  },
+  {
+    "caseId": "BULGU_103",
+    "term": "ela mana",
+    "expArtist": "",
+    "expTrack": "Ela Mana",
+    "section": "Şarkı · Tam Eşleşme",
+    "topN": 1
+  },
+  {
+    "caseId": "BULGU_104",
+    "term": "yekten",
+    "expArtist": "Demet Akalın",
+    "expTrack": "Yekten",
+    "section": "Şarkı · Tam Eşleşme",
+    "topN": 3
+  },
+  {
+    "caseId": "BULGU_105",
+    "term": "erik dalı",
+    "expArtist": "",
+    "expTrack": "Erik Dalı",
+    "section": "Şarkı · Tam Eşleşme",
+    "topN": 3
+  },
+  {
+    "caseId": "BULGU_106",
+    "term": "elfida",
+    "expArtist": "Haluk Levent",
+    "expTrack": "Elfida",
+    "section": "Şarkı · Tam Eşleşme",
+    "topN": 1
+  },
+  {
+    "caseId": "BULGU_107",
+    "term": "yazan kalem siyah",
+    "expArtist": "",
+    "expTrack": "Yazan Kalem Siyah",
+    "section": "Şarkı · Tam Eşleşme",
+    "topN": 3
+  },
+  {
+    "caseId": "BULGU_108",
+    "term": "Mihriban",
+    "expArtist": "",
+    "expTrack": "Mihriban",
+    "section": "Şarkı · Tam Eşleşme",
+    "topN": 3
+  },
+  {
+    "caseId": "BULGU_111",
+    "term": "merdo",
+    "expArtist": "",
+    "expTrack": "Merdo",
+    "section": "Şarkı · Tam Eşleşme",
+    "topN": 3
+  },
+  {
+    "caseId": "BULGU_113",
+    "term": "sigara",
+    "expArtist": "",
+    "expTrack": "Sigara",
+    "section": "Şarkı · Tam Eşleşme",
+    "topN": 3
+  },
+  {
+    "caseId": "BULGU_119_C",
+    "term": "farzet",
+    "expArtist": "İlyas Yalçıntaş",
+    "expTrack": "Farzet",
+    "section": "Şarkı · Tam Eşleşme",
+    "topN": 3
+  },
+  {
+    "caseId": "BULGU_121",
+    "term": "misket",
+    "expArtist": "",
+    "expTrack": "Misket",
+    "section": "Şarkı · Tam Eşleşme",
+    "topN": 1
+  },
+  {
+    "caseId": "BULGU_122",
+    "term": "kara sevda",
+    "expArtist": "",
+    "expTrack": "Kara Sevda",
+    "section": "Şarkı · Tam Eşleşme",
+    "topN": 3
+  },
+  {
+    "caseId": "BULGU_123",
+    "term": "parla",
+    "expArtist": "",
+    "expTrack": "Parla",
+    "section": "Şarkı · Tam Eşleşme",
+    "topN": 3
+  },
+  {
+    "caseId": "BULGU_124",
+    "term": "kırmızı balık",
+    "expArtist": "",
+    "expTrack": "Kırmızı Balık",
+    "section": "Şarkı · Tam Eşleşme",
+    "topN": 3
+  },
+  {
+    "caseId": "UAT_011",
+    "term": "nasır",
+    "expArtist": "Melike Şahin",
+    "expTrack": "Nasır",
+    "section": "Şarkı · Tam Eşleşme",
+    "topN": 1
+  },
+  {
+    "caseId": "UAT_019",
+    "term": "bodrum",
+    "expArtist": "Yüzyüzeyken Konuşuruz",
+    "expTrack": "Bodrum",
+    "section": "Şarkı · Tam Eşleşme",
+    "topN": 1
+  },
+  {
+    "caseId": "UAT_126",
+    "term": "gözlerime bak",
+    "expArtist": "Mert Demir",
+    "expTrack": "Gözlerime Bak",
+    "section": "Şarkı · Tam Eşleşme",
+    "topN": 3
+  },
+  {
+    "caseId": "BULGU_001",
+    "term": "Hermes",
+    "expArtist": "Batuflex",
+    "expTrack": "Hermès",
+    "section": "Şarkı · Kısmi Ad",
+    "topN": 1
+  },
+  {
+    "caseId": "BULGU_019",
+    "term": "yalnızlığın çaresini",
+    "expArtist": "gripin",
+    "expTrack": "Yalnızlığın Çaresini Bulmuşlar",
+    "section": "Şarkı · Kısmi Ad",
+    "topN": 3
+  },
+  {
+    "caseId": "BULGU_024",
+    "term": "yerinde",
+    "expArtist": "Sefo",
+    "expTrack": "Yerinde Dur",
+    "section": "Şarkı · Kısmi Ad",
+    "topN": 1
+  },
+  {
+    "caseId": "BULGU_034",
+    "term": "vidrado em",
+    "expArtist": "Dj Guuga",
+    "expTrack": "Vidrado Em Você",
+    "section": "Şarkı · Kısmi Ad",
+    "topN": 3
+  },
+  {
+    "caseId": "BULGU_037",
+    "term": "çıt çıt",
+    "expArtist": "Barış Manço",
+    "expTrack": "Çıt Çıt Çedene",
+    "section": "Şarkı · Kısmi Ad",
+    "topN": 3
+  },
+  {
+    "caseId": "BULGU_072",
+    "term": "ağlama ben",
+    "expArtist": "Canozan",
+    "expTrack": "Ağlama Ben Ağlarım",
+    "section": "Şarkı · Kısmi Ad",
+    "topN": 1
+  },
+  {
+    "caseId": "BULGU_074",
+    "term": "erik",
+    "expArtist": "",
+    "expTrack": "Erik Dalı",
+    "section": "Şarkı · Kısmi Ad",
+    "topN": 1
+  },
+  {
+    "caseId": "BULGU_078",
+    "term": "doğuştan",
+    "expArtist": "Lvbel C5",
+    "expTrack": "Doğuştan Beri Haklıyım",
+    "section": "Şarkı · Kısmi Ad",
+    "topN": 3
+  },
+  {
+    "caseId": "BULGU_114",
+    "term": "dandini",
+    "expArtist": "Ninni Bebek",
+    "expTrack": "Dandini Dandini Dastana",
+    "section": "Şarkı · Kısmi Ad",
+    "topN": 3
+  },
+  {
+    "caseId": "UAT_017",
+    "term": "sus",
+    "expArtist": "Ceza",
+    "expTrack": "Suspus",
+    "section": "Şarkı · Kısmi Ad",
+    "topN": 1
+  },
+  {
+    "caseId": "UAT_018",
+    "term": "pus",
+    "expArtist": "Ceza",
+    "expTrack": "Suspus",
+    "section": "Şarkı · Kısmi Ad",
+    "topN": 5
+  },
+  {
+    "caseId": "UAT_141",
+    "term": "kalbimin sahibine",
+    "expArtist": "İrem Derici",
+    "expTrack": "Kalbimin Tek Sahibine",
+    "section": "Şarkı · Kısmi Ad",
+    "topN": 3
+  },
+  {
+    "caseId": "BULGU_041",
+    "term": "messy lola young",
+    "expArtist": "Lola Young",
+    "expTrack": "Messy",
+    "section": "Şarkı · Sanatçı + Şarkı",
+    "topN": 3
+  },
+  {
+    "caseId": "BULGU_052",
+    "term": "mabel kömür",
+    "expArtist": "Mabel Matiz",
+    "expTrack": "Kömür",
+    "section": "Şarkı · Sanatçı + Şarkı",
+    "topN": 1
+  },
+  {
+    "caseId": "BULGU_058",
+    "term": "y poizi",
+    "expArtist": "Poizi",
+    "expTrack": "Y",
+    "section": "Şarkı · Sanatçı + Şarkı",
+    "topN": 3
+  },
+  {
+    "caseId": "BULGU_060",
+    "term": "kts manifest",
+    "expArtist": "Manifest",
+    "expTrack": "KTS",
+    "section": "Şarkı · Sanatçı + Şarkı",
+    "topN": 1
+  },
+  {
+    "caseId": "BULGU_070",
+    "term": "Dua Lipa Shine",
+    "expArtist": "Cédric",
+    "expTrack": "Shine",
+    "section": "Şarkı · Sanatçı + Şarkı",
+    "topN": 3
+  },
+  {
+    "caseId": "BULGU_097",
+    "term": "rüya manifest",
+    "expArtist": "Manifest",
+    "expTrack": "Rüya",
+    "section": "Şarkı · Sanatçı + Şarkı",
+    "topN": 1
+  },
+  {
+    "caseId": "BULGU_003",
+    "term": "acanım",
+    "expArtist": "Mabel Matiz",
+    "expTrack": "A Canım",
+    "section": "Şarkı · Yazım Toleransı",
+    "topN": 3
+  },
+  {
+    "caseId": "BULGU_014",
+    "term": "çok pardon",
+    "expArtist": "Lvbel C5",
+    "expTrack": "COOOK PARDON",
+    "section": "Şarkı · Yazım Toleransı",
+    "topN": 3
+  },
+  {
+    "caseId": "BULGU_029",
+    "term": "simarik",
+    "expArtist": "Tarkan",
+    "expTrack": "Şımarık",
+    "section": "Şarkı · Yazım Toleransı",
+    "topN": 1
+  },
+  {
+    "caseId": "BULGU_032",
+    "term": "dame un grr",
+    "expArtist": "Fantomel",
+    "expTrack": "Dame Un Grrr",
+    "section": "Şarkı · Yazım Toleransı",
+    "topN": 3
+  },
+  {
+    "caseId": "BULGU_040",
+    "term": "hav hav",
+    "expArtist": "Lvbel C5",
+    "expTrack": "Havhavhav",
+    "section": "Şarkı · Yazım Toleransı",
+    "topN": 3
+  },
+  {
+    "caseId": "BULGU_077",
+    "term": "karakedi",
+    "expArtist": "Melis Fis",
+    "expTrack": "Kara Kedi",
+    "section": "Şarkı · Yazım Toleransı",
+    "topN": 3
+  },
+  {
+    "caseId": "UAT_054",
+    "term": "illede sen",
+    "expArtist": "Azer Bülbül",
+    "expTrack": "İlle De Sen",
+    "section": "Şarkı · Yazım Toleransı",
+    "topN": 1
+  },
+  {
+    "caseId": "UAT_068",
+    "term": "arabam",
+    "expArtist": "Sefo",
+    "expTrack": "Araba",
+    "section": "Şarkı · Yazım Toleransı",
+    "topN": 3
+  },
+  {
+    "caseId": "UAT_145",
+    "term": "lacivert eceler",
+    "expArtist": "Ferhat Göçer",
+    "expTrack": "Lacivert Geceler",
+    "section": "Şarkı · Yazım Toleransı",
+    "topN": 3
+  },
+  {
+    "caseId": "UAT_148",
+    "term": "güldün ne güzel",
+    "expArtist": "Pinhani",
+    "expTrack": "Ne Güzel Güldün",
+    "section": "Şarkı · Yazım Toleransı",
+    "topN": 3
+  },
+  {
+    "caseId": "BULGU_067",
+    "term": "çölüme yağmur oldun",
+    "expArtist": "Müslüm Gürses",
+    "expTrack": "Affet",
+    "section": "Şarkı · Lyrics",
+    "topN": 3
+  },
+  {
+    "caseId": "BULGU_075",
+    "term": "hadi ya",
+    "expArtist": "Melis Kar",
+    "expTrack": "Yatıya",
+    "section": "Şarkı · Lyrics",
+    "topN": 3
+  },
+  {
+    "caseId": "BULGU_076",
+    "term": "babalar",
+    "expArtist": "Blok3",
+    "expTrack": "PATLAT",
+    "section": "Şarkı · Lyrics",
+    "topN": 1
+  },
+  {
+    "caseId": "BULGU_083",
+    "term": "çetin ceviz şerbetli mayam",
+    "expArtist": "Melike Şahin",
+    "expTrack": "Canın Beni Çekti",
+    "section": "Şarkı · Lyrics",
+    "topN": 3
+  },
+  {
+    "caseId": "BULGU_084",
+    "term": "bir motive",
+    "expArtist": "Motive",
+    "expTrack": "bir",
+    "section": "Şarkı · Lyrics",
+    "topN": 3
+  },
+  {
+    "caseId": "UAT_015",
+    "term": "yandım ah",
+    "expArtist": "Sakiler",
+    "expTrack": "Yalanı Bırak",
+    "section": "Şarkı · Lyrics",
+    "topN": 1
+  },
+  {
+    "caseId": "UAT_022",
+    "term": "bak ben yara gibiyim",
+    "expArtist": "Emir Can İğrek",
+    "expTrack": "Nalan",
+    "section": "Şarkı · Lyrics",
+    "topN": 1
+  },
+  {
+    "caseId": "UAT_024",
+    "term": "zaten aşklar hep yalan dolan",
+    "expArtist": "Yıldız Tilbe",
+    "expTrack": "Sana Değer",
+    "section": "Şarkı · Lyrics",
+    "topN": 1
+  },
+  {
+    "caseId": "UAT_034",
+    "term": "sana hastayım anlasana",
+    "expArtist": "Derya Uluğ",
+    "expTrack": "Yansıma",
+    "section": "Şarkı · Lyrics",
+    "topN": 1
+  },
+  {
+    "caseId": "UAT_128",
+    "term": "sarışınlar",
+    "expArtist": "Derya Uluğ",
+    "expTrack": "Esmerin Adı Oya",
+    "section": "Şarkı · Lyrics",
+    "topN": 3
+  },
+  {
+    "caseId": "UAT_136",
+    "term": "silemez o beni",
+    "expArtist": "Yıldız Tilbe",
+    "expTrack": "Dizine Dursun",
+    "section": "Şarkı · Lyrics",
+    "topN": 1
+  },
+  {
+    "caseId": "UAT_137",
+    "term": "babalar sözünü tutar",
+    "expArtist": "Blok3",
+    "expTrack": "PATLAT",
+    "section": "Şarkı · Lyrics",
+    "topN": 3
+  },
+  {
+    "caseId": "UAT_143",
+    "term": "çok geç şmdi",
+    "expArtist": "Edis",
+    "expTrack": "Yalan",
+    "section": "Şarkı · Lyrics",
+    "topN": 3
+  },
+  {
+    "caseId": "UAT_144",
+    "term": "affet bu gece istedim ölmek",
+    "expArtist": "Model",
+    "expTrack": "Pembe Mezarlık",
+    "section": "Şarkı · Lyrics",
+    "topN": 3
+  },
+  {
+    "caseId": "BULGU_008",
+    "term": "mfö",
+    "expArtist": "MFÖ",
+    "expTrack": "",
+    "section": "Sanatçı · Tam Eşleşme",
+    "topN": 1
+  },
+  {
+    "caseId": "BULGU_0088",
+    "term": "mfo",
+    "expArtist": "MFÖ",
+    "expTrack": "",
+    "section": "Sanatçı · Tam Eşleşme",
+    "topN": 1
+  },
+  {
+    "caseId": "BULGU_016",
+    "term": "Manifest",
+    "expArtist": "Manifest",
+    "expTrack": "",
+    "section": "Sanatçı · Tam Eşleşme",
+    "topN": 1
+  },
+  {
+    "caseId": "BULGU_017",
+    "term": "semicenk",
+    "expArtist": "Semicenk",
+    "expTrack": "",
+    "section": "Sanatçı · Tam Eşleşme",
+    "topN": 1
+  },
+  {
+    "caseId": "BULGU_055",
+    "term": "utku akkaya",
+    "expArtist": "Utku Akkaya",
+    "expTrack": "",
+    "section": "Sanatçı · Tam Eşleşme",
+    "topN": 1
+  },
+  {
+    "caseId": "BULGU_088",
+    "term": "derya bedavacı",
+    "expArtist": "Derya Bedavacı",
+    "expTrack": "",
+    "section": "Sanatçı · Tam Eşleşme",
+    "topN": 1
+  },
+  {
+    "caseId": "BULGU_090",
+    "term": "ceza",
+    "expArtist": "Ceza",
+    "expTrack": "",
+    "section": "Sanatçı · Tam Eşleşme",
+    "topN": 3
+  },
+  {
+    "caseId": "BULGU_102",
+    "term": "yaşar",
+    "expArtist": "Yaşar",
+    "expTrack": "",
+    "section": "Sanatçı · Tam Eşleşme",
+    "topN": 1
+  },
+  {
+    "caseId": "BULGU_112",
+    "term": "Gökhan Özen",
+    "expArtist": "Gökhan Özen",
+    "expTrack": "",
+    "section": "Sanatçı · Tam Eşleşme",
+    "topN": 1
+  },
+  {
+    "caseId": "BULGU_118",
+    "term": "çelik",
+    "expArtist": "Çelik",
+    "expTrack": "",
+    "section": "Sanatçı · Tam Eşleşme",
+    "topN": 1
+  },
+  {
+    "caseId": "BULGU_119_B",
+    "term": "Haluk Levent",
+    "expArtist": "Haluk Levent",
+    "expTrack": "",
+    "section": "Sanatçı · Tam Eşleşme",
+    "topN": 1
+  },
+  {
+    "caseId": "BULGU_120",
+    "term": "Mustafa Yıldızdoğan",
+    "expArtist": "Mustafa Yıldızdoğan",
+    "expTrack": "",
+    "section": "Sanatçı · Tam Eşleşme",
+    "topN": 1
+  },
+  {
+    "caseId": "UAT_001",
+    "term": "u2",
+    "expArtist": "u2",
+    "expTrack": "",
+    "section": "Sanatçı · Tam Eşleşme",
+    "topN": 1
+  },
+  {
+    "caseId": "UAT_010",
+    "term": "edis",
+    "expArtist": "Edis",
+    "expTrack": "",
+    "section": "Sanatçı · Tam Eşleşme",
+    "topN": 1
+  },
+  {
+    "caseId": "UAT_013",
+    "term": "uzi",
+    "expArtist": "UZI",
+    "expTrack": "",
+    "section": "Sanatçı · Tam Eşleşme",
+    "topN": 1
+  },
+  {
+    "caseId": "UAT_030",
+    "term": "sıla",
+    "expArtist": "Sıla",
+    "expTrack": "",
+    "section": "Sanatçı · Tam Eşleşme",
+    "topN": 1
+  },
+  {
+    "caseId": "UAT_045",
+    "term": "eminem",
+    "expArtist": "Eminem",
+    "expTrack": "",
+    "section": "Sanatçı · Tam Eşleşme",
+    "topN": 1
+  },
+  {
+    "caseId": "UAT_051",
+    "term": "güneş",
+    "expArtist": "Güneş",
+    "expTrack": "",
+    "section": "Sanatçı · Tam Eşleşme",
+    "topN": 1
+  },
+  {
+    "caseId": "UAT_052",
+    "term": "dua lipa",
+    "expArtist": "Dua Lipa",
+    "expTrack": "",
+    "section": "Sanatçı · Tam Eşleşme",
+    "topN": 1
+  },
+  {
+    "caseId": "UAT_059",
+    "term": "mero",
+    "expArtist": "Mero",
+    "expTrack": "",
+    "section": "Sanatçı · Tam Eşleşme",
+    "topN": 3
+  },
+  {
+    "caseId": "UAT_061",
+    "term": "murda",
+    "expArtist": "Murda",
+    "expTrack": "",
+    "section": "Sanatçı · Tam Eşleşme",
+    "topN": 3
+  },
+  {
+    "caseId": "UAT_064",
+    "term": "inna",
+    "expArtist": "Inna",
+    "expTrack": "",
+    "section": "Sanatçı · Tam Eşleşme",
+    "topN": 3
+  },
+  {
+    "caseId": "UAT_067",
+    "term": "adele",
+    "expArtist": "Adele",
+    "expTrack": "",
+    "section": "Sanatçı · Tam Eşleşme",
+    "topN": 3
+  },
+  {
+    "caseId": "UAT_070",
+    "term": "mor ve ötesi",
+    "expArtist": "mor ve ötesi",
+    "expTrack": "",
+    "section": "Sanatçı · Tam Eşleşme",
+    "topN": 3
+  },
+  {
+    "caseId": "UAT_075",
+    "term": "patron",
+    "expArtist": "Patron",
+    "expTrack": "",
+    "section": "Sanatçı · Tam Eşleşme",
+    "topN": 3
+  },
+  {
+    "caseId": "UAT_076",
+    "term": "tefo",
+    "expArtist": "Tefo",
+    "expTrack": "",
+    "section": "Sanatçı · Tam Eşleşme",
+    "topN": 3
+  },
+  {
+    "caseId": "UAT_077",
+    "term": "doğuş",
+    "expArtist": "Doğuş",
+    "expTrack": "",
+    "section": "Sanatçı · Tam Eşleşme",
+    "topN": 3
+  },
+  {
+    "caseId": "UAT_084",
+    "term": "ben fero",
+    "expArtist": "Ben Fero",
+    "expTrack": "",
+    "section": "Sanatçı · Tam Eşleşme",
+    "topN": 3
+  },
+  {
+    "caseId": "UAT_086",
+    "term": "inji",
+    "expArtist": "INJI",
+    "expTrack": "",
+    "section": "Sanatçı · Tam Eşleşme",
+    "topN": 3
+  },
+  {
+    "caseId": "UAT_087",
+    "term": "rihanna",
+    "expArtist": "Rihanna",
+    "expTrack": "",
+    "section": "Sanatçı · Tam Eşleşme",
+    "topN": 3
+  },
+  {
+    "caseId": "UAT_089",
+    "term": "mavi",
+    "expArtist": "Mavi",
+    "expTrack": "",
+    "section": "Sanatçı · Tam Eşleşme",
+    "topN": 3
+  },
+  {
+    "caseId": "UAT_090",
+    "term": "velet",
+    "expArtist": "Velet",
+    "expTrack": "",
+    "section": "Sanatçı · Tam Eşleşme",
+    "topN": 3
+  },
+  {
+    "caseId": "UAT_091",
+    "term": "adamlar",
+    "expArtist": "Adamlar",
+    "expTrack": "",
+    "section": "Sanatçı · Tam Eşleşme",
+    "topN": 3
+  },
+  {
+    "caseId": "UAT_102",
+    "term": "blackpink",
+    "expArtist": "BLACKPINK",
+    "expTrack": "",
+    "section": "Sanatçı · Tam Eşleşme",
+    "topN": 3
+  },
+  {
+    "caseId": "UAT_104",
+    "term": "sia",
+    "expArtist": "Sia",
+    "expTrack": "",
+    "section": "Sanatçı · Tam Eşleşme",
+    "topN": 3
+  },
+  {
+    "caseId": "UAT_110",
+    "term": "shakira",
+    "expArtist": "Shakira",
+    "expTrack": "",
+    "section": "Sanatçı · Tam Eşleşme",
+    "topN": 3
+  },
+  {
+    "caseId": "UAT_139",
+    "term": "madonna",
+    "expArtist": "Madonna",
+    "expTrack": "",
+    "section": "Sanatçı · Tam Eşleşme",
+    "topN": 3
+  },
+  {
+    "caseId": "BULGU_006",
+    "term": "blok",
+    "expArtist": "Blok3",
+    "expTrack": "",
+    "section": "Sanatçı · Kısmi Ad",
+    "topN": 1
+  },
+  {
+    "caseId": "BULGU_022",
+    "term": "teo",
+    "expArtist": "Teoman",
+    "expTrack": "",
+    "section": "Sanatçı · Kısmi Ad",
+    "topN": 1
+  },
+  {
+    "caseId": "UAT_016",
+    "term": "aleyna",
+    "expArtist": "Aleyna Tilki",
+    "expTrack": "",
+    "section": "Sanatçı · Kısmi Ad",
+    "topN": 1
+  },
+  {
+    "caseId": "UAT_025",
+    "term": "ferdi",
+    "expArtist": "Ferdi Tayfur",
+    "expTrack": "",
+    "section": "Sanatçı · Kısmi Ad",
+    "topN": 1
+  },
+  {
+    "caseId": "UAT_026",
+    "term": "mabel",
+    "expArtist": "Mabel Matiz",
+    "expTrack": "",
+    "section": "Sanatçı · Kısmi Ad",
+    "topN": 1
+  },
+  {
+    "caseId": "UAT_027",
+    "term": "yıldız",
+    "expArtist": "Yıldız Tilbe",
+    "expTrack": "",
+    "section": "Sanatçı · Kısmi Ad",
+    "topN": 1
+  },
+  {
+    "caseId": "UAT_028",
+    "term": "azer",
+    "expArtist": "Azer Bülbül",
+    "expTrack": "",
+    "section": "Sanatçı · Kısmi Ad",
+    "topN": 1
+  },
+  {
+    "caseId": "UAT_033",
+    "term": "serdar",
+    "expArtist": "Serdar Ortaç",
+    "expTrack": "",
+    "section": "Sanatçı · Kısmi Ad",
+    "topN": 1
+  },
+  {
+    "caseId": "UAT_036",
+    "term": "cengiz",
+    "expArtist": "Cengiz Kurtoğlu",
+    "expTrack": "",
+    "section": "Sanatçı · Kısmi Ad",
+    "topN": 1
+  },
+  {
+    "caseId": "UAT_038",
+    "term": "neşet",
+    "expArtist": "Neşet Ertaş",
+    "expTrack": "",
+    "section": "Sanatçı · Kısmi Ad",
+    "topN": 1
+  },
+  {
+    "caseId": "UAT_039",
+    "term": "melike",
+    "expArtist": "Melike Şahin",
+    "expTrack": "",
+    "section": "Sanatçı · Kısmi Ad",
+    "topN": 1
+  },
+  {
+    "caseId": "UAT_042",
+    "term": "orhan",
+    "expArtist": "Orhan Gencebay",
+    "expTrack": "",
+    "section": "Sanatçı · Kısmi Ad",
+    "topN": 1
+  },
+  {
+    "caseId": "UAT_049",
+    "term": "soner",
+    "expArtist": "Soner Sarıkabadayı",
+    "expTrack": "",
+    "section": "Sanatçı · Kısmi Ad",
+    "topN": 1
+  },
+  {
+    "caseId": "UAT_050",
+    "term": "ati",
+    "expArtist": "Ati242",
+    "expTrack": "",
+    "section": "Sanatçı · Kısmi Ad",
+    "topN": 1
+  },
+  {
+    "caseId": "UAT_053",
+    "term": "norm",
+    "expArtist": "Norm Ender",
+    "expTrack": "",
+    "section": "Sanatçı · Kısmi Ad",
+    "topN": 1
+  },
+  {
+    "caseId": "UAT_055",
+    "term": "sibel",
+    "expArtist": "Sibel Can",
+    "expTrack": "",
+    "section": "Sanatçı · Kısmi Ad",
+    "topN": 1
+  },
+  {
+    "caseId": "UAT_056",
+    "term": "irem",
+    "expArtist": "İrem Derici",
+    "expTrack": "",
+    "section": "Sanatçı · Kısmi Ad",
+    "topN": 1
+  },
+  {
+    "caseId": "UAT_058",
+    "term": "musa",
+    "expArtist": "Musa Eroğlu",
+    "expTrack": "",
+    "section": "Sanatçı · Kısmi Ad",
+    "topN": 1
+  },
+  {
+    "caseId": "UAT_062",
+    "term": "kurtuluş",
+    "expArtist": "Kurtuluş Kuş",
+    "expTrack": "",
+    "section": "Sanatçı · Kısmi Ad",
+    "topN": 1
+  },
+  {
+    "caseId": "UAT_063",
+    "term": "cash",
+    "expArtist": "Cash Flow",
+    "expTrack": "",
+    "section": "Sanatçı · Kısmi Ad",
+    "topN": 1
+  },
+  {
+    "caseId": "UAT_071",
+    "term": "reyn",
+    "expArtist": "Reynmen",
+    "expTrack": "",
+    "section": "Sanatçı · Kısmi Ad",
+    "topN": 1
+  },
+  {
+    "caseId": "UAT_072",
+    "term": "mahsun",
+    "expArtist": "Mahsun Kırmızıgül",
+    "expTrack": "",
+    "section": "Sanatçı · Kısmi Ad",
+    "topN": 1
+  },
+  {
+    "caseId": "UAT_078",
+    "term": "funda",
+    "expArtist": "Funda Arar",
+    "expTrack": "",
+    "section": "Sanatçı · Kısmi Ad",
+    "topN": 1
+  },
+  {
+    "caseId": "UAT_080",
+    "term": "sura",
+    "expArtist": "Sura İskenderli",
+    "expTrack": "",
+    "section": "Sanatçı · Kısmi Ad",
+    "topN": 1
+  },
+  {
+    "caseId": "UAT_081",
+    "term": "rafet",
+    "expArtist": "Rafet El Roman",
+    "expTrack": "",
+    "section": "Sanatçı · Kısmi Ad",
+    "topN": 1
+  },
+  {
+    "caseId": "UAT_085",
+    "term": "haluk",
+    "expArtist": "Haluk Levent",
+    "expTrack": "",
+    "section": "Sanatçı · Kısmi Ad",
+    "topN": 1
+  },
+  {
+    "caseId": "UAT_088",
+    "term": "lvbel",
+    "expArtist": "Lvbel C5",
+    "expTrack": "",
+    "section": "Sanatçı · Kısmi Ad",
+    "topN": 1
+  },
+  {
+    "caseId": "UAT_092",
+    "term": "zerrin",
+    "expArtist": "Zerrin Özer",
+    "expTrack": "",
+    "section": "Sanatçı · Kısmi Ad",
+    "topN": 1
+  },
+  {
+    "caseId": "UAT_093",
+    "term": "selda",
+    "expArtist": "Selda Bağcan",
+    "expTrack": "",
+    "section": "Sanatçı · Kısmi Ad",
+    "topN": 1
+  },
+  {
+    "caseId": "UAT_094",
+    "term": "bilal",
+    "expArtist": "Bilal Sonses",
+    "expTrack": "",
+    "section": "Sanatçı · Kısmi Ad",
+    "topN": 1
+  },
+  {
+    "caseId": "UAT_096",
+    "term": "gülden",
+    "expArtist": "Gülden Karaböcek",
+    "expTrack": "",
+    "section": "Sanatçı · Kısmi Ad",
+    "topN": 1
+  },
+  {
+    "caseId": "UAT_097",
+    "term": "ibrahim tat",
+    "expArtist": "İbrahim Tatlıses",
+    "expTrack": "",
+    "section": "Sanatçı · Kısmi Ad",
+    "topN": 1
+  },
+  {
+    "caseId": "UAT_098",
+    "term": "engin",
+    "expArtist": "Engin Nurşani",
+    "expTrack": "",
+    "section": "Sanatçı · Kısmi Ad",
+    "topN": 1
+  },
+  {
+    "caseId": "UAT_099",
+    "term": "şebnem",
+    "expArtist": "Şebnem Ferah",
+    "expTrack": "",
+    "section": "Sanatçı · Kısmi Ad",
+    "topN": 1
+  },
+  {
+    "caseId": "UAT_100",
+    "term": "ayaz",
+    "expArtist": "Ayaz Erdoğan",
+    "expTrack": "",
+    "section": "Sanatçı · Kısmi Ad",
+    "topN": 1
+  },
+  {
+    "caseId": "UAT_101",
+    "term": "ajda",
+    "expArtist": "Ajda Pekkan",
+    "expTrack": "",
+    "section": "Sanatçı · Kısmi Ad",
+    "topN": 1
+  },
+  {
+    "caseId": "UAT_107",
+    "term": "aynur",
+    "expArtist": "Aynur Aydın",
+    "expTrack": "",
+    "section": "Sanatçı · Kısmi Ad",
+    "topN": 1
+  },
+  {
+    "caseId": "UAT_109",
+    "term": "hayko",
+    "expArtist": "Hayko Cepkin",
+    "expTrack": "",
+    "section": "Sanatçı · Kısmi Ad",
+    "topN": 1
+  },
+  {
+    "caseId": "UAT_113",
+    "term": "koray",
+    "expArtist": "Koray Avcı",
+    "expTrack": "",
+    "section": "Sanatçı · Kısmi Ad",
+    "topN": 1
+  },
+  {
+    "caseId": "UAT_114",
+    "term": "ümit",
+    "expArtist": "Ümit Besen",
+    "expTrack": "",
+    "section": "Sanatçı · Kısmi Ad",
+    "topN": 1
+  },
+  {
+    "caseId": "UAT_115",
+    "term": "elif buse",
+    "expArtist": "Elif Buse Doğan",
+    "expTrack": "",
+    "section": "Sanatçı · Kısmi Ad",
+    "topN": 1
+  },
+  {
+    "caseId": "UAT_123",
+    "term": "özcan",
+    "expArtist": "Özcan Deniz",
+    "expTrack": "",
+    "section": "Sanatçı · Kısmi Ad",
+    "topN": 1
+  },
+  {
+    "caseId": "UAT_125",
+    "term": "deha",
+    "expArtist": "DEHA INC.",
+    "expTrack": "",
+    "section": "Sanatçı · Kısmi Ad",
+    "topN": 1
+  },
+  {
+    "caseId": "UAT_129",
+    "term": "taylor",
+    "expArtist": "Taylor Swift",
+    "expTrack": "",
+    "section": "Sanatçı · Kısmi Ad",
+    "topN": 1
+  },
+  {
+    "caseId": "BULGU_021",
+    "term": "tarkn",
+    "expArtist": "Tarkan",
+    "expTrack": "",
+    "section": "Sanatçı · Yazım Toleransı",
+    "topN": 1
+  },
+  {
+    "caseId": "BULGU_053",
+    "term": "kök$l",
+    "expArtist": "kök$vl",
+    "expTrack": "",
+    "section": "Sanatçı · Yazım Toleransı",
+    "topN": 3
+  },
+  {
+    "caseId": "BULGU_099",
+    "term": "çakal",
+    "expArtist": "cakal",
+    "expTrack": "",
+    "section": "Sanatçı · Yazım Toleransı",
+    "topN": 1
+  },
+  {
+    "caseId": "BULGU_115",
+    "term": "pozi",
+    "expArtist": "Poizi",
+    "expTrack": "",
+    "section": "Sanatçı · Yazım Toleransı",
+    "topN": 1
+  },
+  {
+    "caseId": "BULGU_119",
+    "term": "hşdra",
+    "expArtist": "Hidra",
+    "expTrack": "",
+    "section": "Sanatçı · Yazım Toleransı",
+    "topN": 3
+  },
+  {
+    "caseId": "UAT_003",
+    "term": "goksel",
+    "expArtist": "Göksel",
+    "expTrack": "",
+    "section": "Sanatçı · Yazım Toleransı",
+    "topN": 1
+  },
+  {
+    "caseId": "UAT_014",
+    "term": "can ozan",
+    "expArtist": "Canozan",
+    "expTrack": "",
+    "section": "Sanatçı · Yazım Toleransı",
+    "topN": 1
+  },
+  {
+    "caseId": "UAT_020",
+    "term": "ezel",
+    "expArtist": "Ezhel",
+    "expTrack": "",
+    "section": "Sanatçı · Yazım Toleransı",
+    "topN": 1
+  },
+  {
+    "caseId": "UAT_035",
+    "term": "reymen",
+    "expArtist": "Reynmen",
+    "expTrack": "",
+    "section": "Sanatçı · Yazım Toleransı",
+    "topN": 3
+  },
+  {
+    "caseId": "UAT_047",
+    "term": "emircan",
+    "expArtist": "Emir Can İğrek",
+    "expTrack": "",
+    "section": "Sanatçı · Yazım Toleransı",
+    "topN": 1
+  },
+  {
+    "caseId": "UAT_074",
+    "term": "emircan iğrek",
+    "expArtist": "Emir Can İğrek",
+    "expTrack": "",
+    "section": "Sanatçı · Yazım Toleransı",
+    "topN": 3
+  },
+  {
+    "caseId": "UAT_105",
+    "term": "izel",
+    "expArtist": "İzel",
+    "expTrack": "",
+    "section": "Sanatçı · Yazım Toleransı",
+    "topN": 3
+  },
+  {
+    "caseId": "UAT_118",
+    "term": "hejan",
+    "expArtist": "Heijan",
+    "expTrack": "",
+    "section": "Sanatçı · Yazım Toleransı",
+    "topN": 3
+  },
+  {
+    "caseId": "UAT_127",
+    "term": "Semicek",
+    "expArtist": "Semicenk",
+    "expTrack": "",
+    "section": "Sanatçı · Yazım Toleransı",
+    "topN": 1
+  },
+  {
+    "caseId": "UAT_130",
+    "term": "beyonce",
+    "expArtist": "Beyoncé",
+    "expTrack": "",
+    "section": "Sanatçı · Yazım Toleransı",
+    "topN": 3
+  },
+  {
+    "caseId": "UAT_131",
+    "term": "emre gel",
+    "expArtist": "Emre Fel",
+    "expTrack": "",
+    "section": "Sanatçı · Yazım Toleransı",
+    "topN": 3
+  },
+  {
+    "caseId": "UAT_133",
+    "term": "sibelcan",
+    "expArtist": "Sibel Can",
+    "expTrack": "",
+    "section": "Sanatçı · Yazım Toleransı",
+    "topN": 3
+  },
+  {
+    "caseId": "UAT_135",
+    "term": "kofn",
+    "expArtist": "KÖFN",
+    "expTrack": "",
+    "section": "Sanatçı · Yazım Toleransı",
+    "topN": 3
+  },
+  {
+    "caseId": "UAT_142",
+    "term": "sertap",
+    "expArtist": "Sertab Erener",
+    "expTrack": "",
+    "section": "Sanatçı · Yazım Toleransı",
+    "topN": 3
+  },
+  {
+    "caseId": "UAT_146",
+    "term": "mr ve ötei",
+    "expArtist": "Mor ve Ötesi",
+    "expTrack": "",
+    "section": "Sanatçı · Yazım Toleransı",
+    "topN": 3
+  },
+  {
+    "caseId": "UAT_147",
+    "term": "dolu kadhi tut",
+    "expArtist": "Dolu Kadehi Ters Tut",
+    "expTrack": "",
+    "section": "Sanatçı · Yazım Toleransı",
+    "topN": 3
+  },
+  {
+    "caseId": "BULGU_110",
+    "term": "lvc5",
+    "expArtist": "Lvbel C5",
+    "expTrack": "",
+    "section": "Sanatçı · Kısaltma / Alias",
+    "topN": 3
+  },
+  {
+    "caseId": "BULGU_116",
+    "term": "level c5",
+    "expArtist": "Lvbel C5",
+    "expTrack": "",
+    "section": "Sanatçı · Kısaltma / Alias",
+    "topN": 3
+  },
+  {
+    "caseId": "BULGU_117",
+    "term": "levelc5",
+    "expArtist": "Lvbel C5",
+    "expTrack": "",
+    "section": "Sanatçı · Kısaltma / Alias",
+    "topN": 3
+  },
+  {
+    "caseId": "UAT_002",
+    "term": "84",
+    "expArtist": "seksendört",
+    "expTrack": "",
+    "section": "Sanatçı · Kısaltma / Alias",
+    "topN": 1
+  },
+  {
+    "caseId": "UAT_046",
+    "term": "sago",
+    "expArtist": "Sagopa Kajmer",
+    "expTrack": "",
+    "section": "Sanatçı · Kısaltma / Alias",
+    "topN": 1
+  },
+  {
+    "caseId": "UAT_103",
+    "term": "no1",
+    "expArtist": "No.1",
+    "expTrack": "",
+    "section": "Sanatçı · Kısaltma / Alias",
+    "topN": 3
+  },
+  {
+    "caseId": "UAT_111",
+    "term": "halo",
+    "expArtist": "Halodayı",
+    "expTrack": "",
+    "section": "Sanatçı · Kısaltma / Alias",
+    "topN": 3
+  },
+  {
+    "caseId": "UAT_112",
+    "term": "50",
+    "expArtist": "50 Cent",
+    "expTrack": "",
+    "section": "Sanatçı · Kısaltma / Alias",
+    "topN": 3
+  },
+  {
+    "caseId": "UAT_120",
+    "term": "no 1",
+    "expArtist": "No.1",
+    "expTrack": "",
+    "section": "Sanatçı · Kısaltma / Alias",
+    "topN": 3
+  },
+  {
+    "caseId": "UAT_149",
+    "term": "dktt",
+    "expArtist": "Dolu Kadehi Ters Tut",
+    "expTrack": "",
+    "section": "Sanatçı · Kısaltma / Alias",
+    "topN": 3
+  },
+  {
+    "caseId": "BULGU_087",
+    "term": "akustik",
+    "expArtist": "",
+    "expTrack": "[Playlist] akustik",
+    "section": "Playlist",
+    "topN": 5
+  },
+  {
+    "caseId": "BULGU_064",
+    "term": "pop",
+    "expArtist": "",
+    "expTrack": "[Playlist] pop",
+    "section": "Playlist",
+    "topN": 5
+  },
+  {
+    "caseId": "UAT_005",
+    "term": "90",
+    "expArtist": "",
+    "expTrack": "[Playlist] 90",
+    "section": "Playlist",
+    "topN": 5
+  },
+  {
+    "caseId": "UAT_006",
+    "term": "90lar",
+    "expArtist": "",
+    "expTrack": "[Playlist] 90",
+    "section": "Playlist",
+    "topN": 5
+  },
+  {
+    "caseId": "UAT_007",
+    "term": "90'lar",
+    "expArtist": "",
+    "expTrack": "[Playlist] 90",
+    "section": "Playlist",
+    "topN": 5
+  },
+  {
+    "caseId": "UAT_008",
+    "term": "90s",
+    "expArtist": "",
+    "expTrack": "[Playlist] 90",
+    "section": "Playlist",
+    "topN": 5
+  },
+  {
+    "caseId": "UAT_009",
+    "term": "90 lar",
+    "expArtist": "",
+    "expTrack": "[Playlist] 90",
+    "section": "Playlist",
+    "topN": 5
+  },
+  {
+    "caseId": "UAT_029",
+    "term": "arabesk",
+    "expArtist": "",
+    "expTrack": "[Playlist] arabesk",
+    "section": "Playlist",
+    "topN": 5
+  },
+  {
+    "caseId": "UAT_031",
+    "term": "ilahi",
+    "expArtist": "",
+    "expTrack": "[Playlist] ilahi",
+    "section": "Playlist",
+    "topN": 5
+  },
+  {
+    "caseId": "UAT_037",
+    "term": "karadeniz",
+    "expArtist": "",
+    "expTrack": "[Playlist] karadeniz",
+    "section": "Playlist",
+    "topN": 5
+  },
+  {
+    "caseId": "UAT_040",
+    "term": "halay",
+    "expArtist": "",
+    "expTrack": "[Playlist] halay",
+    "section": "Playlist",
+    "topN": 5
+  },
+  {
+    "caseId": "UAT_043",
+    "term": "yabancı",
+    "expArtist": "",
+    "expTrack": "[Playlist] yabancı",
+    "section": "Playlist",
+    "topN": 5
+  },
+  {
+    "caseId": "UAT_044",
+    "term": "roman",
+    "expArtist": "",
+    "expTrack": "[Playlist] roman",
+    "section": "Playlist",
+    "topN": 5
+  },
+  {
+    "caseId": "UAT_048",
+    "term": "çocuk",
+    "expArtist": "",
+    "expTrack": "[Playlist] çocuk",
+    "section": "Playlist",
+    "topN": 5
+  },
+  {
+    "caseId": "UAT_065",
+    "term": "oyun hava",
+    "expArtist": "",
+    "expTrack": "[Playlist] oyun hava",
+    "section": "Playlist",
+    "topN": 5
+  },
+  {
+    "caseId": "UAT_069",
+    "term": "spor",
+    "expArtist": "",
+    "expTrack": "[Playlist] spor",
+    "section": "Playlist",
+    "topN": 5
+  },
+  {
+    "caseId": "UAT_073",
+    "term": "klasik",
+    "expArtist": "",
+    "expTrack": "[Playlist] klasik",
+    "section": "Playlist",
+    "topN": 5
+  },
+  {
+    "caseId": "UAT_079",
+    "term": "ankara",
+    "expArtist": "",
+    "expTrack": "[Playlist] ankara",
+    "section": "Playlist",
+    "topN": 5
+  },
+  {
+    "caseId": "UAT_083",
+    "term": "çocuk şarkıları",
+    "expArtist": "",
+    "expTrack": "[Playlist] çocuk",
+    "section": "Playlist",
+    "topN": 5
+  },
+  {
+    "caseId": "UAT_106",
+    "term": "türkçe",
+    "expArtist": "",
+    "expTrack": "[Playlist] türkçe",
+    "section": "Playlist",
+    "topN": 5
+  },
+  {
+    "caseId": "UAT_108",
+    "term": "80",
+    "expArtist": "",
+    "expTrack": "[Playlist] 80",
+    "section": "Playlist",
+    "topN": 5
+  },
+  {
+    "caseId": "UAT_116",
+    "term": "rock",
+    "expArtist": "",
+    "expTrack": "[Playlist] rock",
+    "section": "Playlist",
+    "topN": 5
+  },
+  {
+    "caseId": "UAT_121",
+    "term": "dans",
+    "expArtist": "",
+    "expTrack": "[Playlist] dans",
+    "section": "Playlist",
+    "topN": 5
+  },
+  {
+    "caseId": "UAT_122",
+    "term": "türk sanat",
+    "expArtist": "",
+    "expTrack": "[Playlist] türk sanat",
+    "section": "Playlist",
+    "topN": 5
+  },
+  {
+    "caseId": "UAT_134",
+    "term": "meditasyon",
+    "expArtist": "",
+    "expTrack": "[Playlist] meditasyon",
+    "section": "Playlist",
+    "topN": 5
+  },
+  {
+    "caseId": "UAT_138",
+    "term": "90 lar pop",
+    "expArtist": "",
+    "expTrack": "[Playlist] pop",
+    "section": "Playlist",
+    "topN": 5
+  },
+  {
+    "caseId": "UAT_140",
+    "term": "ramazan",
+    "expArtist": "",
+    "expTrack": "[Playlist] ramazan",
+    "section": "Playlist",
+    "topN": 5
+  },
+  {
+    "caseId": "BULGU_125",
+    "term": "teybi bozuk bir arabayla",
+    "expArtist": "Nilipek",
+    "expTrack": "Geçmiyor Zaman",
+    "section": "Şarkı · Lyrics",
+    "topN": 3
+  },
+  {
+    "caseId": "BULGU_126",
+    "term": "türk marşı",
+    "expArtist": "Ceza",
+    "expTrack": "Türk Marşı",
+    "section": "Şarkı · Tam Eşleşme",
+    "topN": 3
+  },
+  {
+    "caseId": "BULGU_127",
+    "term": "masumiyet müzesi",
+    "expArtist": "",
+    "expTrack": "[Playlist] Masumiyet Müzesi",
+    "section": "Playlist",
+    "topN": 5
+  },
+  {
+    "caseId": "BULGU_128",
+    "term": "there is a light that never goes out",
+    "expArtist": "Morrissey",
+    "expTrack": "There Is A Light That Never Goes Out",
+    "section": "Şarkı · Tam Eşleşme",
+    "topN": 3
+  },
+  {
+    "caseId": "BULGU_128_B",
+    "term": "there is a light that never goes out (live)",
+    "expArtist": "Morrissey",
+    "expTrack": "There Is A Light That Never Goes Out",
+    "section": "Şarkı · Kısmi Ad",
+    "topN": 3
+  },
+  {
+    "caseId": "CAGKAN_1",
+    "term": "ölek mi",
+    "expArtist": "",
+    "expTrack": "Ölek mi?",
+    "section": "Şarkı · Lyrics",
+    "topN": 3
+  },
+  {
+    "caseId": "CAGKAN_2",
+    "term": "ölek mi?",
+    "expArtist": "",
+    "expTrack": "Ölek mi?",
+    "section": "Şarkı · Lyrics",
+    "topN": 3
+  },
+  {
+    "caseId": "CAGKAN_3",
+    "term": "dai",
+    "expArtist": "",
+    "expTrack": "Dai Dai",
+    "section": "Şarkı · Lyrics",
+    "topN": 3
+  },
+  {
+    "caseId": "CAGKAN_3",
+    "term": "dia",
+    "expArtist": "",
+    "expTrack": "Dai Dai",
+    "section": "Şarkı · Lyrics",
+    "topN": 3
+  },
+  {
+    "caseId": "CAGKAN_4",
+    "term": "Murat yeter magusa",
+    "expArtist": "",
+    "expTrack": "Mağusa Limanı",
+    "section": "Şarkı · Lyrics",
+    "topN": 3
+  },
+  {
+    "caseId": "CAGKAN_5",
+    "term": "Sen Anlat Geçen Yüzyıl",
+    "expArtist": "",
+    "expTrack": "Sen Anlat Geçen Yüzyıl",
+    "section": "Şarkı · Lyrics",
+    "topN": 3
+  },
+  {
+    "caseId": "CAGKAN_6",
+    "term": "Sinem Yalçınkaya kenar süsü",
+    "expArtist": "",
+    "expTrack": "Kenar Süsü",
+    "section": "Şarkı · Lyrics",
+    "topN": 3
+  },
+  {
+    "caseId": "sena_1",
+    "term": "tarkn",
+    "expArtist": "Tarkan",
+    "expTrack": "",
+    "section": "Şarkı · Lyrics",
+    "topN": 3
+  },
+  {
+    "caseId": "sena_2",
+    "term": "sezn aksu",
+    "expArtist": "Sezen Aksu",
+    "expTrack": "",
+    "section": "Şarkı · Lyrics",
+    "topN": 3
+  },
+  {
+    "caseId": "sena_3",
+    "term": "kürtçe",
+    "expArtist": "",
+    "expTrack": "Kürtçe",
+    "section": "Şarkı · Lyrics",
+    "topN": 3
+  }
+]

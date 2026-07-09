@@ -1,0 +1,192 @@
+{
+  "_id": {
+    "$numberLong": "7"
+  },
+  "name": "hmuud Playlists v3",
+  "indexName": "hmuud_muud_playlist_flat_v3",
+  "completionDefinition": {
+    "completionEnabled": true,
+    "suggestions": [
+      {
+        "completionFieldName": "playlistCompletion",
+        "suggestionName": "playlist-suggest",
+        "involvedFields": [
+          {
+            "name": "playlistName",
+            "weight": {
+              "$numberInt": "12"
+            }
+          }
+        ],
+        "skipDuplicates": true
+      }
+    ],
+    "resultFields": [
+      "id",
+      "songName",
+      "playlistName"
+    ]
+  },
+  "queryDefinition": {
+    "minimumShouldMatch": {
+      "$numberInt": "1"
+    },
+    "queryType": "bool_should",
+    "fieldGroups": [
+      {
+        "multiMatchType": "cross_fields",
+        "multiMatchOperator": "and",
+        "searchableFields": [
+          {
+            "name": "playlistName",
+            "boost": {
+              "$numberDouble": "1.0"
+            },
+            "extraBonusEnabled": true,
+            "nested": false,
+            "nestedPath": "",
+            "subFields": [
+              {
+                "name": "turkish",
+                "boost": {
+                  "$numberDouble": "0.6000000238418579"
+                }
+              },
+              {
+                "name": "prefix",
+                "boost": {
+                  "$numberDouble": "0.5"
+                }
+              },
+              {
+                "name": "prefix_wo_ascii",
+                "boost": {
+                  "$numberDouble": "0.800000011920929"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "multiMatchType": "cross_fields",
+        "multiMatchOperator": "and",
+        "searchableFields": [
+          {
+            "name": "songName",
+            "boost": {
+              "$numberDouble": "0.30000001192092896"
+            },
+            "extraBonusEnabled": false,
+            "nested": true,
+            "nestedPath": "songs",
+            "subFields": [
+              {
+                "name": "turkish",
+                "boost": {
+                  "$numberDouble": "0.20000000298023224"
+                }
+              },
+              {
+                "name": "prefix",
+                "boost": {
+                  "$numberDouble": "0.20000000298023224"
+                }
+              },
+              {
+                "name": "prefix_wo_ascii",
+                "boost": {
+                  "$numberDouble": "0.30000001192092896"
+                }
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "scoreBoostField": "",
+  "scriptSource": "double bm25=_score; double raw=!doc['displayOrder'].empty?doc['displayOrder'].value:0.0; double pop=Math.log(1.0+Math.max(raw,0.0)); double bm25Norm=Math.min(bm25/14.0,1.0); double popNorm=Math.min(pop/11.0,1.0); double score=(bm25Norm*0.6)+(popNorm*0.4); return score*100.0;",
+  "correctionDefinition": {
+    "correctionEnabled": true,
+    "lightSuggestion": false,
+    "correctionFieldName": "muud_dym",
+    "involvedFields": [
+      {
+        "name": "songName"
+      },
+      {
+        "name": "playlistName"
+      }
+    ]
+  },
+  "levenstein": {
+    "enabled": false
+  },
+  "extraBonusFields": [
+    {
+      "name": "playlistName",
+      "subFieldName": "",
+      "weight": {
+        "$numberInt": "4"
+      },
+      "filterQueryType": "MATCH",
+      "filterOperator": "AND"
+    }
+  ],
+  "termFilters": [],
+  "status": "ACTIVE",
+  "boostMode": "Replace",
+  "scoreMode": "Sum",
+  "contentTypeId": {
+    "$numberLong": "1"
+  },
+  "createDate": {
+    "$date": {
+      "$numberLong": "1751896800000"
+    }
+  },
+  "updateDate": {
+    "$date": {
+      "$numberLong": "1751896800000"
+    }
+  },
+  "apiResultType": "playlists",
+  "topHitsScoreWeight": {
+    "$numberDouble": "0.27"
+  },
+  "freshnessDecayField": "",
+  "freshnessDecayOffset": "",
+  "freshnessWindowDays": {
+    "$numberInt": "30"
+  },
+  "type": "BM25",
+  "scriptDefinition": {
+    "sourceId": "LOG_ONE_SIGNAL",
+    "bySource": {
+      "LOG_ONE_SIGNAL": {
+        "bm25Score": {
+          "max": {
+            "$numberInt": "14"
+          },
+          "weight": {
+            "$numberDouble": "0.6"
+          }
+        },
+        "signals": [
+          {
+            "fieldName": "displayOrder",
+            "maxNorm": {
+              "$numberInt": "11"
+            },
+            "weight": {
+              "$numberDouble": "0.4"
+            }
+          }
+        ]
+      }
+    }
+  },
+  "tierRankingEnabled": true,
+  "intentBoostEnabled": true
+}
