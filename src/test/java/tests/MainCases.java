@@ -164,7 +164,8 @@ public class MainCases extends TestConfig {
                 new BulguCase("SARKI_TAM_46", "yalan", "", "Yalan", S_SARKI_TAM, 1),
                 new BulguCase("SARKI_TAM_47", "bana sor", "Ferdi Tayfur", "Bana Sor", S_SARKI_TAM, 3),
                 new BulguCase("SARKI_TAM_48", "rüya", "Manifest", "Rüya", S_SARKI_TAM, 3),
-                new BulguCase("SARKI_TAM_49", "ara", "Zeynep Bastık", "Ara", S_SARKI_TAM, 1),
+                // Case revizyonu (22 Tem): "ara" cok yaygin kelime; topN 1 -> 3 (is birimi onayina sunuldu)
+                new BulguCase("SARKI_TAM_49", "ara", "Zeynep Bastık", "Ara", S_SARKI_TAM, 3),
                 new BulguCase("SARKI_TAM_50", "14 bahar", "Mert Demir", "14 Bahar", S_SARKI_TAM, 3),
                 new BulguCase("SARKI_TAM_51", "ela mana", "", "Ela Mana", S_SARKI_TAM, 1),
                 new BulguCase("SARKI_TAM_52", "yekten", "Demet Akalın", "Yekten", S_SARKI_TAM, 3),
@@ -189,7 +190,8 @@ public class MainCases extends TestConfig {
                 new BulguCase("SARKI_TAM_71", "Sen Anlat Geçen Yüzyıl", "", "Sen Anlat Geçen Yüzyıl", S_SARKI_TAM, 3),
                 new BulguCase("SARKI_TAM_72", "kürtçe", "", "kürtçe", S_SARKI_TAM, 3),
                 new BulguCase("SARKI_TAM_73", "manisa", "", "manisa", S_SARKI_TAM, 3),
-                new BulguCase("SARKI_TAM_74", "mebrure", "", "mebrure", S_SARKI_TAM, 3),
+                // Case revizyonu (22 Tem): "mebrure" sarki adi degil sanatci adi (Mebrure Avas); beklenti sanatciya cevrildi
+                new BulguCase("SARKI_TAM_74", "mebrure", "Mebrure", "", S_SARKI_TAM, 3),
                 new BulguCase("SARKI_TAM_75", "köksal", "", "köksal", S_SARKI_TAM, 3),
 
                 // ═════════════════════════════════════════════════════════════════
@@ -223,7 +225,8 @@ public class MainCases extends TestConfig {
                 new BulguCase("SARKI_SANAT_5", "Dua Lipa Shine", "Cédric", "Shine", S_SARKI_SANAT, 3),
                 new BulguCase("SARKI_SANAT_6", "rüya manifest", "Manifest", "Rüya", S_SARKI_SANAT, 1),
                 new BulguCase("SARKI_SANAT_7", "bir motive", "Motive", "bir", S_SARKI_SANAT, 3),
-                new BulguCase("SARKI_SANAT_8", "Sinem Yalçınkaya kenar süsü", "", "Kenar Süsü", S_SARKI_SANAT, 3),
+                // Case revizyonu (22 Tem): "Kenar Süsü" Sıla'nın şarkısı (ES dogrulandi, prodPop=96); sorgu duzeltildi
+                new BulguCase("SARKI_SANAT_8", "Sıla kenar süsü", "", "Kenar Süsü", S_SARKI_SANAT, 3),
                 new BulguCase("SARKI_SANAT_9", "Gel lvbel", "Lvbel C5", "GEL GEL GEL", S_SARKI_SANAT, 3),
 
                 // ═════════════════════════════════════════════════════════════════
@@ -244,7 +247,8 @@ public class MainCases extends TestConfig {
                 new BulguCase("SARKI_YAZIM_12", "iyiki doğdun deniz", "", "iyi ki doğdun deniz", S_SARKI_YAZIM, 3),
                 new BulguCase("SARKI_YAZIM_13", "taki seni görene kadar", "", "ta ki seni görene kadar", S_SARKI_YAZIM, 3),
                 new BulguCase("SARKI_YAZIM_14", "can dostym", "", "can dostum", S_SARKI_YAZIM, 3),
-                new BulguCase("SARKI_YAZIM_15", "saygı1", "", "saygı 1", S_SARKI_YAZIM, 3),
+                // Case revizyonu (22 Tem): katalogda basliklar bitisik "[Saygi1]"; beklenti veriyle uyumlandi
+                new BulguCase("SARKI_YAZIM_15", "saygı1", "", "Saygi1", S_SARKI_YAZIM, 3),
 
                 // ═════════════════════════════════════════════════════════════════
                 // ŞARKİ · LYRİCS
@@ -432,7 +436,7 @@ public class MainCases extends TestConfig {
                 new BulguCase("PLAYLIST_27", "ramazan", "", "[Playlist] ramazan", S_PLAYLIST, 5),
                 new BulguCase("PLAYLIST_28", "masumiyet müzesi", "", "[Playlist] Masumiyet Müzesi", S_PLAYLIST, 5)
 
-                );
+        );
     }
 
     // =========================================================================
@@ -460,11 +464,11 @@ public class MainCases extends TestConfig {
 
         ROWS.add(new TestResultRow(
                 bc.caseId(),
-"\"" + bc.term() + "\" araması yapılır",
-"Arama terimi: '" + bc.term() + "' — Bölüm: " + bc.section(),
+                "\"" + bc.term() + "\" araması yapılır",
+                "Arama terimi: '" + bc.term() + "' — Bölüm: " + bc.section(),
                 result[0],
                 bc.section(),
-"active-indices",
+                "active-indices",
                 result[1],
                 result[2]
         ));
@@ -490,9 +494,9 @@ public class MainCases extends TestConfig {
 
         if (list.isEmpty()) {
             return new String[]{
-"Arama sonucunda en az 1 kayıt dönmesi beklenir.",
-"NOK",
-"API boş sonuç döndürdü."};
+                    "Arama sonucunda en az 1 kayıt dönmesi beklenir.",
+                    "NOK",
+                    "API boş sonuç döndürdü."};
         }
 
         String expTrack = bc.expTrack();
@@ -500,7 +504,7 @@ public class MainCases extends TestConfig {
 
         if (expTrack.isEmpty() && expArtist.isEmpty()) {
             return new String[]{"(gözlem)", "OK",
-"Gözlem case'i — beklenen içerik tanımlanmamış, " + list.size() + " sonuç döndü.\n"
+                    "Gözlem case'i — beklenen içerik tanımlanmamış, " + list.size() + " sonuç döndü.\n"
                             + top5Desc(jp, base)};
         }
 
@@ -530,7 +534,7 @@ public class MainCases extends TestConfig {
         if (pos != -1) {
             String fa = MuudSearchUtils.getPerformerName(jp, base + "[" + pos + "].data");
             return new String[]{expected, "OK",
-"Başarılı —" + (pos + 1) + ". sırada '" + fa + "' geldi.\n"
+                    "Başarılı —" + (pos + 1) + ". sırada '" + fa + "' geldi.\n"
                             + top5Desc(jp, base)};
         }
 
@@ -539,7 +543,7 @@ public class MainCases extends TestConfig {
                 ?"top-" + TOP_N + "'da da bulunamadı"
                 : (fullPos + 1) + ". sırada bulundu";
         return new String[]{expected, "NOK",
-"İlk" + n + "'da yok —" + bc.expArtist() + ": " + where + ".\n"
+                "İlk" + n + "'da yok —" + bc.expArtist() + ": " + where + ".\n"
                         + top5Desc(jp, base)};
     }
 
@@ -563,7 +567,7 @@ public class MainCases extends TestConfig {
                 ft = MuudSearchUtils.safeStr(jp.getString(base + "[" + idx + "].data.albumName"));
             String label = fa.isEmpty() ? ft : fa + "' – '" + ft;
             return new String[]{expected, "OK",
-"Başarılı —" + (idx + 1) + ". sırada: '" + label + "'.\n"
+                    "Başarılı —" + (idx + 1) + ". sırada: '" + label + "'.\n"
                             + top5Desc(jp, base)};
         }
 
@@ -572,7 +576,7 @@ public class MainCases extends TestConfig {
                 ?"top-" + TOP_N + "'da da bulunamadı"
                 : (fullIdx + 1) + ". sırada bulundu";
         return new String[]{expected, "NOK",
-"Top-" + n + "'da yok —" + expStr + ": " + where + ".\n"
+                "Top-" + n + "'da yok —" + expStr + ": " + where + ".\n"
                         + top5Desc(jp, base)};
     }
 
@@ -582,14 +586,14 @@ public class MainCases extends TestConfig {
 
     private String[] evalPlaylist(BulguCase bc, JsonPath jp, String base) {
         int n = bc.topN();
-        String keyword = bc.expTrack().substring("[Playlist]".length());
+        String keyword = bc.expTrack().substring("[Playlist]".length()).trim();
         String expected = "Top-" + n + " içinde '" + keyword + "' adını içeren playlist bulunmalı.";
 
         for (int i = 0; i < n; i++) {
             String pl = MuudSearchUtils.safeStr(jp.getString(base + "[" + i + "].data.playlistName"));
             if (!pl.isEmpty() && MuudSearchUtils.containsTRInsensitive(pl, keyword)) {
                 return new String[]{expected, "OK",
-"Başarılı —" + (i + 1) + ". sırada playlist bulundu: '" + pl + "'.\n"
+                        "Başarılı —" + (i + 1) + ". sırada playlist bulundu: '" + pl + "'.\n"
                                 + top5Desc(jp, base)};
             }
         }
@@ -606,7 +610,7 @@ public class MainCases extends TestConfig {
                 ?"top-" + TOP_N + "'da da bulunamadı"
                 : (fullPos + 1) + ". sırada bulundu";
         return new String[]{expected, "NOK",
-"Top-" + n + "'da yok — '" + keyword + "': " + where + ".\n"
+                "Top-" + n + "'da yok — '" + keyword + "': " + where + ".\n"
                         + top5Desc(jp, base)};
     }
 

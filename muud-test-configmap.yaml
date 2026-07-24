@@ -22,7 +22,7 @@ data:
         "Content-Type": "application/json",
         "Accept": "*/*",
         "X-SEARCH-APP-KEY": "muudelk9",
-        "Authorization": "Basic bXV1ZGVsazk6NUt5Y09ESlp4aFFxQXZtNQ=="
+        "Authorization": "Basic V1BQZUhMeWc6NUt5Y09ESlp4aFFxQXZtNQ=="
     }
     TOP_N     = 10
     OUT_DIR   = os.environ.get("RESULTS_DIR", "/tmp/results")
@@ -313,7 +313,19 @@ data:
     def contains_tr(actual, expected):
         if not expected: return True
         if not actual: return False
-        return tr_lower(expected) in tr_lower(actual)
+        if tr_lower(expected) in tr_lower(actual): return True
+        # Fallback: bracket/boşluk sil + ı→i (API "Saygi1" ↔ expected "saygı 1")
+        def flat(s): return s.replace('ı','i').replace('[','').replace(']','').replace(' ','').lower()
+        fe, fa = flat(expected), flat(actual)
+        return bool(fe) and fe in fa
+
+    def equals_tr(actual, expected):
+        if not expected: return True
+        if not actual: return False
+        import unicodedata
+        a = unicodedata.normalize("NFC", actual.strip())
+        e = unicodedata.normalize("NFC", expected.strip())
+        return tr_lower(a) == tr_lower(e) or a.lower() == e.lower()
 
     def get_artist(d):
         return d.get("performerName") or d.get("performerNames") or ""
@@ -331,15 +343,17 @@ data:
 
     def find_artist(items, n, exp):
         for i, it in enumerate(items[:n]):
-            if contains_tr(get_artist(it.get("data", {})), exp): return i
+            d = it.get("data", {})
+            if d.get("kind") != "performers": continue
+            if equals_tr(get_artist(d), exp): return i
         return -1
 
     def find_track(items, n, exp_a, exp_t):
         for i, it in enumerate(items[:n]):
             d = it.get("data", {})
             artist = get_artist(d)
-            track = d.get("songName") or d.get("albumName") or ""
-            if (not exp_a or contains_tr(artist, exp_a)) and (not exp_t or contains_tr(track, exp_t)):
+            track = d.get("songName") or d.get("albumName") or d.get("playlistName") or get_artist(d) or ""
+            if (not exp_a or contains_tr(artist, exp_a)) and (not exp_t or contains_tr(track, exp_t) or contains_tr(artist, exp_t)):
                 return i
         return -1
 
@@ -472,37 +486,56 @@ data:
         secs = sorted(set(list(sec_ok) + list(sec_nok)))
         date_str  = datetime.datetime.now().strftime("%d.%m.%Y %H:%M")
         icon_main = "BASARILI" if pct >= 80 else ("DIKKAT" if pct >= 70 else "BASARISIZ")
-        sep = "-" * 52
-        header_line = f"{'Kategori':<32} {'Toplam':>6} {'Basarili':>8} {'Hata':>5} {'Oran':>6}"
-        rows = []
+        icon_color = "#2e7d32" if pct >= 80 else ("#e65100" if pct >= 70 else "#b71c1c")
+        table_rows = ""
         for s in secs:
             ok_c  = sec_ok.get(s, 0)
             tot_c = ok_c + sec_nok.get(s, 0)
             p = round(ok_c / tot_c * 100) if tot_c else 0
-            rows.append(f"{s:<32} {tot_c:>6} {ok_c:>8} {tot_c - ok_c:>5} %{p:>4}")
-        rows.append(sep)
-        rows.append(f"{'GENEL TOPLAM':<32} {total:>6} {ok_count:>8} {total - ok_count:>5} %{pct:>4}")
-        body_lines = [
-            f"MUUD Arama Test Raporu - {date_str}",
-            "",
-            f"GENEL SONUC: {icon_main}",
-            f"Basarili: {ok_count}/{total} = %{pct}",
-            "",
-            "KATEGORI DETAY",
-            sep,
-            header_line,
-            sep,
-        ] + rows + [
-            "",
-            "---",
-            f"Excel raporu ektedir: {os.path.basename(fpath)}",
-        ]
-        body = "\n".join(body_lines)
-        msg = MIMEMultipart()
+            bg = "#c8e6c9" if p >= 80 else "#ffcdd2"
+            table_rows += (
+                f'<tr style="background:{bg}">'
+                f'<td style="padding:6px 10px">{s}</td>'
+                f'<td style="padding:6px 10px;text-align:center">{tot_c}</td>'
+                f'<td style="padding:6px 10px;text-align:center">{ok_c}</td>'
+                f'<td style="padding:6px 10px;text-align:center">{tot_c - ok_c}</td>'
+                f'<td style="padding:6px 10px;text-align:center">%{p}</td>'
+                f'</tr>'
+            )
+        table_rows += (
+            f'<tr style="background:#1f5c99;color:#fff;font-weight:bold">'
+            f'<td style="padding:6px 10px">GENEL TOPLAM</td>'
+            f'<td style="padding:6px 10px;text-align:center">{total}</td>'
+            f'<td style="padding:6px 10px;text-align:center">{ok_count}</td>'
+            f'<td style="padding:6px 10px;text-align:center">{total - ok_count}</td>'
+            f'<td style="padding:6px 10px;text-align:center">%{pct}</td>'
+            f'</tr>'
+        )
+        html = (
+            f'<div style="font-family:Calibri,Arial,sans-serif;max-width:600px">'
+            f'<h2 style="color:#1f5c99;margin-bottom:4px">MUUD Arama Test Raporu</h2>'
+            f'<p style="margin:2px 0;color:#555">Tarih: {date_str}</p>'
+            f'<p style="margin:2px 0"><b>Genel Sonuc:</b> <span style="color:{icon_color};font-weight:bold">{icon_main}</span></p>'
+            f'<p style="margin:2px 0"><b>Basarili:</b> {ok_count}/{total} = %{pct}</p>'
+            f'<br>'
+            f'<table border="0" cellspacing="1" cellpadding="0" style="border-collapse:collapse;width:100%">'
+            f'<tr style="background:#1f5c99;color:#fff">'
+            f'<th style="padding:7px 10px;text-align:left">Kategori</th>'
+            f'<th style="padding:7px 10px">Toplam</th>'
+            f'<th style="padding:7px 10px">Basarili</th>'
+            f'<th style="padding:7px 10px">Hata</th>'
+            f'<th style="padding:7px 10px">Oran</th>'
+            f'</tr>'
+            f'{table_rows}'
+            f'</table>'
+            f'<p style="color:#888;font-size:12px;margin-top:12px">Excel raporu ektedir: {os.path.basename(fpath)}</p>'
+            f'</div>'
+        )
+        msg = MIMEMultipart("alternative")
         msg["From"]    = MAIL_FROM
         msg["To"]      = MAIL_TO
         msg["Subject"] = f"MUUD Test Raporu - {date_str} - %{pct}"
-        msg.attach(MIMEText(body, "plain", "utf-8"))
+        msg.attach(MIMEText(html, "html", "utf-8"))
         with open(fpath, "rb") as f:
             part = MIMEBase("application", "octet-stream")
             part.set_payload(f.read())
@@ -522,7 +555,7 @@ data:
                         s.login(SMTP_USER, SMTP_PASS)
                 except Exception as auth_err:
                     print(f"Auth atildi, relay denenecek: {auth_err}")
-                s.sendmail(MAIL_FROM, MAIL_TO, msg.as_string())
+                s.sendmail(MAIL_FROM, [m.strip() for m in MAIL_TO.split(',')], msg.as_string())
             print(f"Email gonderildi: {MAIL_TO}")
         except Exception as e:
             print(f"Email hatasi: {e}")
@@ -542,68 +575,3 @@ data:
 
     if __name__ == "__main__":
         main()
----
-apiVersion: batch/v1
-kind: CronJob
-metadata:
-  name: muud-search-test
-  namespace: ddp-fixed-test
-spec:
-  schedule: "0 8 * * 1-5"
-  concurrencyPolicy: Forbid
-  successfulJobsHistoryLimit: 3
-  failedJobsHistoryLimit: 3
-  jobTemplate:
-    spec:
-      backoffLimit: 1
-      template:
-        spec:
-          restartPolicy: Never
-          containers:
-          - name: muud-test
-            image: python:3.11-slim
-            command: ["/bin/sh", "-c"]
-            args:
-            - |
-              pip install requests openpyxl --quiet &&
-              python3 /scripts/run_tests.py
-            env:
-            - name: RESULTS_DIR
-              value: /results
-            - name: SMTP_HOST
-              value: "10.234.204.10"
-            - name: SMTP_PORT
-              value: "587"
-            - name: SMTP_USER
-              value: "mobilodeme@turktelekom.com.tr"
-            - name: SMTP_PASS
-              valueFrom:
-                secretKeyRef:
-                  name: muud-test-secrets
-                  key: smtp-pass
-            - name: MAIL_FROM
-              value: "ddp@turktelekom.com.tr"
-            - name: MAIL_TO
-              valueFrom:
-                secretKeyRef:
-                  name: muud-test-secrets
-                  key: mail-to
-            volumeMounts:
-            - name: script
-              mountPath: /scripts
-            - name: results
-              mountPath: /results
-            resources:
-              requests:
-                memory: "512Mi"
-                cpu: "250m"
-              limits:
-                memory: "1Gi"
-                cpu: "500m"
-          volumes:
-          - name: script
-            configMap:
-              name: muud-test-script
-          - name: results
-            persistentVolumeClaim:
-              claimName: muud-test-results

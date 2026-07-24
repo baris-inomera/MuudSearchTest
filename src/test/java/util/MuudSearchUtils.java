@@ -57,11 +57,10 @@ public class MuudSearchUtils {
             case "album"     -> "2";
             case "performer" -> "3";
             case "playlist"  -> "4";
-          //case "songs", "song" -> "5";
             case "songs", "song" -> "5";
 
         //    case "video", "videos" -> "6";
-       //     case "vector", "vectors" -> "49";
+        //    case "vector", "vectors" -> "49";
             case "general"   -> "active-indices"; // Tüm aktif indekslerde ara
             default -> "active-indices"; // Tanımsızsa yine tüm aktiflerde ara
         };
@@ -116,8 +115,33 @@ public class MuudSearchUtils {
         if (actual == null) return false;
         String a = normalizeForMatch(actual);
         String e = normalizeForMatch(expected);
-        return a.toLowerCase(TR).contains(e.toLowerCase(TR))
-                || a.toLowerCase(ROOT).contains(e.toLowerCase(ROOT));
+        if (a.toLowerCase(TR).contains(e.toLowerCase(TR))
+                || a.toLowerCase(ROOT).contains(e.toLowerCase(ROOT))) {
+            return true;
+        }
+        // Fallback: bracket/boşluk sil + ı→i dönüştür.
+        // "Deli [Saygi1]" vs "saygı 1": delisaygi1 ⊇ saygi1 → TRUE
+        // Adèle false-positive korunur: è ≠ e, dönüşüm yapılmaz.
+        String aFlat = a.replaceAll("[\\[\\]\\s]", "").replace('ı', 'i').toLowerCase(ROOT);
+        String eFlat = e.replaceAll("[\\[\\]\\s]", "").replace('ı', 'i').toLowerCase(ROOT);
+        return !eFlat.isEmpty() && aFlat.contains(eFlat);
+    }
+
+    /**
+     * Sanatçı adı karşılaştırması için: büyük/küçük harf toleranslı (Türkçe I/İ dahil),
+     * fakat EXACT match — substring veya aksan normalizasyonu YAPILMAZ.
+     * "Mavi" ≠ "Mavi Gri", "Adele" ≠ "Adèle Castillon"
+     * "Beyoncé" == "Beyoncé", "çelik" == "Çelik" (büyük/küçük ok)
+     */
+    public static boolean equalsTRInsensitive(String actual, String expected) {
+        if (expected == null || expected.isBlank()) return true;
+        if (actual == null) return false;
+        // trim: API'den gelen trailing/leading whitespace farkını ortadan kaldırır.
+        // NFC: decomposed (S + combining-cedilla) → precomposed (Ş). Accent strip YOK.
+        String a = Normalizer.normalize(actual.trim(),   Normalizer.Form.NFC);
+        String e = Normalizer.normalize(expected.trim(), Normalizer.Form.NFC);
+        return a.toLowerCase(TR).equals(e.toLowerCase(TR))
+                || a.toLowerCase(ROOT).equals(e.toLowerCase(ROOT));
     }
 
     public static String prettyRule(Rule rule) {
@@ -130,8 +154,10 @@ public class MuudSearchUtils {
     public static int findArtistIndex(JsonPath jp, int n, String expArtist) {
         String basePath = getBasePath(jp);
         for (int i = 0; i < Math.max(0, n); i++) {
+            String kind = safeStr(jp.getString(basePath + "[" + i + "].data.kind"));
+            if (!"performers".equals(kind)) continue; // şarkı/albüm sonuçlarını atla
             String artist = getPerformerName(jp, basePath + "[" + i + "].data");
-            if (containsTRInsensitive(artist, expArtist)) return i;
+            if (equalsTRInsensitive(artist, expArtist)) return i;
         }
         return -1;
     }
@@ -143,22 +169,37 @@ public class MuudSearchUtils {
 
             // Active-indices karışık içerik döner: şarkı, albüm ve sanatçı kayıtları.
             //
-            //  Şarkı kaydı  → songName dolu,  albumName boş
-            //  Albüm kaydı  → songName boş,   albumName dolu   → albumName'e fallback
-            //  Sanatçı kaydı→ songName boş,   albumName boş    → iki alan da boş
-            //
+            //  Şarkı kaydı    → songName dolu
+            //  Albüm kaydı    → albumName dolu
+            //  Playlist kaydı → playlistName dolu
+            //  Sanatçı kaydı  → hepsi boş → performerName'e fallback
+            //  Bu zincir: keyword aramaları (expArtist="") için performer/playlist
+            //  sonuçlarının da keyword'ü içerip içermediğini kontrol eder.
             String track = safeStr(jp.getString(basePath + "[" + i + "].data.songName"));
             if (track.isEmpty()) {
                 track = safeStr(jp.getString(basePath + "[" + i + "].data.albumName"));
             }
+            if (track.isEmpty()) {
+                track = safeStr(jp.getString(basePath + "[" + i + "].data.playlistName"));
+            }
+            if (track.isEmpty()) {
+                track = getPerformerName(jp, basePath + "[" + i + "].data");
+            }
 
+            // Artist için contains: "Derya Uluğ & Asil Gök" → "Derya Uluğ" eşleşmeli.
+            // Track adı ek filtreleme sağladığından strict match gerekmez.
+            // Strict match (equalsTRInsensitive) yalnızca findArtistIndex'te kalır.
             boolean artistOk = expArtist.isBlank() || containsTRInsensitive(artist, expArtist);
 
             // expTrack belirtilmişse kayıt içinde track/albüm adı MUTLAKA eşleşmeli.
             // Performer-only kayıtları (songName ve albumName boş) geçerli eşleşme sayılmaz.
             // Örn. "ille de sen" → Azer Bülbül sanatçı kaydı bulunsa da
             //      İlle De Sen şarkısı aynı kayıtta yoksa NOK olarak işaretlenir.
-            boolean trackOk = expTrack.isBlank() || containsTRInsensitive(track, expTrack);
+            // Performer adı da kontrol edilir: "mebrure" aramasında "Mebrure Avas –Ayrılalı Ben Senden"
+            // geldiğinde songName eşleşmez ama performerName eşleşmeli.
+            boolean trackOk = expTrack.isBlank()
+                    || containsTRInsensitive(track, expTrack)
+                    || containsTRInsensitive(artist, expTrack);
 
             if (artistOk && trackOk) return i;
         }

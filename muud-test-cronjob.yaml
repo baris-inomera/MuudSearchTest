@@ -1,0 +1,64 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: muud-search-test
+  namespace: ddp-fixed-test
+spec:
+  schedule: "0 8 * * 1-5"
+  concurrencyPolicy: Forbid
+  successfulJobsHistoryLimit: 3
+  failedJobsHistoryLimit: 3
+  jobTemplate:
+    spec:
+      backoffLimit: 1
+      template:
+        spec:
+          restartPolicy: Never
+          containers:
+          - name: muud-test
+            image: python:3.11-slim
+            command: ["/bin/sh", "-c"]
+            args:
+            - |
+              pip install requests openpyxl --quiet &&
+              python3 /scripts/run_tests.py
+            env:
+            - name: RESULTS_DIR
+              value: /results
+            - name: SMTP_HOST
+              value: "10.234.204.10"
+            - name: SMTP_PORT
+              value: "587"
+            - name: SMTP_USER
+              value: "mobilodeme@turktelekom.com.tr"
+            - name: SMTP_PASS
+              valueFrom:
+                secretKeyRef:
+                  name: muud-test-secrets
+                  key: smtp-pass
+            - name: MAIL_FROM
+              value: "ddp@turktelekom.com.tr"
+            - name: MAIL_TO
+              valueFrom:
+                secretKeyRef:
+                  name: muud-test-secrets
+                  key: mail-to
+            volumeMounts:
+            - name: script
+              mountPath: /scripts
+            - name: results
+              mountPath: /results
+            resources:
+              requests:
+                memory: "512Mi"
+                cpu: "250m"
+              limits:
+                memory: "1Gi"
+                cpu: "500m"
+          volumes:
+          - name: script
+            configMap:
+              name: muud-test-script
+          - name: results
+            persistentVolumeClaim:
+              claimName: muud-test-results
