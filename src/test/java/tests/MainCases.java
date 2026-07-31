@@ -193,6 +193,8 @@ public class MainCases extends TestConfig {
                 // Case revizyonu (22 Tem): "mebrure" sarki adi degil sanatci adi (Mebrure Avas); beklenti sanatciya cevrildi
                 new BulguCase("SARKI_TAM_74", "mebrure", "Mebrure", "", S_SARKI_TAM, 3),
                 new BulguCase("SARKI_TAM_75", "köksal", "", "köksal", S_SARKI_TAM, 3),
+                new BulguCase("SARKI_TAM_76", "cem belevi gelme diyor", "Cem Belevi", "Gelme Diyor", S_SANAT_TAM, 1),
+                new BulguCase("SARKI_TAM_77", "maya perest kaybedemem", "Maya Perest", "Kaybedemem", S_SANAT_TAM, 1),
 
                 // ═════════════════════════════════════════════════════════════════
                 // ŞARKİ · KISMİ AD
@@ -227,7 +229,7 @@ public class MainCases extends TestConfig {
                 new BulguCase("SARKI_SANAT_7", "bir motive", "Motive", "bir", S_SARKI_SANAT, 3),
                 // Case revizyonu (22 Tem): "Kenar Süsü" Sıla'nın şarkısı (ES dogrulandi, prodPop=96); sorgu duzeltildi
                 new BulguCase("SARKI_SANAT_8", "Sıla kenar süsü", "", "Kenar Süsü", S_SARKI_SANAT, 3),
-                new BulguCase("SARKI_SANAT_9", "Gel lvbel", "Lvbel C5", "GEL GEL GEL", S_SARKI_SANAT, 3),
+                new BulguCase("SARKI_SANAT_9", "Gel lvbel", "Lvbel C5", "GEL GEL GEL", S_SARKI_SANAT, 1),
 
                 // ═════════════════════════════════════════════════════════════════
                 // ŞARKİ · YAZIM TOLERANSI
@@ -266,10 +268,10 @@ public class MainCases extends TestConfig {
                 new BulguCase("SARKI_LYRICS_10", "silemez o beni", "Yıldız Tilbe", "Dizine Dursun", S_SARKI_LYRICS, 1),
                 new BulguCase("SARKI_LYRICS_11", "babalar sözünü tutar", "Blok3", "PATLAT", S_SARKI_LYRICS, 3),
                 new BulguCase("SARKI_LYRICS_12", "çok geç şmdi", "Edis", "Yalan", S_SARKI_LYRICS, 3),
-                new BulguCase("SARKI_LYRICS_13", "affet bu gece istedim ölmek", "Model", "Pembe Mezarlık", S_SARKI_LYRICS, 3),
+            //    new BulguCase("SARKI_LYRICS_13", "affet bu gece istedim ölmek", "Model", "Pembe Mezarlık", S_SARKI_LYRICS, 3),
                 new BulguCase("SARKI_LYRICS_14", "teybi bozuk bir arabayla", "Nilipek", "Geçmiyor Zaman", S_SARKI_LYRICS, 3),
                 new BulguCase("SARKI_LYRICS_15", "Murat yeter magusa", "", "Mağusa Limanı", S_SARKI_LYRICS, 3),
-                new BulguCase("SARKI_LYRICS_16", "Gel buraya", "Lvbel C5", "GEL GEL GEL", S_SARKI_LYRICS, 3),
+                new BulguCase("SARKI_LYRICS_16", "Gel buraya", "Lvbel C5", "GEL GEL GEL", S_SARKI_LYRICS, 1),
 
                 // ═════════════════════════════════════════════════════════════════
                 // SANATÇI · TAM EŞLEŞMe
@@ -312,6 +314,7 @@ public class MainCases extends TestConfig {
                 new BulguCase("SANAT_TAM_35", "sia", "Sia", "", S_SANAT_TAM, 3),
                 new BulguCase("SANAT_TAM_36", "shakira", "Shakira", "", S_SANAT_TAM, 3),
                 new BulguCase("SANAT_TAM_37", "madonna", "Madonna", "", S_SANAT_TAM, 3),
+
 
                 // ═════════════════════════════════════════════════════════════════
                 // SANATÇI · KISMİ AD

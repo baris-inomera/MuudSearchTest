@@ -37,11 +37,11 @@ public class MuudSearchApi {
                 .relaxedHTTPSValidation()
                 .header("Content-Type", "application/json")
                 .header("Accept", "*/*")
-                .header("X-SEARCH-APP-KEY","hmuud")
+                .header("X-SEARCH-APP-KEY","muudelk9")
 // muudelk9:5KycODJZxhQqAvm5 — mirket consumer "MuudElk9" → tenant hmuud.
 // Eski deger WPPeHLyg (consumer "Muud") tenant muud'a gidiyordu; gateway
 // Basic auth'a bakar, X-SEARCH-APP-KEY header'i tenant secimini ETKILEMEZ.
-                .header("Authorization", "Basic bXV1ZGVsazk6NUt5Y09ESlp4aFFxQXZtNQ==")
+                .header("Authorization", "Basic V1BQZUhMeWc6NUt5Y09ESlp4aFFxQXZtNQ==")
                 .body(apiQueryBody)
                 .when()
                 .post(new_path)
