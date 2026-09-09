@@ -1,0 +1,396 @@
+[
+  {
+    "id": "K00-api-altyapi-hatasi",
+    "oncelik": 200,
+    "aciklama": "Sonuç metni API/altyapı hatası anlatıyor — arama bulgusu değil.",
+    "kosullar": {
+      "apiHatasi": true
+    },
+    "sonuc": {
+      "bulgu": false,
+      "kategori": "YANLIS_BEKLENTI",
+      "kokNeden": "api/altyapi hatasi",
+      "guven": 0.95,
+      "cozum": "MOTOR TARAFINDA AKSIYON YOK — bu satırda arama motoru hiç değerlendirilmedi.\nNE YAP: Koşuyu bu case için tekrarlayın. Hata tekrar ediyorsa gateway/Netzilo bağlantısını ve API yanıtının gerçekten JSON döndüğünü kontrol edin.\nDİKKAT: Bu satır başarı oranı hesabından DÜŞÜLMELİ; motor performansı olarak sayılırsa oran haksız yere düşük görünür.\nDOĞRULA: \"{sorgu}\" sorgusunu Postman'den koşun; 200 ve geçerli JSON dönüyorsa sorun koşu anına özgü geçici bir hatadır.",
+      "devNotu": "NEDEN: Sonuç metni API hatası / 'Failed to parse the JSON document' / boş yanıt içeriyor. Sıralama değerlendirilememiş, dolayısıyla bu satırdan hiçbir motor çıkarımı yapılamaz. 03.09.2026 koşusunda SARKI_TAM_1 ve SARKI_TAM_2 tam olarak bu nedenle NOK göründü ve bir sonraki koşuda kendiliğinden OK'e döndü."
+    },
+    "kanit": "olculmedi"
+  },
+  {
+    "id": "K06-sanatci-sarki-performer-eziyor",
+    "oncelik": 99,
+    "aciklama": "Sanatçı+şarkı sorgusunda çıplak performer kaydı şarkıyı geçiyor.",
+    "kosullar": {
+      "testTipiIcerir": "Sanatçı + Şarkı",
+      "agirlikDevrilmesi": true,
+      "devrilenUstIndex": "performers"
+    },
+    "sonuc": {
+      "bulgu": true,
+      "kategori": "AGIRLIK",
+      "kokNeden": "performers agirligi songs'u eziyor",
+      "guven": 0.95,
+      "cozum": "NEREDE: Performers index tanımı (id 3).\nNE YAP: Playlists'te (id 4) var olan `intentBoostEnabled` alanını Performers'a da ekle ve şu kuralı tanımla — sorgu 2+ token içeriyorsa ve token'ların tamamı performerName'i karşılamıyorsa performers kaydına 0.5 çarpanı uygula.\nYAPMA: `topHitsScoreWeight` performers=0.38 değerini DÜŞÜRME. Statik düşürme Sanatçı · Kısmi Ad ailesindeki 44 case'i bozar.\nDOĞRULA: \"{sorgu}\" sorgusunu Postman'de koş; topHits'te 1. sıra [songs] olmalı, çıplak performer kaydı 3. sıranın altına inmeli. Sonra Sanatçı · Kısmi Ad ailesini tekrar koş, %89 oranı düşmemeli.",
+      "devNotu": "NEDEN: Hedef şarkının ham skoru üstündeki performer kaydından YÜKSEK olmasına rağmen {beklenenSira}. sırada. Sırayı ham skor değil skor × topHitsScoreWeight belirliyor: performers 0.38, songs 0.27. Yani songs kaydı %41 daha yüksek skor almadıkça performers'ı geçemiyor. Kullanıcı sanatçı+şarkı yazdığında şarkıyı arıyor, sanatçı sayfasını değil — bu bir intent problemi, ağırlık problemi değil.\nOLCUM (04.09.2026, 277 UAT + 277 prod sorgusu) — BU RAPOR {ortam} ORTAMINDAN. Bu ortamin agirlik tablosu: {agirlikTablosu}. {dogrulamaOrani} IKI ORTAM AYNI TABLOYU KULLANMIYOR: UAT'ta playlists songs'un USTUNDE (0.335 > 0.27), PROD'da ALTINDA (~0.18); videos UAT'ta 0.00, PROD'da ~0.27. Bir ortamda olculen agirligi digerine tasimayin."
+    },
+    "kanit": "277 UAT sorgusu / 1859 cift — tablo + playlist carpani %99.78"
+  },
+  {
+    "id": "K07-cross-field-sanatci-sarki-yok",
+    "oncelik": 98,
+    "aciklama": "Sanatçı+şarkı sorgusunda hiç şarkı dönmüyor.",
+    "kosullar": {
+      "testTipiIcerir": "Sanatçı + Şarkı",
+      "ilkIndex": "performers",
+      "agirlikDevrilmesi": false,
+      "bulunamadi": true
+    },
+    "sonuc": {
+      "bulgu": true,
+      "kategori": "INDEX_MISSING",
+      "kokNeden": "cross-field sanatci+sarki desteklenmiyor",
+      "guven": 0.85,
+      "cozum": "İKİ ADIM, SIRASI ÖNEMLİ.\n1) ETL (önce bu): Songs index'inde feat edilen sanatçı `performers` alanına yazılmıyor. Adında 'feat' geçen ~414 bin şarkının yalnızca ~%22'sinde feat sanatçısı bu alanda duruyor (DDP-342 sayımı). Aynı ismi `searchName` dizisine de ekleyin — o dizi zaten permütasyon tutuyor (ör. [\"Remix Erkan Ocaklı\", \"Erkan Ocaklı Remix\"]), yeni alan açmaya gerek yok.\n2) SORGU: Songs (id 96) tanımında performerNames + songName'i `copy_to` ile tek bir full_text alanına yazın, `multi_match type=cross_fields` kullanın.\nSIRA NEDEN ÖNEMLİ: 2'yi tek başına yaparsanız hiçbir şey değişmez — eşleşecek veri yok.\nDOĞRULA: \"{sorgu}\" sorgusunu koş; hedef şarkı top-3'te olmalı. Önce Elasticsearch'te tek doküman çekip `performers` ve `searchName` alanlarının dolduğunu gör.",
+      "devNotu": "NEDEN: Hedef içerik top-10'da HİÇ yok ve dönen sonuçlar sorgunun yalnızca tek token'ını eşliyor. Sanatçı ve şarkı token'ları birlikte değerlendirilmiyor. Ayrıca beklenen sanatçının katalogda olup olmadığını doğrulayın — yoksa bu satır bulgu değil, `bilinen-istisnalar.json`'a BLOCKED olarak girmeli."
+    },
+    "kanit": "DDP-342 sayimi; response ile DOGRULANMADI"
+  },
+  {
+    "id": "K06b-sanatci-sarki-performer-onde",
+    "oncelik": 97,
+    "aciklama": "Sanatçı+şarkı sorgusunda performer kaydı şarkının önünde (devrilme yok).",
+    "kosullar": {
+      "testTipiIcerir": "Sanatçı + Şarkı",
+      "ilkIndex": "performers",
+      "bulunamadi": false
+    },
+    "sonuc": {
+      "bulgu": true,
+      "kategori": "AGIRLIK",
+      "kokNeden": "performers agirligi songs'u eziyor",
+      "guven": 0.8500000000000001,
+      "cozum": "NEREDE: Performers index tanımı (id 3).\nNE YAP: K06 ile aynı aksiyon — Performers'a `intentBoostEnabled` ekle; sorguda sanatçı adının ötesinde token varsa çıplak performer kaydına 0.5 çarpanı uygula.\nYAPMA: performers 0.38 ağırlığını statik düşürme.\nDOĞRULA: \"{sorgu}\" sorgusunda hedef şarkı {beklenenSira}. sıradan top-3'e çıkmalı.",
+      "devNotu": "NEDEN: Çıplak performer kaydı 1. sırayı aldı, aranan şarkı {beklenenSira}. sırada kaldı. Burada ham skor devrilmesi YOK — performer kaydı zaten daha yüksek skor almış, üstüne 0.38 ağırlık da eklenince fark açılıyor. K06 ile aynı kök neden, farklı tetiklenme biçimi.\nOLCUM (04.09.2026, 277 UAT + 277 prod sorgusu) — BU RAPOR {ortam} ORTAMINDAN. Bu ortamin agirlik tablosu: {agirlikTablosu}. {dogrulamaOrani} IKI ORTAM AYNI TABLOYU KULLANMIYOR: UAT'ta playlists songs'un USTUNDE (0.335 > 0.27), PROD'da ALTINDA (~0.18); videos UAT'ta 0.00, PROD'da ~0.27. Bir ortamda olculen agirligi digerine tasimayin."
+    },
+    "kanit": "277 UAT sorgusu / 1859 cift — tablo + playlist carpani %99.78"
+  },
+  {
+    "id": "K01-playlist-sarki-sorgusunu-eziyor",
+    "oncelik": 96,
+    "aciklama": "Şarkı testinde 1. sırayı playlist alıyor.",
+    "kosullar": {
+      "testTipiIcerir": "Şarkı",
+      "ilkIndex": "playlists"
+    },
+    "sonuc": {
+      "bulgu": true,
+      "kategori": "AGIRLIK",
+      "kokNeden": "playlists agirligi ve intent boost",
+      "guven": 0.85,
+      "cozum": "NEREDE: Playlists index tanimi (id 4).\nIKI KALDIRAC VAR, ONCE IKINCISINI DENE:\n1) `intentBoostEnabled` TETIKLEME KOSULU (once bu, daha az riskli): Playlist niyetli sorgularda playlists agirligi ~4.0 ile carpiliyor (UAT'ta 51 gozlem medyan 3.87, prod'da 80 gozlem medyan 3.96 — iki ortamda ayni). \"{sorgu}\" bir sarki adi oldugu halde bu carpan tetiklenmis. Tetikleme kosuluna sunu ekleyin: sorgu songs index'inde birebir baslik eslesmesi uretiyorsa playlist intent boost UYGULANMAZ. Bu, Playlist ailesindeki 30 case'e dokunmaz.\n2) `topHitsScoreWeight`: 0.335 -> 0.25 (songs 0.27'nin ALTINA). UAT'ta playlists gercekten songs'un ustunde, o yuzden bu gecerli bir kaldirac. Ama daha genis etkili: Playlist ailesinin %93 oranini dusurebilir, o yuzden 1'i denedikten sonra bakin.\n3) `playlistName.turkish` boost 0.6 — Turkce govdeleme alakasiz playlist'leri esliyor. HENUZ OLCULMEDI.\nDOGRULA: \"{sorgu}\" sorgusunda 1. sira [songs] olmali. Sonra Playlist ailesinin 30 case'ini tekrar kos — %93 orani DUSMEMELI.",
+      "devNotu": "NEDEN: \"{sorgu}\" bir sarki sorgusu ama 1. sirayi playlist aldi. UAT'ta playlists agirligi 0.335, songs'un (0.27) %24 ustunde; ustune playlist-intent carpani (~4.0) da binerse etkin agirlik 1.34'e cikiyor ve songs'un cok ustune gecıyor.\nOLCUM (04.09.2026, 277 UAT + 277 prod sorgusu) — BU RAPOR {ortam} ORTAMINDAN. Bu ortamin agirlik tablosu: {agirlikTablosu}. {dogrulamaOrani} IKI ORTAM AYNI TABLOYU KULLANMIYOR: UAT'ta playlists songs'un USTUNDE (0.335 > 0.27), PROD'da ALTINDA (~0.18); videos UAT'ta 0.00, PROD'da ~0.27. Bir ortamda olculen agirligi digerine tasimayin."
+    },
+    "kanit": "277 UAT + 277 prod sorgusu — tablo UAT'ta %99.78; playlist carpani ~4.0 iki ortamda da olculdu"
+  },
+  {
+    "id": "K02a-kisa-isim-uzun-ismi-eziyor",
+    "oncelik": 95,
+    "aciklama": "Sanatçı sorgusunda 1. sıra sorguyla birebir aynı ve hedef DAHA popüler.",
+    "kosullar": {
+      "testTipiIcerir": "Sanatçı",
+      "ilkIndex": "performers",
+      "ilkSonucSorguylaAyni": true,
+      "populerlikKarsilastirmasi": "HEDEF_DAHA_POPULER"
+    },
+    "sonuc": {
+      "bulgu": true,
+      "kategori": "AGIRLIK",
+      "kokNeden": "performerName.exact bonusu populerligi eziyor",
+      "guven": 0.9,
+      "cozum": "NEREDE: Performers index tanimi (id 3) -> `extraBonusFields` -> `performerName.exact` -> `weight`.\nOLCUM (3 sorguda yapildi): birebir ad eslesmesi performers taban skoruna su kadar ekliyor — \"gulden\" +15.93 puan, \"selda\" +14.54 puan, \"deha\" -4.43 puan (uzun ad da kismen esletigi icin negatif). Yani tipik durum ~14-16 puan.\nNE YAP: weight'i 10 -> 4-5 araligina cekin. Hesap (UAT olcumu; bu rapor {ortam}, performers katsayisi {popKatsayiPerformers}): \"selda\" case'inde hedefin populerlik avantaji 0.85 x (52-44) = 6.80 puan; birebir bonusu bunun ALTINA inerse hedef 1. siraya cikar. 14.54'ten ~6.5'e inmek icin weight ~4.5 gerekiyor.\nDIKKAT: Populerlik katsayisi index'e gore farkli — {ortam} icin performers {popKatsayiPerformers}, songs {popKatsayiSongs} (karistirmayin).\nDOGRULA: \"{sorgu}\" sorgusunda hedef 1. siraya cikmali. Sonra Sanatci · Tam Eslesme ailesini (38 case, %97) tekrar kos — birebir eslesmenin dogru oldugu case'ler bozulmamali; bozulursa 4 yerine 6 deneyin.",
+      "devNotu": "NEDEN: 1. siradaki kaydin adi sorguyla (\"{sorgu}\") birebir ayni, hedef {konum}. Hedef DAHA POPULER ({hedefPop} vs {ustPop}) ama birebir ad bonusu populerlik avantajini asiyor.\nDOGRULAMA — {ortam} ortami, skorlamayi belirleyen alan `{popAlani}`: songs katsayisi {popKatsayiSongs}, performers katsayisi {popKatsayiPerformers}. UAT olcumu: songs 0.58 (kuzu kuzu n=24, bana sor n=30, R2=1.00000), performers 0.85 (5 ayri grup, R2=1.00000) — performers populerlige songs'tan %47 daha fazla agirlik veriyor. PROD'da bu katsayilar OLCULEMEDI; PROD raporunda gorunen satirlarda UAT katsayisiyla hesap yapmayin."
+    },
+    "kanit": "3 sorgu — birebir ad bonusu 14-16 puan olculdu (gulden, selda)"
+  },
+  {
+    "id": "K02-performers-exact-bonusu",
+    "oncelik": 94,
+    "aciklama": "Sanatçı testinde performer kaydı yanlış sırada; exact bonusu şüphelisi.",
+    "kosullar": {
+      "testTipiIcerir": "Sanatçı",
+      "ilkIndex": "performers"
+    },
+    "sonuc": {
+      "bulgu": true,
+      "kategori": "AGIRLIK",
+      "kokNeden": "performerName.exact bonusu populerligi eziyor",
+      "guven": 0.7,
+      "cozum": "ONCE HANGI MEKANIZMA OLDUGUNU AYIRT ET — iki farkli durum bu kurala dusuyor:\n(a) Ustteki kayit sorguyla BIREBIR ayni adli ise -> birebir ad bonusu problemi. Performers (id 3) `extraBonusFields` -> `performerName.exact` -> `weight`: 10 -> 4-5. Olculen bonus ~14-16 puan.\n(b) Ustteki kayit collab/varyant kayit ise (ornek: \"deha\" sorgusunda 'DEHA INC. & cakal' 1., 'DEHA INC.' 2.) -> bu bir bonus problemi DEGIL. Olcum: birebir bonusu burada -4.43 puan, yani hedefin lehine. Hedef sadece daha az populer oldugu icin altta (40 vs 46) ve agirlikli fark yalnizca 0.26. Cozum K16'da: collab kaydi solo sanatciyla birlestirilmeli, cunku collab kaydinin solo sanatcidan yuksek populerlik tasimasi katalog problemidir.\nDOGRULA: \"{sorgu}\" sorgusunda hedef top-3'e girmeli. Hangi durumdaysaniz o aksiyonu uygulayin; (b) durumunda weight'e dokunmak bu satiri duzeltmez.",
+      "devNotu": "NEDEN: Sanatci sorgusunda beklenen performer kaydi {konum}, ustunde '{ustEtiket}' var. Iki mekanizma da bu desene yol acabiliyor (birebir ad bonusu ~14-16 puan; ya da collab kaydinin daha yuksek populerligi). Ayirt etmek icin ustteki kaydin adi sorguyla birebir mi, collab mi diye bakin.\nDOGRULAMA — {ortam} ortami, skorlamayi belirleyen alan `{popAlani}`: songs katsayisi {popKatsayiSongs}, performers katsayisi {popKatsayiPerformers}. UAT olcumu: songs 0.58 (kuzu kuzu n=24, bana sor n=30, R2=1.00000), performers 0.85 (5 ayri grup, R2=1.00000) — performers populerlige songs'tan %47 daha fazla agirlik veriyor. PROD'da bu katsayilar OLCULEMEDI; PROD raporunda gorunen satirlarda UAT katsayisiyla hesap yapmayin."
+    },
+    "kanit": "3 sorgu — iki ayri mekanizma ayirt edildi (birebir ad / collab populerligi)"
+  },
+  {
+    "id": "K04-lyrics-alani-etkisiz",
+    "oncelik": 93,
+    "aciklama": "Şarkı sözü sorgusu performer kayıtlarına düşüyor.",
+    "kosullar": {
+      "testTipiIcerir": "Lyrics",
+      "ilkIndex": "performers"
+    },
+    "sonuc": {
+      "bulgu": true,
+      "kategori": "INDEX_MISSING",
+      "kokNeden": "lyrics adaylari cross-index birlestirmede kaybediyor",
+      "guven": 0.8,
+      "cozum": "DIKKAT — BU KURALIN ESKI TESHISI YANLISTI.\nEskiden 'lyrics alani etkisiz, boost 0.2 pratikte sifir' diyordu. OLCUM bunu curuttu: 16 LYRICS case'inin 15'inde songs index'i ADAY URETIYOR (songs.total 1 ile 10000 arasi). Yani lyrics alani ESLESIYOR; sorun eslesmede degil, sonrasinda.\nGERCEK MEKANIZMA: Lyrics eslesmesinden gelen songs adaylari dusuk skor aliyor ve index'ler arasi birlestirmede performers'a kaybediyor (UAT: performers 0.38 vs songs 0.27). Ornek: \"colume yagmur oldun\" -> songs.total=16 (16 sarki esliyor!) ama topHits'te yalnizca 1 songs kaydi var ve 1. sira performers.\nNE YAP, SIRAYLA:\n1) Songs (id 96) -> `lyrics` boost 0.2 -> 1.5, `lyrics.turkish` 0.1 -> 0.8. Bu, lyrics'ten gelen adaylarin SKORUNU yukseltir, birlestirmede sag kalirlar.\n2) Lyrics intent'i: sorgu 3+ kelimeli dogal bir cumleyse ve hicbir performerName'i tam karsilamiyorsa performers kaydina 0.5 carpani. Boylece 0.38 avantaji notrlenir.\nISTISNA: songs.total = 0 veya 1 ise sorun baska — o sarki sozu katalogda yok ya da lyrics alani o kayitta bos. Once Elasticsearch'te tek dokuman cekip lyrics alanina bakin.\nDOGRULA: \"{sorgu}\" sorgusunda 1. sira [songs] olmali. Sarki · Lyrics ailesi su an %44 — bu ailedeki en buyuk kazanc burada.",
+      "devNotu": "NEDEN: \"{sorgu}\" bir sarki sozu ama sonuclarin basinda performer kayitlari var.\nOLCUM (04.09.2026, 277 UAT sorgusu): 16 LYRICS case'inde songs.total degerleri 1, 2, 5, 7, 9, 16, 45, 50, 92, 158, 226, 241, 251, 824, 4966, 8958, 10000 — yani lyrics eslesmesi CALISIYOR. Ama bu adaylarin skoru dusuk oldugu icin cogu topHits'e giremiyor. Eski 'lyrics alani etkisiz' teshisi olcumle celisiyor; sorun eslesme degil, skor ve cross-index harmanlama."
+    },
+    "kanit": "277 UAT sorgusu — 16 LYRICS case'inin 15'inde songs adayi VAR (iddia curutuldu)"
+  },
+  {
+    "id": "K03-birebir-baslik-tier-bonusu",
+    "oncelik": 92,
+    "aciklama": "İlk sonuçların çoğu sorguyla birebir aynı adlı kayıtlar.",
+    "kosullar": {
+      "birebirEslesmeEnAz": 3
+    },
+    "sonuc": {
+      "bulgu": true,
+      "kategori": "RANKING",
+      "kokNeden": "exact/tier bonusu populerligi eziyor",
+      "guven": 0.75,
+      "cozum": "ONCE BU SORGUDA FARKI OLC — tek bir sabit deger YOK.\nOLCUM (5 sorguda taban skor kumelenmesiyle): tam eslesme ile kismi eslesme arasindaki taban skor farki \"kuzu kuzu\" 51.36 · \"deha\" 13.15 · \"selda\" 12.03 · \"yerinde\" 11.25 · \"colume yagmur oldun\" 5.83 puan. Yani fark sorguya gore 6-51 puan arasinda degisiyor; ayirt edici cok kelimeli basliklarda buyuk, kisa/yaygin basliklarda kucuk.\nNASIL OLCERSIN ({ortam}): {tabanFormul}\nNE YAP: Fark, populerligin verebilecegi maksimum katkidan ({popKatsayiSongs} x en yuksek {popAlani}) BUYUKSE populerlik o sinirri asla gecemez -> tier puan farkini o degerin altina indirin. Fark zaten kucukse (13 puan ve alti) tier'e DOKUNMAYIN; o satirin kok nedeni baska yerdedir.\nYAPMA: Sabit bir \"tier farkini 25'e indir\" onerisi uygulamayin — 5 sorgunun 4'unde fark zaten 13 puanin altinda.",
+      "devNotu": "NEDEN: Ilk sonuclarin {birebirSayisi} tanesinin adi sorguyla (\"{sorgu}\") birebir ayni ve hedef bunlarin altinda. Songs (96) tanimda `tierRankingEnabled=true`. ANCAK tam eslesme avantaji sabit degil: 5 sorguda 5.83 ile 51.36 puan arasinda olculdu. Bu 'avantaj' saf tier bonusu da degil — tam baslik eslesmesi ayni zamanda cok daha yuksek BM25 aliyor ve response'tan ikisi ayirt edilemiyor. Bu yuzden bu kuralin guveni 0.75'e dusuruldu: mekanizma dogru, buyuklugu sorguya ozgu ve olculmeden aksiyon alinmamali.\nsongs populerlik katsayisi — {ortam} icin: {popKatsayiSongs}. (UAT'ta \"kuzu kuzu\" n=24 ve \"bana sor\" n=30 sorgularinda R2=1.00000 ile 0.58 olculdu; PROD'da hicbir populerlik alani skoru dogrusal aciklamadigi icin katsayi cikarilamadi.)"
+    },
+    "kanit": "5 sorgu — fark 5.83-51.36 arasi DEGISKEN, sabit deger yok"
+  },
+  {
+    "id": "K05-yazim-toleransi-kapali",
+    "oncelik": 91,
+    "aciklama": "Yazım toleransı testinde hedef hiç bulunamıyor.",
+    "kosullar": {
+      "testTipiIcerir": "Yazım",
+      "bulunamadi": true
+    },
+    "sonuc": {
+      "bulgu": true,
+      "kategori": "SINONIM",
+      "kokNeden": "yazim toleransi kapali",
+      "guven": 0.8,
+      "cozum": "NEREDE: İlgili index tanımı (sanatçı sorgusu ise Performers id 3, şarkı ise Songs id 96).\n1) `extraBonusFields` içindeki `fuzzy: true` satırının `weight`: 2 → 6. Performers'ta bu ağırlık şu an sadece 2, yani yazım toleransı neredeyse yok.\n2) Yetmezse `levenstein.enabled`: false → true, `maxEdits: 1` ile (tüm index tanımlarında şu an false). Tek harflik hataları kapatır, 2+ harf için `muud_dym` correction devrede kalır.\nYAPMA: Sorgu bazlı synonym EKLEMEYİN. Ekip politikası bu yönde; synonym tek case'i yeşile çevirir, motoru düzeltmez ve başarı oranını yapay yükseltir.\nDOĞRULA: \"{sorgu}\" sorgusunda hedef top-3'e girmeli. `maxEdits: 1` açıldıktan sonra Sanatçı · Tam Eşleşme ailesini (36 case, %97) tekrar koş — fuzzy yanlış eşleşme üretip bu oranı düşürmemeli.",
+      "devNotu": "NEDEN: \"{sorgu}\" için hedef içerik top-10'da HİÇ yok; yazım farkı hiç tolere edilmiyor. Tüm index tanımlarında `levenstein.enabled=false`. Yazım toleransı yalnızca iki yerden geliyor: `muud_dym` correction index'i ve `extraBonusFields`'taki `fuzzy: true` satırları. Performers'ta o ağırlık 2 — diğer alanların yanında ölçülemeyecek kadar küçük."
+    },
+    "kanit": "DOGRULANMADI — fuzzy weight=2 iddiasi olculemedi"
+  },
+  {
+    "id": "K15-ozel-karakterli-sorgu",
+    "oncelik": 90,
+    "aciklama": "Sorguda özel karakter/ayraç var — DDP-342 ailesi.",
+    "kosullar": {
+      "sorguRegex": ".*[$@!_:&%#+/\\\\()\\[\\]].*"
+    },
+    "sonuc": {
+      "bulgu": true,
+      "kategori": "SINONIM",
+      "kokNeden": "ozel karakter analyzer'da dusuyor",
+      "guven": 0.7,
+      "cozum": "NEREDE: Index analyzer tanımı — `char_filter` / mapping seviyesi. Sorgu bazlı düzeltme DEĞİL.\nİLK ADIM: Bu satırı DDP-342'nin dört grubundan birine koyun, çünkü aksiyon gruba göre değişiyor:\n· HARF (4.076 kayıt) — karakter aslında harf yerine geçiyor (ör. 'KÖK$VL'). Analyzer'da harf olarak KORUNMALI, atılmamalı.\n· AYRAÇ (6.776) — gerçek ayraç. `char_filter`'da boşluğa çevrilmeli, token sınırı sayılmamalı.\n· KAPSAM DIŞI (8.406) — içerik ortamda yok. Bu satır bulgu değil, `bilinen-istisnalar.json`'a BLOCKED girmeli.\n· BOZUK (190) — veri hatalı, ETL'de düzeltilmeli.\nDOĞRULA: `_analyze` API'sini kullanın — \"{sorgu}\" sorgusunu ve indekslenmiş biçimi aynı analyzer'dan geçirip token dizilerinin örtüştüğünü görün. Örtüşmüyorsa sorun analyzer'da, örtüşüyorsa sıralamada.",
+      "devNotu": "NEDEN: \"{sorgu}\" sorgusunda özel karakter/ayraç var. Analyzer bu karakteri token sınırı sayıp attığı için sorgunun token'ları indekslenmiş biçimin token'larıyla örtüşmüyor — eşleşme hiç kurulamıyor ya da yanlış kuruluyor. DDP-342 bu ailenin tamamını sayıp dört gruba ayırdı; grup bilgisi olmadan tek bir düzeltme yazılamaz çünkü HARF ve AYRAÇ grupları BİRBİRİNİN TERSİ aksiyon istiyor."
+    },
+    "kanit": "DDP-342 sayimi; response ile DOGRULANMADI"
+  },
+  {
+    "id": "K19-hatali-yazim-duzeltmesi",
+    "oncelik": 89,
+    "aciklama": "Motor sorguyu yanlış bir kelimeye düzeltmiş (corrected=true).",
+    "kosullar": {
+      "sanatciVaryantEnAz": 3
+    },
+    "sonuc": {
+      "bulgu": true,
+      "kategori": "SINONIM",
+      "kokNeden": "yazim duzeltici sorguyu yanlis kelimeye ceviriyor",
+      "guven": 0.75,
+      "cozum": "ONCE SUNU KONTROL ET: Postman'de \"{sorgu}\" sorgusunu kosun ve response'un basindaki `corrected` ile `suggestedText` alanlarina bakin. `corrected: true` ise motor sorgunuzu BASKA BIR KELIMEYE cevirmis ve sonuclar o kelimenin sonuclaridir.\nOLCULEN HATALI DUZELTMELER (04.09.2026, UAT): mebrure -> mecure · manisa -> manga · gel lvbel -> gel rebel · babalar -> babacan. Bunlarin hicbiri dogru duzeltme degil.\nNEREDE: `muud_dym` correction index'i ve duzeltmenin tetiklenme esigi.\nNE YAP: Duzeltme yalnizca ORIJINAL sorgu yeterli sonuc uretmediginde devreye girmeli. \"{sorgu}\" icin katalogda gercek eslesme varsa duzeltme uygulanmamali. Duzeltme esigini yukseltin ve duzeltilmis sorgu orijinalden daha az sonuc donduruyorsa orijinali tercih edin.\nALTERNATIF: Duzeltmeyi uygulamak yerine kullaniciya onerin ('Bunu mu demek istediniz?'), sonuclari sessizce degistirmeyin.\nDOGRULA: `corrected` alani false olmali ve top-5'te \"{sorgu}\" ile gercekten alakali kayitlar gelmeli.",
+      "devNotu": "NEDEN: Top-N'de '{varyantAdi}' sanatcisinin {varyantSlot} varyanti var. Bu, katalog duplikasyonu gibi gorunuyor ama kok neden farkli olabilir: motor sorguyu baska bir kelimeye DUZELTMIS olabilir ve donen kayitlar o kelimenin kayitlaridir.\nOLCUM: 277 UAT sorgusunun 7'sinde corrected=true. SARKI_TAM_74 (\"mebrure\") tam olarak boyle — motor 'mecure' diye duzeltmis ve top-5'i MECURE varyantlari doldurmus. Yani o satirin kok nedeni K16'nin anlattigi katalog duplikasyonu DEGIL, hatali yazim duzeltmesi.\nNOT: prod'da yalnizca 1 sorguda correction tetiklendi, UAT'ta 7 — duzeltme davranisi iki ortamda ayni degil."
+    }
+  },
+  {
+    "id": "K08-katalog-duplikasyonu",
+    "oncelik": 88,
+    "aciklama": "İlk N sonuçta aynı kayıt birden fazla.",
+    "kosullar": {
+      "duplikasyon": true
+    },
+    "sonuc": {
+      "bulgu": true,
+      "kategori": "RANKING",
+      "kokNeden": "katalog duplikasyonu top-N yiyor",
+      "guven": 0.8,
+      "cozum": "NEREDE: Sorgu tarafı (hızlı) + ETL (kalıcı).\n1) HIZLI: Elasticsearch `collapse` kullanın. Anahtar: songs için `normalize(performerName + songName)`, performers için `normalize(performerName)`, albums için `normalize(performerName + albumName)`. Bu alanı keyword olarak indeksleyip collapse field yapın.\n2) KALICI: Ingest tarafında aynı içeriğin birden fazla dokümana yazılmasını engelleyin — duplikasyon kaynağı katalogda.\nDOĞRULA: \"{sorgu}\" sorgusunda tekrar eden kayıt tek satıra inmeli ve hedef içerik boşalan slotlardan yukarı çıkmalı. Kaç slot boşaldığını sayın — hedef {beklenenSira}. sıradaysa ve 2 duplike varsa {beklenenSira} eksi 2'ye çıkması beklenir.",
+      "devNotu": "NEDEN: İlk sonuçlarda aynı kayıt birden fazla kez yer alıyor ve hedef içeriğin girebileceği slotları tüketiyor. Bu bir sıralama hatası değil — sıralama doğru çalışıyor, sadece aynı içerik birden fazla doküman olarak indekslendiği için top-N penceresi doluyor. Tekilleştirme uygulanırsa hedef başka hiçbir ayar değişmeden yukarı çıkar."
+    },
+    "kanit": "olculmedi"
+  },
+  {
+    "id": "K17-sorgu-performers-selline-dusuyor",
+    "oncelik": 87,
+    "aciklama": "Çok kelimeli şarkı sorgusu top-5'te sadece performer kayıtlarına düşüyor.",
+    "kosullar": {
+      "ilkIndex": "performers",
+      "bulunamadi": true,
+      "sorguKelimeEnAz": 2
+    },
+    "sonuc": {
+      "bulgu": true,
+      "kategori": "INDEX_MISSING",
+      "kokNeden": "cok kelimeli sorgu songs'ta hic eslesmiyor",
+      "guven": 0.8,
+      "cozum": "NEREDE: Songs index tanimi (id 96) — sorgu eslesmesi, siralama degil.\nTESHIS ADIMI (once bu): Elasticsearch'te \"{sorgu}\" icin songs index'ine TEK BASINA sorgu atin. Hic sonuc donmuyorsa icerik katalogda yok -> bu satir bulgu degil, `bilinen-istisnalar.json`'a BLOCKED. Sonuc donuyorsa asagidaki aksiyon gecerli.\nNE YAP: {sorguKelime} kelimelik sorgu songs'ta hic eslesmiyor ama performers'ta kismi isim eslesmesiyle sonuc uretiyor. `minimum_should_match` degerini songs icin dusurun (ornegin \"2<70%\") ve performers'ta kismi isim eslesmesine minimum skor esigi koyun — tek token uzerinden gelen performer eslesmesi cok kelimeli bir sorguda top-5'e girmemeli.\nDOGRULA: \"{sorgu}\" sorgusunda top-5'te en az bir [songs] kaydi gorunmeli.",
+      "devNotu": "NEDEN: \"{sorgu}\" {sorguKelime} kelimelik bir sorgu ama top-5'in tamami performer kaydi ve hicbiri sorgunun tamamini karsilamiyor — hepsi tek bir token uzerinden kismi isim eslesmesi. Hedef icerik top-10'da hic yok. Bu bir siralama problemi degil: songs index'i bu sorgu icin ya aday uretmiyor ya da uretilen adaylar esik altinda kaliyor."
+    },
+    "kanit": "olculmedi"
+  },
+  {
+    "id": "K16-sanatci-varyant-duplikasyonu",
+    "oncelik": 86,
+    "aciklama": "Aynı sanatçının solo/collab/kopya kayıtları top-N'i dolduruyor.",
+    "kosullar": {
+      "sanatciVaryantEnAz": 3
+    },
+    "sonuc": {
+      "bulgu": true,
+      "kategori": "RANKING",
+      "kokNeden": "sanatci varyant kayitlari top-N yiyor",
+      "guven": 0.8,
+      "cozum": "ONCE CORRECTION KONTROLU: Postman'de \"{sorgu}\" sorgusunu kosup `corrected` alanina bakin. `true` ise motor sorguyu baska kelimeye cevirmistir ve varyant kalabaligi katalog sorunu degil, hatali duzeltme sonucudur — K19'a bakin. `false` ise asagidaki aksiyon gecerli.\n\nNEREDE: Performers index (id 3) + ingest/ETL.\n1) HIZLI: `collapse` uygulayın — anahtar `normalize(performerName)` (küçük harfe indirgenmiş, '&' ve ',' sonrası atılmış hâli). Böylece '{varyantAdi}' için tek satır döner, kalan slotlar başka sanatçılara açılır.\n2) KALICI (ETL): Aynı sanatçının solo kaydı ile collab kayıtları ayrı doküman olmamalı; collab kayıtları solo sanatçıya `performers` dizisi üzerinden bağlanmalı. Yalnızca harf büyüklüğü farklı kopyalar (ör. 'manifest' / 'Manifest', 'Musa' / 'muSa') ise düpedüz mükerrer kayıttır, birleştirilmeli.\nDOĞRULA: \"{sorgu}\" sorgusunda '{varyantAdi}' tek slot almalı; beklenen sanatçı {konum} konumundan yukarı çıkmalı.",
+      "devNotu": "NEDEN: Top-N'de '{varyantAdi}' sanatçısının {varyantSlot} farklı kaydı var (solo + '&'/virgüllü collab + yalnızca harf büyüklüğü farklı kopya). Sıralama yanlış değil — her kayıt kendi başına haklı olarak eşleşiyor; sorun aynı varlığın katalogda birden fazla doküman olması ve top-N penceresini doldurması. 04.09.2026 koşusunda 277 case'in 38'inde (%14) adı birebir aynı olan mükerrer performer kaydı görüldü.\nKANIT (UAT olcumu): \"gulden\" sorgusunda 'Gulden' (prodPopularity 52.0, popularSongCount 3304) ve 'Gulden Karabocek' (prodPopularity 52.0, popularSongCount 2492) — populerlikleri BIREBIR AYNI, skor farki tam 15.93 puan ve bu farkin tamami ad eslesmesinden geliyor. Iki kaydin populerliginin ayni olmasi bunlarin ayni sanatciya ait mukerrer kayit olabilecegini gosteriyor; oyleyse bu bir siralama sorunu degil, katalog sorunudur. \"deha\" sorgusunda ayni desen: 'DEHA INC. & cakal' (46.0) solo 'DEHA INC.' (40.0) kaydindan daha populer."
+    },
+    "kanit": "2 sorgu (gulden, deha) + 04.09 kosusunda 38/277 mukerrer kayit"
+  },
+  {
+    "id": "K20-kisa-sorgu-performers-substring",
+    "oncelik": 86,
+    "aciklama": "Kısa tek kelimelik sorgu, adında o kelime GEÇEN performer kayıtlarına düşüyor.",
+    "kosullar": {
+      "ilkIndex": "performers",
+      "bulunamadi": true,
+      "sorguKelimeEnCok": 1,
+      "sorguUzunlukEnCok": 8
+    },
+    "sonuc": {
+      "bulgu": true,
+      "kategori": "RANKING",
+      "kokNeden": "kisa sorgu performers substring eslesmesine dusuyor",
+      "guven": 0.85,
+      "cozum": "NEREDE: Performers index tanimi (id 3) — kismi/infix eslesme ve minimum eslesme orani.\nOLCULEN DESEN (prod kosusu, 04.09.2026): \"ara\" -> Funda ARAr, ARAbesk Kafa · \"erik\" -> ERIK Satie, ERIKa Lundmoen · \"sus\" -> Arif SUSam, Cagdas SUSeven · \"git\" -> Kirik GITar. Hepsinde donen performer adlari sorguyu ICERIYOR ama sorgu o sanatcinin adi DEGIL; aranan sarki/playlist top-10'a hic giremiyor.\nNE YAP (biri ya da ikisi):\n1) performerName kismi eslesmesine minimum eslesme orani koyun: sorgu, performerName'in en az %60'ini kaplamiyorsa o kayit aday olmasin. \"ara\" (3 harf) 'Funda Arar'in (10 harf) %30'u — elenir.\n2) Kisa sorgularda (<=8 karakter, tek kelime) performers agirligini bastirin; bu tip sorgularda kullanici genelde sarki/playlist ariyor.\nDIKKAT: (2) Sanatci · Kismi Ad ailesini (45 case) etkiler — 'blok', 'teo', 'ati' gibi kisa sorgularla sanatci aranan case'ler orada. Once (1)'i deneyin.\nDOGRULA: \"{sorgu}\" sorgusunda top-5'te en az bir [songs] veya [playlists] kaydi gorunmeli. Sonra Sanatci · Kismi Ad ailesini tekrar kos.",
+      "devNotu": "NEDEN: \"{sorgu}\" {sorguKelime} kelimelik ve kisa bir sorgu; top-5'in tamami performer kaydi ve hicbiri sorgunun tam karsiligi degil — hepsi adinda o harf dizisini BULUNDURAN kayitlar. Hedef icerik top-10'da yok.\nORTAM NOTU: Bu desen PROD kosusunda 12 satirda gorulup UAT'ta gorulmedi. Prod'da performers index'i kisa sorgularda songs/playlists'e gore cok daha baskin; iki ortamin harmanlama konfigurasyonu farkli."
+    }
+  },
+  {
+    "id": "K09-performer-songs-devrilmesi",
+    "oncelik": 85,
+    "aciklama": "Performer kaydı, ham skoru daha yüksek şarkıyı geçiyor.",
+    "kosullar": {
+      "agirlikDevrilmesi": true,
+      "devrilenUstIndex": "performers",
+      "devrilenAltIndex": "songs"
+    },
+    "sonuc": {
+      "bulgu": true,
+      "kategori": "AGIRLIK",
+      "kokNeden": "performers agirligi songs'u eziyor",
+      "guven": 0.8500000000000001,
+      "cozum": "NEREDE: Performers index tanımı (id 3).\nNE YAP: Sorgu tipine göre intent boost. Performers'a `intentBoostEnabled` ekleyip şu kuralı yazın: sorgu bir performerName'i TAM karşılamıyorsa performers kaydına 0.5 çarpanı.\nYAPMA: performers `topHitsScoreWeight` 0.38 → statik düşürme. Sanatçı ailesindeki 113 case'i (Tam Eşleşme 38 + Kısmi Ad 44 + Yazım 21 + Alias 10) bozar.\nDOĞRULA: \"{sorgu}\" sorgusunda hedef {beklenenSira}. sıradan yukarı çıkmalı; ham skor sırası ile nihai sıra örtüşmeli. Değişiklikten sonra tüm Sanatçı ailesini tekrar koş.",
+      "devNotu": "NEDEN: Üstteki performer kaydının ham skoru alttaki şarkıdan DÜŞÜK, yani Elasticsearch şarkıyı daha alakalı buldu. Nihai sırayı skor × topHitsScoreWeight belirliyor (performers {ustAgirlik} / songs {altAgirlik}) ve harmanlama Elasticsearch'ün kararını tersine çeviriyor. Hedef bu yüzden {beklenenSira}. sırada. Bu, ağırlık tablosunun sorgu niyetinden bağımsız sabit olmasının doğal sonucu.\nOLCUM (04.09.2026, 277 UAT + 277 prod sorgusu) — BU RAPOR {ortam} ORTAMINDAN. Bu ortamin agirlik tablosu: {agirlikTablosu}. {dogrulamaOrani} IKI ORTAM AYNI TABLOYU KULLANMIYOR: UAT'ta playlists songs'un USTUNDE (0.335 > 0.27), PROD'da ALTINDA (~0.18); videos UAT'ta 0.00, PROD'da ~0.27. Bir ortamda olculen agirligi digerine tasimayin."
+    },
+    "kanit": "277 UAT sorgusu / 1859 cift — tablo + playlist carpani %99.78"
+  },
+  {
+    "id": "K10-cross-index-devrilmesi-genel",
+    "oncelik": 80,
+    "aciklama": "Farklı index'ler arası sıra devrilmesi (genel).",
+    "kosullar": {
+      "agirlikDevrilmesi": true
+    },
+    "sonuc": {
+      "bulgu": true,
+      "kategori": "AGIRLIK",
+      "kokNeden": "cross-index harmanlama",
+      "guven": 0.65,
+      "cozum": "[İNCELEME ÖNERİLİR — bu satır genel kurala düştü, kesin aksiyon için sorgunun niyeti belirlenmeli.]\nİLK ADIM: \"{sorgu}\" sorgusunda kullanıcı hangi index'ten sonuç bekliyor? Cevabı yazın, sonra aksiyon netleşir:\n· [songs] bekleniyorsa → K06/K09'daki intent boost aksiyonunu uygulayın.\n· [performers] bekleniyorsa → beklenti doğru, bu satır YANLIS_BEKLENTI olabilir.\nSONRA: Bu tip 3+ satır birikince özel bir kural yazın (yeni id, öncelik 90+) ve bu genel kuraldan çıkarın.\nDOĞRULA: Ham skor sırası ile nihai sıranın örtüşmesi gerekiyorsa {ustIndex} ağırlığı ({ustAgirlik}) ile {altIndex} ağırlığı ({altAgirlik}) arasındaki farkı sorgu tipine göre daralt.",
+      "devNotu": "NEDEN: Üstteki [{ustIndex}] kaydının ham skoru alttaki [{altIndex}] kaydından düşük; nihai sırayı topHitsScoreWeight belirliyor ({ustIndex} {ustAgirlik} / {altIndex} {altAgirlik}). Mekanizma net ama bu satırın kök nedeni ağırlık dışında da olabilir — genel kural niyeti okuyamaz.\nOLCUM (04.09.2026, 277 UAT + 277 prod sorgusu) — BU RAPOR {ortam} ORTAMINDAN. Bu ortamin agirlik tablosu: {agirlikTablosu}. {dogrulamaOrani} IKI ORTAM AYNI TABLOYU KULLANMIYOR: UAT'ta playlists songs'un USTUNDE (0.335 > 0.27), PROD'da ALTINDA (~0.18); videos UAT'ta 0.00, PROD'da ~0.27. Bir ortamda olculen agirligi digerine tasimayin."
+    },
+    "kanit": "277 UAT sorgusu / 1859 cift — tablo + playlist carpani %99.78"
+  },
+  {
+    "id": "K11-playlist-ilk-sirada-genel",
+    "oncelik": 70,
+    "aciklama": "Playlist 1. sırada (genel).",
+    "kosullar": {
+      "ilkIndex": "playlists"
+    },
+    "sonuc": {
+      "bulgu": true,
+      "kategori": "AGIRLIK",
+      "kokNeden": "playlists agirligi ve analyzer'i",
+      "guven": 0.65,
+      "cozum": "[INCELEME ONERILIR — genel kural.]\nAKSIYON: K01'e bakin. Iki kaldirac var: (1) intentBoostEnabled tetikleme kosulunu daralt (~4.0 carpan — iki ortamda da olculdu), (2) playlists topHitsScoreWeight'i songs'un altina indir. DIKKAT: bu deger ortama gore farkli — {agirlikTablosu}. UAT'ta 0.335 (songs'un USTUNDE, indirilmesi anlamli); PROD'da ~0.18 (songs'un ALTINDA, indirilecek bir sey yok). Bu rapor {ortam}.\nONCE SUNU KONTROL ET: Bu sorguda playlist'in 1. sirada olmasi gercekten yanlis mi? Sorgu bir tur/mood ifadesiyse playlist dogru cevap olabilir; o durumda satir YANLIS_BEKLENTI.\nDOGRULA: Playlist ailesindeki 30 case'i (su an %93) degisiklikten sonra tekrar kos.",
+      "devNotu": "NEDEN: \"{sorgu}\" sorgusunda 1. sirayi playlist aldi. Genel kural oldugu icin guven dusuk — sorgunun niyeti okunmadi.\nOLCUM (04.09.2026, 277 UAT + 277 prod sorgusu) — BU RAPOR {ortam} ORTAMINDAN. Bu ortamin agirlik tablosu: {agirlikTablosu}. {dogrulamaOrani} IKI ORTAM AYNI TABLOYU KULLANMIYOR: UAT'ta playlists songs'un USTUNDE (0.335 > 0.27), PROD'da ALTINDA (~0.18); videos UAT'ta 0.00, PROD'da ~0.27. Bir ortamda olculen agirligi digerine tasimayin."
+    },
+    "kanit": "277 UAT sorgusu — tablo %99.78; playlist carpani ~4.0"
+  },
+  {
+    "id": "K12-populerlik-verisi-eksik-kayitlar-ustte",
+    "oncelik": 60,
+    "aciklama": "İlk sonuçların birkaçında popülerlik alanı boş.",
+    "kosullar": {
+      "populerlikEksikEnAz": 2
+    },
+    "sonuc": {
+      "bulgu": true,
+      "kategori": "AGIRLIK",
+      "kokNeden": "populerlik verisi eksik kayitlar ustte",
+      "guven": 0.65,
+      "cozum": "NEREDE: İlgili index'in `scriptSource`'u (popülerlik terimi) + ETL.\n1) Popülerlik alanı boş dokümanlar için varsayılan CEZA tanımlayın — şu an 0 sayılıyor ve nötr davranıyor; bunun yerine skorun popülerlik terimini negatif ya da eşik altı yapın.\n2) Alternatif: bu kayıtları sonuç kümesinden filtreleyin (popülerlik yoksa yayınlanmamış/eksik içerik olabilir).\n3) ETL: bu dokümanlarda popülerliğin neden boş olduğunu bulun — 'boş' ile '0' aynı şey değil, ikisini ayırt edin.\nDOĞRULA: \"{sorgu}\" sorgusunda popülerliği boş kayıtlar aşağı inmeli ve hedef {beklenenSira}. sıradan yukarı çıkmalı.",
+      "devNotu": "NEDEN: İlk sonuçların birden fazlasında popülerlik alanı boş ('-'); bu kayıtlar skorda 0 sayılmasına rağmen üst sıralarda duruyor. Demek ki tier/exact bonusu popülerlik eksikliğini fazlasıyla kapatıyor — popülerliği olmayan bir kayıt, popüler bir kaydın önüne geçebiliyor."
+    },
+    "kanit": "olculmedi"
+  },
+  {
+    "id": "K13-rapor-populerlik-alani-yanlis",
+    "oncelik": 45,
+    "aciklama": "Raporda popülerlik 0 görünüyor — eski alan basımı, motor bulgusu değil.",
+    "kosullar": {
+      "oluPopulerlik": "performers"
+    },
+    "sonuc": {
+      "bulgu": false,
+      "kategori": "YANLIS_BEKLENTI",
+      "kokNeden": "rapor yanlis populerlik alanini basiyor",
+      "guven": 0.85,
+      "cozum": "MOTOR TARAFINDA AKSIYON YOK — bu bir raporlama artefakti.\nNE YAP: Bu rapor 04.09.2026 duzeltmesinden ONCE uretilmis. `MainCases.itemDesc` artik ortama gore alan seciyor ({ortam} icin `{popAlani}`); yeni bir kosu alip bu satira tekrar bakin, populerlik degerleri dolu gelecek.\nDIKKAT: [{oluIndex}] index'inde 'popularity= 0' gormek bir ETL bulgusu DEGILDIR. ETL/reindex ticket'i acmayin.\nDOGRULA: Yeni kosuda bu satir baska bir kurala dusmeli; hala buraya dusuyorsa alan degisikligi uygulanmamis demektir.",
+      "devNotu": "NEDEN: [{oluIndex}] index'indeki tum kayitlarda rapora basilan populerlik alani 0. Ama bu alan skorlamada kullanilmiyor.\nKANIT (04.09.2026, UAT'ta \"kuzu kuzu\" sorgusu): UAT'ta skorlamayi belirleyen alan `prodPopularity`. Tam eslesme grubundaki 24 songs kaydinda taban skor sabit (103.78) ve skor = 103.7777 + 0.58 x prodPopularity, R2 = 1.00000. `popularity` alani UAT'ta performers/playlists/albums'te TUM kayitlarda 0 geliyor ama skorlamada kullanilmiyor; `popularity2` dolu ama skorlamada kullanilmiyor (ayni regresyon R2 = 0.86). Bu satir eski alan basimi yuzunden 'olu sinyal' gibi gorunuyor."
+    },
+    "kanit": "olculmedi"
+  },
+  {
+    "id": "K18-hedef-daha-az-populer",
+    "oncelik": 40,
+    "aciklama": "Aynı index içinde hedef, üstündeki kayıttan daha az popüler — beklenti gözden geçirilmeli.",
+    "kosullar": {
+      "populerlikKarsilastirmasi": "HEDEF_DAHA_AZ_POPULER",
+      "karsilastirmaAyniIndex": true
+    },
+    "sonuc": {
+      "bulgu": false,
+      "kategori": "YANLIS_BEKLENTI",
+      "kokNeden": "beklenti katalog populerligiyle celisiyor",
+      "guven": 0.7,
+      "cozum": "MOTOR MUHTEMELEN HAKLI — once beklentiyi dogrulayin, kod degistirmeyin.\nOLCUM: Beklenen icerigin `{popAlani}` degeri {hedefPop}; ustunde kalan '{ustEtiket}' kaydininki {ustPop}. Ikisi de ayni index'ten ([{ustPopIndex}]), yani kiyas gecerli. Motor daha populer olani one aliyor — tanimi geregi dogru davranis.\nNE YAP: Bu case editoryal bir tercihse (\"{sorgu}\" arandiginda populerlikten bagimsiz olarak hedef gelmeli), `bilinen-istisnalar.json`'a YANLIS_BEKLENTI olarak girin ya da beklentiyi 'Top-3 icinde' seklinde gevsetin. Gercekten hedef gelmeliyse bu populerlikle degil, editoryal bir boost alaniyla cozulur (Performers id 3'e `editorial_boost` eklenmesi) — bu bir urun karari, is birimiyle netlestirin.\nDOGRULA: Iki kaydin populerligini Postman'den teyit edin; katalog populerlikleri beklentinizle celisiyorsa case'i guncelleyin.",
+      "devNotu": "NEDEN: Hedef {konum} ve ustundeki en populer kayit '{ustEtiket}' ({ustPop}) hedeften ({hedefPop}) daha populer. Ikisi ayni index'ten geldigi icin populerlik kiyasi gecerli. Siralama motoru populerligi dogru kullaniyor (UAT'ta olculen formul: skor = taban + 0.58 x prodPopularity; bu rapor {ortam}, alan `{popAlani}`); bu satirda motor hatasi degil, beklenti ile katalog verisi arasinda bir celiski var. NOT: Bu kural dusuk oncelikli — daha spesifik bir mekanizma kurali eslestiyse o kazanir."
+    },
+    "kanit": "olculmedi"
+  }
+]

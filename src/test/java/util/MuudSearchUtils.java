@@ -52,12 +52,13 @@ public class MuudSearchUtils {
             //   Performers   → 3   (muud_performer_flat_v2)
             //   Playlists    → 4   (muud_playlist_flat_v2)
             //   Songs        → 5   (muud_song_flat_v2)
-            //   Videos       → 6   (muud_video_flat_v2)
+            //    Videos       → 6   (muud_video_flat_v2)
             //   Vektors      → 49  (muud_song_vector_v4)
+            case "videos"     -> "6";
             case "album"     -> "2";
             case "performer" -> "3";
             case "playlist"  -> "4";
-            case "songs", "song" -> "5";
+            case "songs", "song" -> "96";
 
         //    case "video", "videos" -> "6";
         //    case "vector", "vectors" -> "49";
@@ -197,9 +198,12 @@ public class MuudSearchUtils {
             //      İlle De Sen şarkısı aynı kayıtta yoksa NOK olarak işaretlenir.
             // Performer adı da kontrol edilir: "mebrure" aramasında "Mebrure Avas –Ayrılalı Ben Senden"
             // geldiğinde songName eşleşmez ama performerName eşleşmeli.
+            // Çok kısa expTrack (≤2 karakter, örn. "Y" şarkısı) için contains yanlış
+            // eşleşme üretir; bu durumda exact equals kullan.
             boolean trackOk = expTrack.isBlank()
-                    || containsTRInsensitive(track, expTrack)
-                    || containsTRInsensitive(artist, expTrack);
+                    || (expTrack.length() <= 2
+                        ? equalsTRInsensitive(track, expTrack) || equalsTRInsensitive(artist, expTrack)
+                        : containsTRInsensitive(track, expTrack) || containsTRInsensitive(artist, expTrack));
 
             if (artistOk && trackOk) return i;
         }

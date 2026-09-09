@@ -49,7 +49,7 @@ data:
         ("SARKI_TAM_13","ey aşk","Sezen Aksu","Ey Aşk","Şarkı · Tam Eşleşme",1),
         ("SARKI_TAM_14","şımarık","Tarkan","Şımarık","Şarkı · Tam Eşleşme",1),
         ("SARKI_TAM_15","giderim kırağınan","Onur Şan","Giderim Kırağınan","Şarkı · Tam Eşleşme",3),
-        ("SARKI_TAM_16","ara beni lütfen","Kenan Doğulu","Ara Beni Lütfen","Şarkı · Tam Eşleşme",1),
+        ("SARKI_TAM_16","ara beni lütfen","","Ara Beni Lütfen","Şarkı · Tam Eşleşme",1),
         ("SARKI_TAM_17","aşk yok olmaktır","","Aşk Yok Olmaktır","Şarkı · Tam Eşleşme",1),
         ("SARKI_TAM_18","can efendim","","Can Efendim","Şarkı · Tam Eşleşme",3),
         ("SARKI_TAM_19","çıt çıt çedene","Barış Manço","Çıt Çıt Çedene","Şarkı · Tam Eşleşme",3),
@@ -82,17 +82,17 @@ data:
         ("SARKI_TAM_46","yalan","","Yalan","Şarkı · Tam Eşleşme",1),
         ("SARKI_TAM_47","bana sor","Ferdi Tayfur","Bana Sor","Şarkı · Tam Eşleşme",3),
         ("SARKI_TAM_48","rüya","Manifest","Rüya","Şarkı · Tam Eşleşme",3),
-        ("SARKI_TAM_49","ara","Zeynep Bastık","Ara","Şarkı · Tam Eşleşme",1),
+        ("SARKI_TAM_49","ara","Zeynep Bastık","Ara","Şarkı · Tam Eşleşme",3),
         ("SARKI_TAM_50","14 bahar","Mert Demir","14 Bahar","Şarkı · Tam Eşleşme",3),
         ("SARKI_TAM_51","ela mana","","Ela Mana","Şarkı · Tam Eşleşme",1),
-        ("SARKI_TAM_52","yekten","Demet Akalın","Yekten","Şarkı · Tam Eşleşme",3),
+        ("SARKI_TAM_52","yekten","","Yekten","Şarkı · Tam Eşleşme",3),
         ("SARKI_TAM_53","erik dalı","","Erik Dalı","Şarkı · Tam Eşleşme",3),
-        ("SARKI_TAM_54","elfida","Haluk Levent","Elfida","Şarkı · Tam Eşleşme",1),
+        ("SARKI_TAM_54","elfida","","Elfida","Şarkı · Tam Eşleşme",1),
         ("SARKI_TAM_55","yazan kalem siyah","","Yazan Kalem Siyah","Şarkı · Tam Eşleşme",3),
         ("SARKI_TAM_56","Mihriban","","Mihriban","Şarkı · Tam Eşleşme",3),
         ("SARKI_TAM_57","merdo","","Merdo","Şarkı · Tam Eşleşme",3),
         ("SARKI_TAM_58","sigara","","Sigara","Şarkı · Tam Eşleşme",3),
-        ("SARKI_TAM_59","farzet","İlyas Yalçıntaş","Farzet","Şarkı · Tam Eşleşme",3),
+        ("SARKI_TAM_59","farzet","","Farzet","Şarkı · Tam Eşleşme",3),
         ("SARKI_TAM_60","misket","","Misket","Şarkı · Tam Eşleşme",1),
         ("SARKI_TAM_61","kara sevda","","Kara Sevda","Şarkı · Tam Eşleşme",3),
         ("SARKI_TAM_62","parla","","Parla","Şarkı · Tam Eşleşme",3),
@@ -109,45 +109,49 @@ data:
         ("SARKI_TAM_73","manisa","","manisa","Şarkı · Tam Eşleşme",3),
         ("SARKI_TAM_74","mebrure","","mebrure","Şarkı · Tam Eşleşme",3),
         ("SARKI_TAM_75","köksal","","köksal","Şarkı · Tam Eşleşme",3),
-        ("SARKI_KISMI_1","Hermes","Batuflex","Hermès","Şarkı · Kısmi Ad",1),
+        ("SARKI_TAM_76","uzaylılar bile dinliyo ","Blok3","uzaylılar bile dinliyo","Şarkı · Tam Eşleşme",5),
+        ("SANAT_TAM_77","değilim","Mebrure","Değilim","Şarkı · Tam Eşleşme",5),
+        ("SARKI_TAM_78","git ","Blok3","Git","Şarkı · Tam Eşleşme",5),
+        ("SARKI_KISMI_1","Hermes","Batuflex","Hermès","Şarkı · Yazım · Diakritik",1),
         ("SARKI_KISMI_2","yalnızlığın çaresini","gripin","Yalnızlığın Çaresini Bulmuşlar","Şarkı · Kısmi Ad",3),
         ("SARKI_KISMI_3","yerinde","Sefo","Yerinde Dur","Şarkı · Kısmi Ad",1),
-        ("SARKI_KISMI_4","vidrado em","Dj Guuga","Vidrado Em Você","Şarkı · Kısmi Ad",3),
+        ("SARKI_KISMI_4","vidrado em","","Vidrado Em Você","Şarkı · Kısmi Ad",3),
         ("SARKI_KISMI_5","çıt çıt","Barış Manço","Çıt Çıt Çedene","Şarkı · Kısmi Ad",3),
         ("SARKI_KISMI_6","ağlama ben","Canozan","Ağlama Ben Ağlarım","Şarkı · Kısmi Ad",1),
         ("SARKI_KISMI_7","erik","","Erik Dalı","Şarkı · Kısmi Ad",1),
         ("SARKI_KISMI_8","doğuştan","Lvbel C5","Doğuştan Beri Haklıyım","Şarkı · Kısmi Ad",3),
-        ("SARKI_KISMI_9","dandini","Ninni Bebek","Dandini Dandini Dastana","Şarkı · Kısmi Ad",3),
+        ("SARKI_KISMI_9","dandini","","Dandini Dandini Dastana","Şarkı · Kısmi Ad",3),
         ("SARKI_KISMI_10","sus","Ceza","Suspus","Şarkı · Kısmi Ad",1),
         ("SARKI_KISMI_11","pus","Ceza","Suspus","Şarkı · Kısmi Ad",5),
-        ("SARKI_KISMI_12","kalbimin sahibine","İrem Derici","Kalbimin Tek Sahibine","Şarkı · Kısmi Ad",3),
-        ("SARKI_KISMI_13","there is a light that never goes out (live)","Morrissey","There Is A Light That Never Goes Out","Şarkı · Kısmi Ad",3),
+        ("SARKI_KISMI_12","kalbimin sahibine","İrem Derici","Kalbimin Tek Sahibine","Şarkı · Kelime Bazlı Eşleşme",3),
+        ("SARKI_KISMI_13","there is a light that never goes out (live)","Morrissey","There Is A Light That Never Goes Out","Şarkı · Kelime Bazlı Eşleşme",3),
         ("SARKI_KISMI_14","dai","","Dai Dai","Şarkı · Kısmi Ad",3),
-        ("SARKI_KISMI_15","alara doğum günün","","doğum günün kutlu olsun alara","Şarkı · Kısmi Ad",3),
+        ("SARKI_KISMI_15","alara doğum günün","","doğum günün kutlu olsun alara","Şarkı · Kelime Bazlı Eşleşme",3),
         ("SARKI_SANAT_1","messy lola young","Lola Young","Messy","Şarkı · Sanatçı + Şarkı",3),
         ("SARKI_SANAT_2","mabel kömür","Mabel Matiz","Kömür","Şarkı · Sanatçı + Şarkı",1),
         ("SARKI_SANAT_3","y poizi","Poizi","Y","Şarkı · Sanatçı + Şarkı",3),
+        ("SARKI_SANAT_3a","y","Poizi","Y","Şarkı · Tam Eşleşme",5),
         ("SARKI_SANAT_4","kts manifest","Manifest","KTS","Şarkı · Sanatçı + Şarkı",1),
-        ("SARKI_SANAT_5","Dua Lipa Shine","Cédric","Shine","Şarkı · Sanatçı + Şarkı",3),
         ("SARKI_SANAT_6","rüya manifest","Manifest","Rüya","Şarkı · Sanatçı + Şarkı",1),
         ("SARKI_SANAT_7","bir motive","Motive","bir","Şarkı · Sanatçı + Şarkı",3),
-        ("SARKI_SANAT_8","Sinem Yalçınkaya kenar süsü","","Kenar Süsü","Şarkı · Sanatçı + Şarkı",3),
-        ("SARKI_SANAT_9","Gel lvbel","Lvbel C5","GEL GEL GEL","Şarkı · Sanatçı + Şarkı",3),
-        ("SARKI_YAZIM_1","acanım","Mabel Matiz","A Canım","Şarkı · Yazım Toleransı",3),
-        ("SARKI_YAZIM_2","çok pardon","Lvbel C5","COOOK PARDON","Şarkı · Yazım Toleransı",3),
-        ("SARKI_YAZIM_3","simarik","Tarkan","Şımarık","Şarkı · Yazım Toleransı",1),
-        ("SARKI_YAZIM_4","dame un grr","Fantomel","Dame Un Grrr","Şarkı · Yazım Toleransı",3),
-        ("SARKI_YAZIM_5","hav hav","Lvbel C5","Havhavhav","Şarkı · Yazım Toleransı",3),
-        ("SARKI_YAZIM_6","karakedi","Melis Fis","Kara Kedi","Şarkı · Yazım Toleransı",3),
-        ("SARKI_YAZIM_7","illede sen","Azer Bülbül","İlle De Sen","Şarkı · Yazım Toleransı",1),
-        ("SARKI_YAZIM_8","arabam","Sefo","Araba","Şarkı · Yazım Toleransı",3),
-        ("SARKI_YAZIM_9","lacivert eceler","Ferhat Göçer","Lacivert Geceler","Şarkı · Yazım Toleransı",3),
-        ("SARKI_YAZIM_10","güldün ne güzel","Pinhani","Ne Güzel Güldün","Şarkı · Yazım Toleransı",3),
-        ("SARKI_YAZIM_11","dia","","Dai Dai","Şarkı · Yazım Toleransı",3),
-        ("SARKI_YAZIM_12","iyiki doğdun deniz","","iyi ki doğdun deniz","Şarkı · Yazım Toleransı",3),
-        ("SARKI_YAZIM_13","taki seni görene kadar","","ta ki seni görene kadar","Şarkı · Yazım Toleransı",3),
-        ("SARKI_YAZIM_14","can dostym","","can dostum","Şarkı · Yazım Toleransı",3),
-        ("SARKI_YAZIM_15","saygı1","","saygı 1","Şarkı · Yazım Toleransı",3),
+        ("SARKI_SANAT_8","Sinem Yalçınkaya kenar süsü","Sinem Yalçınkaya","Kenar Süsü","Şarkı · Sanatçı + Şarkı",3),
+        ("SARKI_SANAT_9","Gel lvbel","Lvbel C5","GEL GEL GEL","Şarkı · Sanatçı + Şarkı",1),
+        ("SARKI_SANAT_10","cem belevi sevme diyor","Cem Belevi","Sevme Diyor","Şarkı · Sanatçı + Şarkı",1),
+        ("SARKI_SANAT_11","maya perest kaybedemem","Maya Perest","Kaybedemem","Şarkı · Sanatçı + Şarkı",1),
+        ("SARKI_YAZIM_1","acanım","Mabel Matiz","A Canım","Şarkı · Yazım · Boşluk",3),
+        ("SARKI_YAZIM_2","çok pardon","Lvbel C5","COOOK PARDON","Şarkı · Yazım · Harf Hatası",3),
+        ("SARKI_YAZIM_3","simarik","Tarkan","Şımarık","Şarkı · Yazım · Diakritik",1),
+        ("SARKI_YAZIM_4","dame un grr","","Dame Un Grrr","Şarkı · Yazım · Harf Hatası",3),
+        ("SARKI_YAZIM_5","hav hav","Lvbel C5","Havhavhav","Şarkı · Yazım · Boşluk",3),
+        ("SARKI_YAZIM_6","karakedi","Melis Fis","Kara Kedi","Şarkı · Yazım · Boşluk",3),
+        ("SARKI_YAZIM_8","arabam","","Arabam","Şarkı · Tam Eşleşme",3),
+        ("SARKI_YAZIM_9","lacivert eceler","Ferhat Göçer","Lacivert Geceler","Şarkı · Yazım · Harf Hatası",3),
+        ("SARKI_YAZIM_10","güldün ne güzel","Pinhani","Ne Güzel Güldün","Şarkı · Kelime Bazlı Eşleşme",3),
+        ("SARKI_YAZIM_11","dia","","Dai Dai","Şarkı · Yazım · Harf Hatası",3),
+        ("SARKI_YAZIM_12","iyiki doğdun deniz","","iyi ki doğdun deniz","Şarkı · Yazım · Boşluk",3),
+        ("SARKI_YAZIM_13","taki seni görene kadar","","ta ki seni görene kadar","Şarkı · Yazım · Boşluk",3),
+        ("SARKI_YAZIM_14","can dostym","","can dostum","Şarkı · Yazım · Harf Hatası",3),
+        ("SARKI_YAZIM_15","saygı1","","Saygi1","Şarkı · Yazım · Diakritik",3),
         ("SARKI_LYRICS_1","çölüme yağmur oldun","Müslüm Gürses","Affet","Şarkı · Lyrics",3),
         ("SARKI_LYRICS_2","hadi ya","Melis Kar","Yatıya","Şarkı · Lyrics",3),
         ("SARKI_LYRICS_3","babalar","Blok3","PATLAT","Şarkı · Lyrics",1),
@@ -160,10 +164,10 @@ data:
         ("SARKI_LYRICS_10","silemez o beni","Yıldız Tilbe","Dizine Dursun","Şarkı · Lyrics",1),
         ("SARKI_LYRICS_11","babalar sözünü tutar","Blok3","PATLAT","Şarkı · Lyrics",3),
         ("SARKI_LYRICS_12","çok geç şmdi","Edis","Yalan","Şarkı · Lyrics",3),
-        ("SARKI_LYRICS_13","affet bu gece istedim ölmek","Model","Pembe Mezarlık","Şarkı · Lyrics",3),
-        ("SARKI_LYRICS_14","teybi bozuk bir arabayla","Nilipek","Geçmiyor Zaman","Şarkı · Lyrics",3),
-        ("SARKI_LYRICS_15","Murat yeter magusa","","Mağusa Limanı","Şarkı · Lyrics",3),
-        ("SARKI_LYRICS_16","Gel buraya","Lvbel C5","GEL GEL GEL","Şarkı · Lyrics",3),
+        ("SARKI_LYRICS_13","teybi bozuk bir arabayla","Nilipek","Geçmiyor Zaman","Şarkı · Lyrics",3),
+        ("SARKI_LYRICS_14","Murat yeter magusa","","Mağusa Limanı","Şarkı · Lyrics",3),
+        ("SARKI_LYRICS_15","Gel buraya","Lvbel C5","GEL GEL GEL","Şarkı · Lyrics",3),
+        ("SARKI_LYRICS_16","Bana ne","Ezhel","Bana Ne Bu Sevdalardan","Şarkı · Kısmi Ad",3),
         ("SANAT_TAM_1","mfö","MFÖ","","Sanatçı · Tam Eşleşme",1),
         ("SANAT_TAM_2","mfo","MFÖ","","Sanatçı · Tam Eşleşme",1),
         ("SANAT_TAM_3","Manifest","Manifest","","Sanatçı · Tam Eşleşme",1),
@@ -182,7 +186,6 @@ data:
         ("SANAT_TAM_16","sıla","Sıla","","Sanatçı · Tam Eşleşme",1),
         ("SANAT_TAM_17","eminem","Eminem","","Sanatçı · Tam Eşleşme",1),
         ("SANAT_TAM_18","güneş","Güneş","","Sanatçı · Tam Eşleşme",1),
-        ("SANAT_TAM_19","dua lipa","Dua Lipa","","Sanatçı · Tam Eşleşme",1),
         ("SANAT_TAM_20","mero","Mero","","Sanatçı · Tam Eşleşme",3),
         ("SANAT_TAM_21","murda","Murda","","Sanatçı · Tam Eşleşme",3),
         ("SANAT_TAM_22","inna","Inna","","Sanatçı · Tam Eşleşme",3),
@@ -201,6 +204,7 @@ data:
         ("SANAT_TAM_35","sia","Sia","","Sanatçı · Tam Eşleşme",3),
         ("SANAT_TAM_36","shakira","Shakira","","Sanatçı · Tam Eşleşme",3),
         ("SANAT_TAM_37","madonna","Madonna","","Sanatçı · Tam Eşleşme",3),
+        ("SANAT_TAM_38","tan taşçı","Tan Taşçı","","Sanatçı · Tam Eşleşme",3),
         ("SANAT_KISMI_1","blok","Blok3","","Sanatçı · Kısmi Ad",1),
         ("SANAT_KISMI_2","teo","Teoman","","Sanatçı · Kısmi Ad",1),
         ("SANAT_KISMI_3","aleyna","Aleyna Tilki","","Sanatçı · Kısmi Ad",1),
@@ -245,27 +249,28 @@ data:
         ("SANAT_KISMI_42","özcan","Özcan Deniz","","Sanatçı · Kısmi Ad",1),
         ("SANAT_KISMI_43","deha","DEHA INC.","","Sanatçı · Kısmi Ad",1),
         ("SANAT_KISMI_44","taylor","Taylor Swift","","Sanatçı · Kısmi Ad",1),
-        ("SANAT_YAZIM_1","tarkn","Tarkan","","Sanatçı · Yazım Toleransı",1),
-        ("SANAT_YAZIM_2","kök$l","kök$vl","","Sanatçı · Yazım Toleransı",3),
-        ("SANAT_YAZIM_3","çakal","cakal","","Sanatçı · Yazım Toleransı",1),
-        ("SANAT_YAZIM_4","pozi","Poizi","","Sanatçı · Yazım Toleransı",1),
-        ("SANAT_YAZIM_5","hşdra","Hidra","","Sanatçı · Yazım Toleransı",3),
-        ("SANAT_YAZIM_6","goksel","Göksel","","Sanatçı · Yazım Toleransı",1),
-        ("SANAT_YAZIM_7","can ozan","Canozan","","Sanatçı · Yazım Toleransı",1),
-        ("SANAT_YAZIM_8","ezel","Ezhel","","Sanatçı · Yazım Toleransı",1),
-        ("SANAT_YAZIM_9","reymen","Reynmen","","Sanatçı · Yazım Toleransı",3),
-        ("SANAT_YAZIM_10","emircan","Emir Can İğrek","","Sanatçı · Yazım Toleransı",1),
-        ("SANAT_YAZIM_11","emircan iğrek","Emir Can İğrek","","Sanatçı · Yazım Toleransı",3),
-        ("SANAT_YAZIM_12","izel","İzel","","Sanatçı · Yazım Toleransı",3),
-        ("SANAT_YAZIM_13","hejan","Heijan","","Sanatçı · Yazım Toleransı",3),
-        ("SANAT_YAZIM_14","Semicek","Semicenk","","Sanatçı · Yazım Toleransı",1),
-        ("SANAT_YAZIM_15","beyonce","Beyoncé","","Sanatçı · Yazım Toleransı",3),
-        ("SANAT_YAZIM_16","emre gel","Emre Fel","","Sanatçı · Yazım Toleransı",3),
-        ("SANAT_YAZIM_17","sibelcan","Sibel Can","","Sanatçı · Yazım Toleransı",3),
-        ("SANAT_YAZIM_18","kofn","KÖFN","","Sanatçı · Yazım Toleransı",3),
-        ("SANAT_YAZIM_19","sertap","Sertab Erener","","Sanatçı · Yazım Toleransı",3),
-        ("SANAT_YAZIM_20","mr ve ötei","Mor ve Ötesi","","Sanatçı · Yazım Toleransı",3),
-        ("SANAT_YAZIM_21","dolu kadhi tut","Dolu Kadehi Ters Tut","","Sanatçı · Yazım Toleransı",3),
+        ("SANAT_KISMI_45","blok 3","Blok3","","Sanatçı · Yazım · Boşluk",1),
+        ("SANAT_YAZIM_1","tarkn","Tarkan","","Sanatçı · Yazım · Harf Hatası",1),
+        ("SANAT_YAZIM_2","kök$l","kök$vl","","Sanatçı · Yazım · Harf Hatası",3),
+        ("SANAT_YAZIM_3","çakal","cakal","","Sanatçı · Yazım · Diakritik",1),
+        ("SANAT_YAZIM_4","pozi","Poizi","","Sanatçı · Yazım · Harf Hatası",1),
+        ("SANAT_YAZIM_5","hşdra","Hidra","","Sanatçı · Yazım · Harf Hatası",3),
+        ("SANAT_YAZIM_6","goksel","Göksel","","Sanatçı · Yazım · Diakritik",1),
+        ("SANAT_YAZIM_7","can ozan","Canozan","","Sanatçı · Yazım · Boşluk",1),
+        ("SANAT_YAZIM_8","ezel","Ezhel","","Sanatçı · Yazım · Harf Hatası",1),
+        ("SANAT_YAZIM_9","reymen","Reynmen","","Sanatçı · Yazım · Harf Hatası",3),
+        ("SANAT_YAZIM_10","emircan","Emir Can İğrek","","Sanatçı · Yazım · Boşluk",1),
+        ("SANAT_YAZIM_11","emircan iğrek","Emir Can İğrek","","Sanatçı · Yazım · Boşluk",3),
+        ("SANAT_YAZIM_12","izel","İzel","","Sanatçı · Tam Eşleşme",3),
+        ("SANAT_YAZIM_13","hejan","Heijan","","Sanatçı · Yazım · Harf Hatası",3),
+        ("SANAT_YAZIM_14","Semicek","Semicenk","","Sanatçı · Yazım · Harf Hatası",1),
+        ("SANAT_YAZIM_15","beyonce","Beyoncé","","Sanatçı · Yazım · Diakritik",3),
+        ("SANAT_YAZIM_16","emre gel","Emre Fel","","Sanatçı · Yazım · Harf Hatası",3),
+        ("SANAT_YAZIM_17","sibelcan","Sibel Can","","Sanatçı · Yazım · Boşluk",3),
+        ("SANAT_YAZIM_18","kofn","KÖFN","","Sanatçı · Yazım · Diakritik",3),
+        ("SANAT_YAZIM_19","sertap","Sertab Erener","","Sanatçı · Yazım · Harf Hatası",3),
+        ("SANAT_YAZIM_20","mr ve ötei","Mor ve Ötesi","","Sanatçı · Yazım · Harf Hatası",3),
+        ("SANAT_YAZIM_21","dolu kadhi tut","Dolu Kadehi Ters Tut","","Sanatçı · Yazım · Harf Hatası",3),
         ("SANAT_ALIAS_1","lvc5","Lvbel C5","","Sanatçı · Kısaltma / Alias",3),
         ("SANAT_ALIAS_2","level c5","Lvbel C5","","Sanatçı · Kısaltma / Alias",3),
         ("SANAT_ALIAS_3","levelc5","Lvbel C5","","Sanatçı · Kısaltma / Alias",3),
@@ -290,11 +295,10 @@ data:
         ("PLAYLIST_12","yabancı","","[Playlist] yabancı","Playlist",5),
         ("PLAYLIST_13","roman","","[Playlist] roman","Playlist",5),
         ("PLAYLIST_14","çocuk","","[Playlist] çocuk","Playlist",5),
-        ("PLAYLIST_15","oyun hava","","[Playlist] oyun hava","Playlist",5),
+        ("PLAYLIST_15","oyun havası","","[Playlist] oyun havası","Playlist",5),
         ("PLAYLIST_16","spor","","[Playlist] spor","Playlist",5),
         ("PLAYLIST_17","klasik","","[Playlist] klasik","Playlist",5),
         ("PLAYLIST_18","ankara","","[Playlist] ankara","Playlist",5),
-        ("PLAYLIST_19","çocuk şarkıları","","[Playlist] çocuk","Playlist",5),
         ("PLAYLIST_20","türkçe","","[Playlist] türkçe","Playlist",5),
         ("PLAYLIST_21","80","","[Playlist] 80","Playlist",5),
         ("PLAYLIST_22","rock","","[Playlist] rock","Playlist",5),
@@ -304,6 +308,9 @@ data:
         ("PLAYLIST_26","90 lar pop","","[Playlist] pop","Playlist",5),
         ("PLAYLIST_27","ramazan","","[Playlist] ramazan","Playlist",5),
         ("PLAYLIST_28","masumiyet müzesi","","[Playlist] Masumiyet Müzesi","Playlist",5),
+        ("PLAYLIST_29","türkü","","[Playlist] türkü","Playlist",5),
+        ("PLAYLIST_30","türküler","","[Playlist] türküler","Playlist",5),
+        ("PLAYLIST_31","remix","","[Playlist] remix","Playlist",5),
     ]
 
     def tr_lower(s):
@@ -330,25 +337,35 @@ data:
             return None
 
     def find_artist(items, n, exp):
+        # Java ile birebir: sadece performers kind, exact match
         for i, it in enumerate(items[:n]):
-            if contains_tr(get_artist(it.get("data", {})), exp): return i
+            d = it.get("data", {})
+            if d.get("kind") != "performers": continue
+            if equals_tr(get_artist(d), exp): return i
         return -1
 
     def find_track(items, n, exp_a, exp_t):
+        # Java ile birebir: expTrack <=2 karakter ise exact match kullan (ornek: "Y" sarkisi)
+        use_exact = bool(exp_t) and len(exp_t.strip()) <= 2
         for i, it in enumerate(items[:n]):
             d = it.get("data", {})
             artist = get_artist(d)
-            track = d.get("songName") or d.get("albumName") or ""
-            if (not exp_a or contains_tr(artist, exp_a)) and (not exp_t or contains_tr(track, exp_t)):
+            track = d.get("songName") or d.get("albumName") or d.get("playlistName") or get_artist(d) or ""
+            artist_ok = not exp_a or contains_tr(artist, exp_a)
+            if use_exact:
+                track_ok = not exp_t or equals_tr(track, exp_t) or equals_tr(artist, exp_t)
+            else:
+                track_ok = not exp_t or contains_tr(track, exp_t) or contains_tr(artist, exp_t)
+            if artist_ok and track_ok:
                 return i
         return -1
 
     def find_playlist(items, n, kw):
+        # Java ile birebir: sadece playlistName alanini kontrol et (albumName/songName degil)
         for i, it in enumerate(items[:n]):
             d = it.get("data", {})
-            for f in ["albumName", "playlistName", "songName"]:
-                if contains_tr(d.get(f, ""), kw): return i
-            if contains_tr(get_artist(d), kw): return i
+            pl = d.get("playlistName") or ""
+            if pl and contains_tr(pl, kw): return i
         return -1
 
     def evaluate(cid, term, exp_a, exp_t, section, top_n, items):

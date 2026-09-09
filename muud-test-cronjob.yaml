@@ -20,8 +20,8 @@ spec:
             command: ["/bin/sh", "-c"]
             args:
             - |
-              pip install requests openpyxl --quiet &&
-              python3 /scripts/run_tests.py
+              pip install --no-cache-dir --target=/tmp/deps requests openpyxl -q &&
+              PYTHONPATH=/tmp/deps python3 /scripts/run_tests.py
             env:
             - name: RESULTS_DIR
               value: /results
@@ -30,14 +30,14 @@ spec:
             - name: SMTP_PORT
               value: "587"
             - name: SMTP_USER
-              value: "mobilodeme@turktelekom.com.tr"
+              value: "baris.durak@partner.turktelekom.com.tr"
             - name: SMTP_PASS
               valueFrom:
                 secretKeyRef:
                   name: muud-test-secrets
                   key: smtp-pass
             - name: MAIL_FROM
-              value: "ddp@turktelekom.com.tr"
+              value: "baris.durak@partner.turktelekom.com.tr"
             - name: MAIL_TO
               valueFrom:
                 secretKeyRef:
@@ -60,5 +60,4 @@ spec:
             configMap:
               name: muud-test-script
           - name: results
-            persistentVolumeClaim:
-              claimName: muud-test-results
+            emptyDir: {}

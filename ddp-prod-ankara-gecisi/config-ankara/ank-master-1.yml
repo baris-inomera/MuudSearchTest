@@ -1,0 +1,93 @@
+# ======================== Elasticsearch Configuration =========================
+#
+# ddp-prod-ank-master-1  -  NEW NODE (Ankara)
+#
+# Modelled on the existing Istanbul master config (Toluca04/05/06) so that the
+# only intentional differences are node.name, node.attr.rack and network.host.
+#
+# BEFORE DEPLOYING:
+#   1. Replace every <<ANK_*_IP>> placeholder with the real address.
+#   2. Install EXACTLY the same Elasticsearch version as the Istanbul nodes.
+#      A different version either cannot join or half-upgrades the cluster.
+#   3. Copy elastic-certificates.p12 from an Istanbul node into
+#      /app/elasticsearch-master/config/certs/ and add the keystore passwords:
+#        bin/elasticsearch-keystore add xpack.security.transport.ssl.keystore.secure_password
+#        bin/elasticsearch-keystore add xpack.security.transport.ssl.truststore.secure_password
+#      verification_mode is `certificate`, so only the CA chain is checked -
+#      no need to reissue certificates for the new IPs, copying is enough.
+#   4. Mount /backup/elasticsearch-snapshots at the same path as the other nodes.
+#   5. Open transport port 9300 in BOTH directions against all other nodes.
+#
+# ---------------------------------- Cluster -----------------------------------
+#
+# Must match the running cluster exactly, otherwise the node forms its own.
+#
+cluster.name: ddp-prod-cluster
+#
+# ------------------------------------ Node ------------------------------------
+#
+node.name: ddp-prod-ank-master-1
+#
+# Awareness attribute. `cluster.routing.allocation.awareness.attributes: rack`
+# is set as a persistent cluster setting during the migration; this value is what
+# places the node in the Ankara zone. A typo here silently breaks the whole
+# two-location guarantee, so 03-join-ankara.sh verifies it.
+#
+node.attr.rack: ddp-ankara
+#
+# ----------------------------------- Paths ------------------------------------
+#
+path.data: /data/elasticsearch-master
+#
+path.logs: /app/elasticsearch-master/logs
+#
+# Shared snapshot repository - same path on every node, writable by the
+# elasticsearch user. Repository verification runs on all nodes, master-only
+# nodes included.
+#
+path.repo: ["/backup/elasticsearch-snapshots"]
+#
+# ----------------------------------- Memory -----------------------------------
+#
+bootstrap.memory_lock: true
+#
+# ---------------------------------- Network -----------------------------------
+#
+network.host: 10.6.245.97
+#
+# If there is NAT between Istanbul and Ankara, the address other nodes must dial
+# is not the one bound locally. In that case set network.publish_host to the
+# externally reachable address, otherwise leave it unset.
+#network.publish_host: <<ANK_MASTER_1_PUBLIC_IP>>
+#
+http.port: 9200
+transport.port: 9300
+#
+# --------------------------------- Discovery ----------------------------------
+#
+# Target topology: 2 IST masters + 1 ANK master (3 total, quorum 2).
+#
+discovery.seed_hosts: ["10.95.27.26:9300", "10.95.27.27:9300", "10.6.245.97:9300"]
+#
+# cluster.initial_master_nodes IS DELIBERATELY ABSENT.
+#
+# This node joins an EXISTING cluster. If this setting were present the node
+# would bootstrap a brand new, separate cluster with the same name and would
+# never join ddp-prod-cluster - and the failure looks like a silent no-op.
+# Do not add it. Ever.
+#
+# ---------------------------------- Various -----------------------------------
+#
+xpack.security.enabled: true
+
+xpack.security.transport.ssl.enabled: true
+xpack.security.transport.ssl.verification_mode: certificate
+xpack.security.transport.ssl.keystore.path: /app/elasticsearch-master/config/certs/elastic-certificates.p12
+xpack.security.transport.ssl.truststore.path: /app/elasticsearch-master/config/certs/elastic-certificates.p12
+
+ingest.geoip.downloader.enabled: false
+
+node.roles: [ master ]
+#xpack.security.http.ssl.enabled: true
+#xpack.security.http.ssl.verification_mode: certificate
+#xpack.security.http.ssl.keystore.path: /app/elasticsearch-master/config/certs/elastic-certificates.p12

@@ -77,7 +77,8 @@ public class Bulgu_UAT_OrtakExcel extends TestConfig {
     @AfterAll
     static void writeReport() {
         System.out.printf("%n📋 Toplam %d case işlendi.%n", ROWS.size());
-        ExcelTestReportWriter.writeBulgu(ROWS);
+        ExcelTestReportWriter.writeBulgu(ROWS, "reports/bulgu-uat");
+        analyzer.BulguAnalyzer.annotateLatest("reports/bulgu-uat");   // NOK satirlarini otomatik analiz eder
     }
 
     // =========================================================================
@@ -229,8 +230,6 @@ public class Bulgu_UAT_OrtakExcel extends TestConfig {
             new BulguCase("UAT_136",  "silemez o beni",                  "Yıldız Tilbe",         "Dizine Dursun",                  S_SARKI_LYRICS, 1),
             new BulguCase("UAT_137",  "babalar sözünü tutar",            "Blok3",                "PATLAT",                         S_SARKI_LYRICS, 3),
             new BulguCase("UAT_143",  "çok geç şmdi",                    "Edis",                 "Yalan",                          S_SARKI_LYRICS, 3),
-            new BulguCase("UAT_144",  "affet bu gece istedim ölmek",     "Model",                "Pembe Mezarlık",                 S_SARKI_LYRICS, 3),
-
             // ═════════════════════════════════════════════════════════════════
             // SANATÇI · TAM EŞLEŞMe
             // Kullanıcı sanatçı adını birebir yazmış

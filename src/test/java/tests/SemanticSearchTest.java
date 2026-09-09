@@ -60,7 +60,8 @@ public class SemanticSearchTest extends TestConfig {
     @AfterAll
     static void writeReport() {
         System.out.printf("%n📋 Toplam %d semantic case işlendi.%n", ROWS.size());
-        ExcelTestReportWriter.writeBulgu(ROWS);
+        ExcelTestReportWriter.writeBulgu(ROWS, "reports/semantic");
+        analyzer.BulguAnalyzer.annotateLatest("reports/semantic");   // NOK satirlarini otomatik analiz eder
     }
 
     // =========================================================================

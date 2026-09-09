@@ -1,3 +1,9 @@
+// ============================================================
+//  MuudSearchApi — PROD ORTAMI
+//  Bu dosyanin TAMAMINI src/test/java/client/MuudSearchApi.java
+//  uzerine kopyala. Baska hicbir yeri degistirmen gerekmiyor;
+//  rapor adi (TestReport_<zaman>_PROD.xlsx) BASE_URL'den otomatik gelir.
+// ============================================================
 package client;
 
 import io.restassured.RestAssured;
@@ -5,7 +11,39 @@ import io.restassured.response.Response;
 
 public class MuudSearchApi {
 
-    private static final String BASE_URL = "https://mirketgateway.apps.erdek.paas.turktelekom.intra";
+    private static final String BASE_URL = "https://searchapi.turktelekom.com.tr";
+
+    // ------------------------------------------------------------------
+    // Ortam etiketi — rapor dosya adinda kullanilir:
+    //     TestReport_<zaman>_PROD.xlsx  /  TestReport_<zaman>_UAT.xlsx
+    // Etiket YUKARIDAKI BASE_URL'den turetilir. Ortam degistirmek icin
+    // yalnizca o satiri (ve gerekiyorsa app-key / Authorization) duzenle;
+    // bu iki metoda dokunmak gerekmez.
+    // ------------------------------------------------------------------
+
+    /** Aktif base URL — log ve rapor adlandirmasi icin. */
+    public static String baseUrl() {
+        return BASE_URL;
+    }
+
+    /**
+     * BASE_URL'den ortam etiketi uretir: PROD / UAT / LOCAL. Taninmayan bir host
+     * icin host adinin ilk parcasini buyuk harfle dondurur, boylece yeni bir
+     * ortam eklenirse adlandirma yine calisir.
+     */
+    public static String ortam() {
+        String u = BASE_URL.toLowerCase(java.util.Locale.ROOT);
+        if (u.contains("searchapi.turktelekom.com.tr")) return "PROD";
+        if (u.contains("mirketgateway") || u.contains("erdek.paas")) return "UAT";
+        if (u.contains("localhost") || u.contains("127.0.0.1")) return "LOCAL";
+        try {
+            String h = new java.net.URI(BASE_URL).getHost();
+            if (h != null && !h.isBlank()) {
+                return h.split("\\.")[0].toUpperCase(java.util.Locale.ROOT);
+            }
+        } catch (Exception ignore) { /* etiket uretilemedi */ }
+        return "BILINMEYEN";
+    }
 
     public Response search(String term, String indexId, int limit) {
 
@@ -37,11 +75,11 @@ public class MuudSearchApi {
                 .relaxedHTTPSValidation()
                 .header("Content-Type", "application/json")
                 .header("Accept", "*/*")
-                .header("X-SEARCH-APP-KEY","muudelk9")
-// muudelk9:5KycODJZxhQqAvm5 — mirket consumer "MuudElk9" → tenant hmuud.
-// Eski deger WPPeHLyg (consumer "Muud") tenant muud'a gidiyordu; gateway
-// Basic auth'a bakar, X-SEARCH-APP-KEY header'i tenant secimini ETKILEMEZ.
-                .header("Authorization", "Basic V1BQZUhMeWc6NUt5Y09ESlp4aFFxQXZtNQ==")
+                .header("X-SEARCH-APP-KEY","muud")
+                // PROD gateway. Kimlik: consumer "Muud" (Basic kullanici BDGU79km).
+                // Gateway tenant secimini Basic auth uzerinden yapiyor;
+                // X-SEARCH-APP-KEY header'i tenant secimini ETKILEMEZ.
+                .header("Authorization", "Basic QkRHVTc5a206ckpnNzBZaTd6VGxreVF2UQ==")
                 .body(apiQueryBody)
                 .when()
                 .post(new_path)

@@ -1,0 +1,11 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="ResponseDumper (prod)" type="Application" factoryName="Application">
+    <option name="MAIN_CLASS_NAME" value="analyzer.ResponseDumper" />
+    <module name="muud-search-api-tests" />
+    <option name="PROGRAM_PARAMETERS" value="reports/main-cases prod" />
+    <option name="VM_PARAMETERS" value="-Dfile.encoding=UTF-8" />
+    <method v="2">
+      <option name="Make" enabled="true" />
+    </method>
+  </configuration>
+</component>

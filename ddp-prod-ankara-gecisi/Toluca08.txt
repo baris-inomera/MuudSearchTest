@@ -1,0 +1,115 @@
+# ======================== Elasticsearch Configuration =========================
+#
+# NOTE: Elasticsearch comes with reasonable defaults for most settings.
+#       Before you set out to tweak and tune the configuration, make sure you
+#       understand what are you trying to accomplish and the consequences.
+#
+# The primary way of configuring a node is via this file. This template lists
+# the most important settings you may want to configure for a production cluster.
+#
+# Please consult the documentation for further information on configuration options:
+# https://www.elastic.co/guide/en/elasticsearch/reference/index.html
+#
+# ---------------------------------- Cluster -----------------------------------
+#
+# Use a descriptive name for your cluster:
+#
+cluster.name: ddp-prod-cluster
+#
+# ------------------------------------ Node ------------------------------------
+#
+# Use a descriptive name for the node:
+#
+node.name: ddp-prod-ist-data-5
+#
+# Add custom attributes to the node:
+#
+node.attr.rack: ddp-istanbul
+#
+# ----------------------------------- Paths ------------------------------------
+#
+# Path to directory where to store the data (separate multiple locations by comma):
+#
+path.data: /data/elasticsearch-data
+#
+# Path to log files:
+#
+path.logs: /app/elasticsearch-data/logs
+#
+# Path to the shared snapshot repository. Must be mounted at the SAME path on
+# every node and be writable by the elasticsearch user. Added for the
+# IST -> IST+ANK migration: without it no snapshot repository can be registered,
+# which means there is no rollback point.
+#
+path.repo: ["/backup/elasticsearch-snapshots"]
+#
+# ----------------------------------- Memory -----------------------------------
+#
+# Lock the memory on startup:
+#
+bootstrap.memory_lock: true
+#
+# Make sure that the heap size is set to about half the memory available
+# on the system and that the owner of the process is allowed to use this
+# limit.
+#
+# Elasticsearch performs poorly when the system is swapping the memory.
+#
+# ---------------------------------- Network -----------------------------------
+#
+# By default Elasticsearch is only accessible on localhost. Set a different
+# address here to expose this node on the network:
+#
+#
+network.host: 10.95.27.30
+#
+# By default Elasticsearch listens for HTTP traffic on the first free port it
+# finds starting at 9200. Set a specific HTTP port here:
+#
+http.port: 9200
+transport.port: 9300
+#
+# For more information, consult the network module documentation.
+#
+# --------------------------------- Discovery ----------------------------------
+#
+# Pass an initial list of hosts to perform discovery when this node is started:
+# The default list of hosts is ["127.0.0.1", "[::1]"]
+#
+#discovery.type: single-node
+#discovery.seed_hosts: ["10.95.27.26:9300"]
+# Target topology: 2 IST masters + 1 ANK master (3 total, quorum 2).
+# 10.95.27.28 (ddp-prod-ist-master-3) is decommissioned by the migration and is
+# deliberately absent. 10.6.245.97 may still be unreachable when this
+# file is first deployed - an unreachable seed host is harmless.
+discovery.seed_hosts: ["10.95.27.26:9300", "10.95.27.27:9300", "10.6.245.97:9300"]
+#
+# Bootstrap the cluster using an initial set of master-eligible nodes:
+#
+# DISABLED. The cluster is already bootstrapped, so this setting is ignored at
+# runtime - but it is a foot-gun: if a node ever loses its path.data it would
+# bootstrap a BRAND NEW cluster instead of rejoining this one. It must never be
+# present on a node that joins an existing cluster.
+#cluster.initial_master_nodes: ["ddp-prod-ist-master-1", "ddp-prod-ist-master-2","ddp-prod-ist-master-3"]
+#
+# For more information, consult the discovery and cluster formation module documentation.
+#
+# ---------------------------------- Various -----------------------------------
+#
+#
+# Allow wildcard deletion of indices:
+#
+#action.destructive_requires_name: false
+xpack.security.enabled: true
+
+xpack.security.transport.ssl.enabled: true
+xpack.security.transport.ssl.verification_mode: certificate
+xpack.security.transport.ssl.keystore.path: /app/elasticsearch-data/config/certs/elastic-certificates.p12
+xpack.security.transport.ssl.truststore.path: /app/elasticsearch-data/config/certs/elastic-certificates.p12
+
+ingest.geoip.downloader.enabled: false
+
+
+node.roles: [ data ]
+#xpack.security.http.ssl.enabled: true
+#xpack.security.http.ssl.keystore.path: /app/elasticsearch-data/config/certs/elastic-certificates.p12

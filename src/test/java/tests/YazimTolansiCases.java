@@ -56,7 +56,8 @@ public class YazimTolansiCases extends TestConfig {
     @AfterAll
     static void writeReport() {
         System.out.printf("%n📋 Toplam %d case işlendi.%n", ROWS.size());
-        ExcelTestReportWriter.writeBulgu(ROWS);
+        ExcelTestReportWriter.writeBulgu(ROWS, "reports/yazim-tolansi");
+        analyzer.BulguAnalyzer.annotateLatest("reports/yazim-tolansi");   // NOK satirlarini otomatik analiz eder
     }
 
     // =========================================================================

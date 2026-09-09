@@ -37,3 +37,10 @@ build/
 
 ### Mac OS ###
 .DS_Store
+
+# BulguAnalyzer
+analyzer.properties
+reports/.analyzer-cache.json
+
+# ResponseDumper ile toplanan ham API cevaplari (buyuk, versiyonlanmamali)
+reports/api-responses/

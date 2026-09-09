@@ -1,0 +1,55 @@
+# BulguAnalyzer konfigurasyonu
+#
+# Bu dosyayi analyzer.properties olarak proje KOKUNE kopyalayin ve .gitignore'a ekleyin.
+# Alternatif olarak hicbir dosya olusturmadan ortam degiskeni de kullanabilirsiniz:
+#
+#   Windows (PowerShell):  $env:ANTHROPIC_API_KEY="sk-ant-..."
+#   Windows (cmd):         set ANTHROPIC_API_KEY=sk-ant-...
+#   Linux/macOS:           export ANTHROPIC_API_KEY=sk-ant-...
+#
+# Oncelik sirasi: -D sistem property > ortam degiskeni > bu dosya > varsayilan
+#
+# API KEY'I ASLA KODA VEYA GIT'E YAZMAYIN.
+
+# --- zorunlu ---
+analyzer.apiKey=
+
+# --- opsiyonel ---
+# Analyzer'i tamamen kapatmak icin false (testler normal calisir, sadece sutunlar eklenmez)
+analyzer.enabled=true
+
+# Satir basina cagrilan ucuz model
+analyzer.model.row=claude-haiku-4-5
+
+# Kosu basina BIR kez cagrilan guclu model (kosu geneli oruntu analizi)
+analyzer.model.run=claude-sonnet-4-5
+
+# Kosu ozeti sayfasi uretilsin mi
+analyzer.runSummary=true
+
+# Es zamanli istek sayisi (1-8)
+analyzer.concurrency=4
+
+# Bu esigin altinda guvenle verilen "bulgu degil" karari INCELENMELI'ye cevrilir
+analyzer.confidenceThreshold=0.5
+
+# Istek zaman asimi (saniye) ve yeniden deneme sayisi
+analyzer.timeoutSeconds=90
+analyzer.maxRetries=3
+
+# Ayni sorgu+sonuc imzasi tekrar analiz edilmesin diye onbellek dosyasi
+analyzer.cachePath=reports/.analyzer-cache.json
+
+# ---------------------------------------------------------------------------
+# ResponseDumper — olcum corpusu toplama (analyzer.properties'e kopyalayin)
+#
+# Kimlik bilgileri BU DOSYADA DEGIL, analyzer.properties'te durur (.gitignore'da).
+# Ornek olarak birak; gercek deger yazma.
+# ---------------------------------------------------------------------------
+#dump.uat.url=https://mirketgateway.apps.erdek.paas.turktelekom.intra/gateway/search/rest/v10/active-indices/search
+#dump.uat.appKey=muudelk9
+#dump.uat.auth=Basic <UAT_BASIC_TOKEN>
+#
+#dump.prod.url=https://searchapi.turktelekom.com.tr/gateway/search/rest/v10/active-indices/search
+#dump.prod.appKey=muud
+#dump.prod.auth=Basic <PROD_BASIC_TOKEN>

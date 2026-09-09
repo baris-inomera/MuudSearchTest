@@ -1,0 +1,112 @@
+[
+  {
+    "caseId": "SARKI_SANAT_11",
+    "sorgu": "maya perest kaybedemem",
+    "beklenen": "Top-1 içinde 'Maya Perest' – 'Kaybedemem' eşleşmesi bulunmalı.",
+    "gozlem": "1. [performers] Maya Perest | skor 50.40 | ağırlıklı 19.15 — 2. [songs] Kaybedemem — Maya Perest | skor 69.91 | ağırlıklı 18.88. Şarkının ham skoru %39 daha yüksek ama ağırlıklı skorda 0.27 puanla kaybediyor.",
+    "bulgu": true,
+    "kategori": "AGIRLIK",
+    "kokNeden": "performers agirligi songs'u eziyor",
+    "cozum": "NEREDE: Performers index tanimi (id 3).\nNE YAP: Playlists'te (id 4) var olan `intentBoostEnabled` alanini Performers'a ekle; sorgu bir performerName'i TAM karsilamiyorsa performers kaydina 0.5 carpani uygula.\nYAPMA: `topHitsScoreWeight` performers=0.38 -> statik dusurme; Sanatci · Kismi Ad ailesindeki 44 case'i bozar.\nDOGRULA: \"maya perest kaybedemem\" sorgusunda 1. sira [songs] olmali. Sonra Sanatci ailesinin 111 case'ini tekrar kos.",
+    "devNotu": "Sorgu bir sanatçı adının ötesinde token (şarkı adı) içerdiğinde çıplak performer kaydı geri plana alınmalı; sorun ham skorda değil, performers 0.38 / songs 0.27 ağırlık oranında."
+  },
+  {
+    "caseId": "SANAT_KISMI_29",
+    "sorgu": "selda",
+    "beklenen": "1. sırada 'Selda Bağcan' sanatçısı gelmeli.",
+    "gozlem": "1. [performers] Selda | popularity=0 | skor 76.56 — 2. [performers] Selda Bağcan | popularity=0 | skor 71.10. Koşu genelinde performers index'indeki TÜM sonuçlarda popularity=0.",
+    "bulgu": true,
+    "kategori": "AGIRLIK",
+    "kokNeden": "performers.popularity olu sinyal",
+    "cozum": "NEREDE: Performers index tanimi (id 3).\n1) ALAN DOGRULAMASI: `scriptSource` icinde `pNorm` hangi alandan okunuyor? Response'ta `popularity: 0` ile birlikte `prodPopularity` DOLU geliyor. `popularity` ise ETL bulgusu, `prodPopularity` ise raporlama farki.\n2) NE YAP: `extraBonusFields` -> `performerName.exact` -> `weight`: 10 -> 4.\nDOGRULA: \"selda\" sorgusunda Selda Bagcan 1. siraya cikmali. Adim 2 tek basina yetmez.",
+    "devNotu": "performers index'inde popularity alanı tamamen boş geldiği için ünlü sanatçıyı benzer isimliden ayıracak sinyal kalmamış; sıralamayı yalnızca isim kısalığı belirliyor."
+  },
+  {
+    "caseId": "SANAT_KISMI_37",
+    "sorgu": "aynur",
+    "beklenen": "1. sırada 'Aynur Aydın' sanatçısı gelmeli.",
+    "gozlem": "İlk 5'te 'Aynur', 'Aynur Haşhaş', 'Aynur Polat' var; Aynur Aydın top-10'da yok. Önceki koşularda Aynur Aydın'ın popülerliği (37) rakiplerinden (40/42/46) düşüktü.",
+    "bulgu": false,
+    "kategori": "YANLIS_BEKLENTI",
+    "kokNeden": "beklenti katalog verisiyle celisiyor",
+    "cozum": "MOTOR TARAFINDA AKSIYON YOK — bu satir `bilinen-istisnalar.json`'a girmeli.\nNE YAP: caseId SANAT_KISMI_37, durum=YANLIS_BEKLENTI, aciklama='Aynur Aydin'in katalog populerligi (37) rakiplerinden (40/42/46) dusuk; beklenti veriyle celisiyor.'\nALTERNATIF: Aynur Aydin editoryal olarak onceliklendirilecekse Performers (id 3) tanimina populerlikten bagimsiz bir `editorial_boost` alani eklenmeli — bu bir urun karari, is birimiyle netlestirin.\nDOGRULA: Istisnaya alindiktan sonra bu satir basari orani hesabindan dusulur; yeniden tartisilmaz.",
+    "devNotu": "Test, katalog popülerliği daha düşük olan bir sanatçıyı 1. sırada istiyor. Beklenti iş birimiyle netleştirilmeli; motor tarafında yapılacak bir şey yok."
+  },
+  {
+    "caseId": "SARKI_TAM_42",
+    "sorgu": "phonk",
+    "beklenen": "Top-3 içinde 'DEHA INC.' – 'Phonk' eşleşmesi bulunmalı.",
+    "gozlem": "Beklenen içerik top-10'da yok. Ekip notuna göre şarkı prod ortamında bulunmuyor, popülerlik değeri 0 geliyor.",
+    "bulgu": false,
+    "kategori": "YANLIS_BEKLENTI",
+    "kokNeden": "icerik ortamda yok",
+    "cozum": "MOTOR TARAFINDA AKSIYON YOK — icerik ortamda mevcut degil, test kosulamamis.\nNE YAP: `bilinen-istisnalar.json`'a ekle: caseId SARKI_TAM_42, durum=BLOCKED, gecerlilik='Icerik prod'a yuklendiginde bu satir silinmeli'.\nEK: Rapora OK/NOK yanina BLOCKED statusu ekleyin; bu tip case'ler basari orani hesabindan cikarilmali, aksi halde motor haksiz yere kotu gorunuyor.\nDOGRULA: Istisna eklendikten sonra AI Kosu Ozeti sayfasi bu satiri ayri sayar.",
+    "devNotu": "Beklenen içerik test edilen ortamda mevcut değil; bu bir arama motoru bulgusu değil, koşulamamış bir test case'i."
+  },
+  {
+    "caseId": "SARKI_TAM_72",
+    "sorgu": "kürtçe",
+    "beklenen": "Top-3 içinde 'kürtçe' eşleşmesi bulunmalı.",
+    "gozlem": "İlk 3 sırayı 'Türkçe Rap' (prodPopularity 95), 'Türkçe Rock' (73), 'Türkçe Slow' (94) playlist'leri aldı. kürtçe/türkçe tek harf farkı.",
+    "bulgu": true,
+    "kategori": "SINONIM",
+    "kokNeden": "playlist analyzer yanlis esleme",
+    "cozum": "NEREDE: Playlists index tanimi (id 4).\nNE YAP: `playlistName.turkish` boost: 0.6 -> 0.3. Ayrica stem uzerinden gelen eslesmeler icin minimum skor esigi tanimlayin (gövde eslesmesi tek basina top-3'e girmesin).\nYAPMA: Sorgu bazli synonym/stopword ekleme — bu bir precision hatasi, kelime listesiyle kapatilmaz.\nDOGRULA: `_analyze` API'siyle sorguyu ve playlist adini ayni analyzer'dan gecirin; tek harf farkinin ayni token'a indigini gorun. Sonra Playlist ailesindeki 27 case'i tekrar kos.",
+    "devNotu": "Altı harflik bir kelimede tek harf farkının eşleşmesi ve anlamın tamamen değişmesi ciddi bir precision hatası; playlist tarafındaki fuzzy/ASCII-fold ayarı daraltılmalı."
+  },
+  {
+    "caseId": "SARKI_LYRICS_9",
+    "sorgu": "sarışınlar",
+    "beklenen": "Top-3 içinde 'Derya Uluğ' – 'Esmerin Adı Oya' eşleşmesi bulunmalı.",
+    "gozlem": "Beklenen içerik 5. sırada. 2., 3. ve 4. sıralar aynı kaydın ('Sercio – Sarışınlar') üç kopyası.",
+    "bulgu": true,
+    "kategori": "RANKING",
+    "kokNeden": "katalog duplikasyonu top-N yiyor",
+    "cozum": "NEREDE: Songs index tanimi (id 96) + ingest.\n1) HIZLI: Elasticsearch `collapse` — anahtar `normalize(performerName + songName)`, keyword olarak indeksleyip collapse field yapin.\n2) KALICI: Ingest tarafinda ayni icerigin uc dokuman olarak yazilmasini engelleyin.\nDOGRULA: Ilk 5'te uc kopya tek satira inmeli; hedef 3. siraya cikip case gecmeli. Bosalan slot sayisini onceden hesaplayip beklenen yeni sirayi yazin.",
+    "devNotu": "Aynı kaydın üç kopyası ilk 5'ten üç slot yiyor; tekilleştirme uygulanırsa hedef doğrudan 3. sıraya çıkar ve case geçer."
+  },
+  {
+    "caseId": "SARKI_LYRICS_13",
+    "sorgu": "teybi bozuk bir arabayla",
+    "beklenen": "Top-3 içinde 'Nilipek' – 'Geçmiyor Zaman' eşleşmesi bulunmalı.",
+    "gozlem": "Dönen ilk 5 sonucun hepsi adında 'Bir' geçen performer kayıtları (Birol Giray, Birsen Tezer, Gökhan Birben...). Hiç şarkı dönmemiş.",
+    "bulgu": true,
+    "kategori": "INDEX_MISSING",
+    "kokNeden": "lyrics alani etkisiz",
+    "cozum": "NEREDE: Songs index tanimi (id 96) + Performers (id 3).\n1) NE YAP: Songs (96) -> `lyrics` boost: 0.2 -> 1.5, `lyrics.turkish`: 0.1 -> 0.8.\n2) NE YAP: Lyrics intent'i tespit edin — sorgu 3+ kelimeli dogal cumleyse ve hicbir performerName'i tam karsilamiyorsa performers kaydina 0.5 carpani.\nDOGRULA: 1. sira [songs] olmali. Sarki · Lyrics ailesi su an %53; bu ailede en buyuk kazanc burada.",
+    "devNotu": "Şarkı sözü sorgusu lyrics alanında değil, performer adlarında aranıyor; sorgu tek bir yaygın token üzerinden alakasız kayıtlara düşüyor."
+  },
+  {
+    "caseId": "SARKI_KISMI_10",
+    "sorgu": "sus",
+    "beklenen": "Top-1 içinde 'Ceza' – 'Suspus' eşleşmesi bulunmalı.",
+    "gozlem": "İlk 5 sonucun hepsi adı birebir 'Sus' olan şarkılar. Beklenen içerik 'Suspus', yani sorgunun infix eşleşmesi.",
+    "bulgu": false,
+    "kategori": "YANLIS_BEKLENTI",
+    "kokNeden": "asiri dar beklenti",
+    "cozum": "MOTOR TARAFINDA AKSIYON YOK — beklenti asiri dar.\nNE YAP: Case beklentisini 'Top-3' yerine 'Top-10 icinde' olarak gevsetin. Uc harflik bir sorguda infix eslesmeyi birebir baslik eslesmesinin onune almak genel precision'i bozar.\nYAPMA: Bu case icin sorgu bazli synonym EKLEMEYIN — motoru iyilestirmez, sadece basari oranini yapay yukseltir. Ekip politikasi bu yonde.\nDOGRULA: Beklenti guncellendikten sonra case gecer; motor tarafinda hicbir olcum degismez, degismemesi de dogru.",
+    "devNotu": "Üç harflik bir sorguda infix eşleşmeyi birebir başlık eşleşmesinin önüne almak genel precision'ı ciddi biçimde bozar; beklenti 'Top-10 içinde' olarak gevşetilmeli."
+  },
+  {
+    "caseId": "SARKI_SANAT_8",
+    "sorgu": "Sinem Yalçınkaya kenar süsü",
+    "beklenen": "Top-3 içinde 'Kenar Süsü' eşleşmesi bulunmalı.",
+    "gozlem": "İlk 5 tamamen performer kaydı ve her biri sorgunun sadece tek token'ını eşliyor ('Sinem İnci', 'Hakan Kenarda'). Hiç şarkı dönmüyor.",
+    "bulgu": true,
+    "kategori": "INDEX_MISSING",
+    "kokNeden": "cross-field sanatci+sarki desteklenmiyor",
+    "cozum": "IKI ADIM, SIRASI ONEMLI.\n1) ETL (once bu): Songs'ta feat edilen sanatci `performers` alanina yazilmiyor — adinda 'feat' gecen ~414 bin sarkinin yalnizca ~%22'sinde bu alan dolu (DDP-342). Ayni ismi `searchName` dizisine de ekleyin, o dizi zaten permutasyon tutuyor.\n2) SORGU: Songs (id 96) tanimda performerNames + songName'i `copy_to` ile tek full_text alanina yazin, `multi_match type=cross_fields` kullanin.\nSIRA NEDEN ONEMLI: 2'yi tek basina yaparsaniz eslesecek veri yok, hicbir sey degismez.\nDOGRULA: Once Elasticsearch'te tek dokuman cekip alanlarin doldugunu gorun, sonra sorguyu kosun.",
+    "devNotu": "Sanatçı ve şarkı token'ları birlikte değerlendirilmiyor; sorgu tek bir güçlü performer token'ına düşüp şarkı tarafını hiç üretmiyor."
+  },
+  {
+    "caseId": "SANAT_YAZIM_19",
+    "sorgu": "sertap",
+    "beklenen": "İlk3 içinde 'Sertab Erener' sanatçısı gelmeli.",
+    "gozlem": "Sertab Erener performer kaydı top-10'da yok; 1. sırada 'Sertap — Aysu Dericioğlu' şarkısı var. 2. sırada 'Sertab Erener En Popüler Şarkılar' playlist'i çıkıyor, yani sanatçı katalogda mevcut.",
+    "bulgu": true,
+    "kategori": "SINONIM",
+    "kokNeden": "yazim toleransi kapali",
+    "cozum": "NEREDE: Performers index tanimi (id 3).\n1) NE YAP: `extraBonusFields` icindeki `fuzzy: true` satirinin `weight`: 2 -> 6.\n2) Yetmezse: `levenstein.enabled`: false -> true, `maxEdits: 1` (tum index tanimlarinda su an false). b/p gibi tek harf degisimlerini kapatir.\nYAPMA: Sorgu bazli synonym eklemeyin — ekip politikasi bu yonde.\nDOGRULA: Sanatci top-3'e girmeli. Sonra Sanatci · Tam Eslesme ailesini (36 case, %97) tekrar kos; fuzzy yanlis eslesme uretip bu orani dusurmemeli.",
+    "devNotu": "b/p harf değişimi hiç tolere edilmiyor; sanatçı katalogda olmasına rağmen performer kaydı dönmüyor."
+  }
+]

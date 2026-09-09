@@ -5,6 +5,7 @@ import org.apache.poi.ss.util.CellRangeAddress;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 import java.io.FileOutputStream;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -120,6 +121,41 @@ public class ExcelTestReportWriter {
     // =========================================================================
     // ENTRY POINT — BulguFinal / BulguFinal2 (yalnızca "Tüm Testler", daraltılmış sütunlar)
     // =========================================================================
+    /**
+     * Raporu belirtilen alt klasöre kaydeder.
+     * Klasör yoksa otomatik oluşturulur.
+     * Örnek: writeBulgu(rows, "reports/muud-typo")
+     */
+    public static void writeBulgu(List<TestResultRow> rows, String subDir) {
+        writeBulgu(rows, subDir, null);
+    }
+
+    /**
+     * Ortam etiketli sürüm. Dosya adı: TestReport_<zaman>_<ORTAM>.xlsx
+     * Etiket SONA eklenir; böylece "TestReport_" öneki ve sözlük sırası = kronolojik
+     * sıra korunur (analyzer en yeni raporu ada göre seçiyor).
+     */
+    public static void writeBulgu(List<TestResultRow> rows, String subDir, String ortamEtiketi) {
+        String ek = (ortamEtiketi == null || ortamEtiketi.isBlank())
+                ? "" : "_" + ortamEtiketi.trim().toUpperCase(Locale.ROOT);
+        String fileName = "TestReport_" + LocalDateTime.now().format(TS) + ek + ".xlsx";
+        Path dir = Path.of(System.getProperty("user.dir"), subDir);
+        try { Files.createDirectories(dir); } catch (Exception e) { /* zaten var */ }
+        Path outPath = dir.resolve(fileName);
+
+        try (Workbook wb = new XSSFWorkbook()) {
+            StyleBundle styles = buildStyles(wb);
+            writeBulguSheet(wb, "Tüm Testler", rows, styles);
+
+            try (FileOutputStream fos = new FileOutputStream(outPath.toFile())) {
+                wb.write(fos);
+            }
+            System.out.println("📊 Rapor oluşturuldu: " + outPath);
+        } catch (Exception e) {
+            throw new RuntimeException("Excel raporu yazılamadı: " + e.getMessage(), e);
+        }
+    }
+
     public static void writeBulgu(List<TestResultRow> rows) {
         String fileName = "TestReport_" + LocalDateTime.now().format(TS) + ".xlsx";
         Path outPath = Path.of(System.getProperty("user.dir"), fileName);

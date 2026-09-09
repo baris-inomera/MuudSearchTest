@@ -1,0 +1,71 @@
+ddp-prod-cluster · Ankara Gecisi · Operasyon Paketi
+===================================================
+
+BURADAN BASLA
+-------------
+  operasyon-runbook.html
+
+  Bu dosyayi bir tarayicida acin. Gecisin tamami adim adim,
+  hangi dosyanin hangi makineye gidecegi ve her komutun nerede
+  calisacagi yazili.
+
+ICERIK
+------
+  operasyon-runbook.html   Ana dokuman - once bunu okuyun
+  config-ankara/           Ankara sunucularina kopyalanacak 3 config
+  migration/               Calistirilacak scriptler
+  migration/README.md      Teknik detay
+  migration/ROLLBACK.md    Geri alma prosedurleri (R1-R7)
+  Toluca04-08.txt          Istanbul configleri - BU GECISTE KULLANILMAYACAK
+  ES_Migration_Ozeti.md    Mimari ozet (bilgi amacli)
+
+CONFIG DOSYALARI NEREYE
+-----------------------
+  Hedefte dosyanin adi her zaman "elasticsearch.yml" olacak,
+  yani kopyalarken adini degistireceksiniz.
+
+  ANKARA - bu geciste kopyalanacak:
+    config-ankara/ank-master-1.yml
+      -> 10.6.245.97  : /app/elasticsearch-master/config/elasticsearch.yml
+    config-ankara/ank-data-1.yml
+      -> 10.6.245.99  : /app/elasticsearch-data/config/elasticsearch.yml
+    config-ankara/ank-data-2.yml
+      -> 10.6.245.100 : /app/elasticsearch-data/config/elasticsearch.yml
+
+  ISTANBUL - SONRAKI BAKIM PENCERESI, simdi kopyalanmayacak:
+    Toluca04.txt -> 10.95.27.26 : /app/elasticsearch-master/config/elasticsearch.yml
+    Toluca05.txt -> 10.95.27.27 : /app/elasticsearch-master/config/elasticsearch.yml
+    Toluca06.txt -> 10.95.27.28 : /app/elasticsearch-master/config/elasticsearch.yml
+    Toluca07.txt -> 10.95.27.29 : /app/elasticsearch-data/config/elasticsearch.yml
+    Toluca08.txt -> 10.95.27.30 : /app/elasticsearch-data/config/elasticsearch.yml
+
+SCRIPT SIRASI
+-------------
+  cd migration
+  ./00-preflight.sh                  <- salt okunur, once bunu calistirin
+  ./02-backup.sh                     <- YEDEK, bu gecmeden ilerlemeyin
+  ./03-join-ankara.sh
+  ./04-enable-awareness.sh
+  ./06-decommission-ist-master-3.sh
+  ./07-post-checks.sh
+
+  ./05-watch-relocation.sh           <- izleme, ayri terminal, salt okunur
+  ./01-rolling-restart.sh            <- BU GECISTE CALISTIRILMAYACAK
+
+SCRIPTLERIN CALISACAGI MAKINEDE OLMASI GEREKENLER
+--------------------------------------------------
+  bash 4+       ->  bash --version
+  curl          ->  curl --version
+  jq            ->  jq --version
+  ES erisimi    ->  curl -s http://10.95.27.26:9200
+
+  jq kurulu degilse scriptler calismaz.
+
+ONAY SEKLI
+----------
+  Scriptler tam olarak "evet" bekler. y veya Enter kabul edilmez.
+
+TAKILIRSANIZ
+------------
+  Durumu kaydedin, komut vermeyin, sorumluyu arayin.
+      cd migration && ./rollback.sh status

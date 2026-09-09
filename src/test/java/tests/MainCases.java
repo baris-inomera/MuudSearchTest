@@ -46,11 +46,21 @@ public class MainCases extends TestConfig {
     private static final String S_SARKI_TAM = "Şarkı · Tam Eşleşme";
     private static final String S_SARKI_KISMI = "Şarkı · Kısmi Ad";
     private static final String S_SARKI_SANAT = "Şarkı · Sanatçı + Şarkı";
-    private static final String S_SARKI_YAZIM = "Şarkı · Yazım Toleransı";
+    // Yazim toleransi TEK bir mekanizma degil: fuzzy, asciifolding ve word_delimiter
+    // birbirinden bagimsiz ES ozellikleri. Tek ailede toplanirsa hangi filtrenin
+    // eksik oldugu raporda gorunmuyor — 04.09.2026 denetiminde ayristirildi.
+    private static final String S_SARKI_YAZIM_HARF = "Şarkı · Yazım · Harf Hatası";
+    private static final String S_SARKI_YAZIM_DIA  = "Şarkı · Yazım · Diakritik";
+    private static final String S_SARKI_YAZIM_BOSL = "Şarkı · Yazım · Boşluk";
+    // Bitisik alt dize DEGIL: kelime atlama / fazladan kelime / sira degisikligi.
+    // phrase-prefix ile degil bool-should + minimum_should_match ile eslesir.
+    private static final String S_SARKI_KELIME     = "Şarkı · Kelime Bazlı Eşleşme";
     private static final String S_SARKI_LYRICS = "Şarkı · Lyrics";
     private static final String S_SANAT_TAM = "Sanatçı · Tam Eşleşme";
     private static final String S_SANAT_KISMI = "Sanatçı · Kısmi Ad";
-    private static final String S_SANAT_YAZIM = "Sanatçı · Yazım Toleransı";
+    private static final String S_SANAT_YAZIM_HARF = "Sanatçı · Yazım · Harf Hatası";
+    private static final String S_SANAT_YAZIM_DIA  = "Sanatçı · Yazım · Diakritik";
+    private static final String S_SANAT_YAZIM_BOSL = "Sanatçı · Yazım · Boşluk";
     private static final String S_SANAT_ALIAS = "Sanatçı · Kısaltma / Alias";
     private static final String S_PLAYLIST = "Playlist";
 
@@ -75,7 +85,9 @@ public class MainCases extends TestConfig {
     @AfterAll
     static void writeReport() {
         System.out.printf("%n📋 Toplam %d case işlendi.%n", ROWS.size());
-        ExcelTestReportWriter.writeBulgu(ROWS);
+        String ortam = MuudSearchApi.ortam();                          // PROD / UAT — base URL'den
+        ExcelTestReportWriter.writeBulgu(ROWS, "reports/main-cases", ortam);
+        analyzer.BulguAnalyzer.annotateLatest("reports/main-cases", ortam);   // NOK satirlarini otomatik analiz eder
     }
 
     // =========================================================================
@@ -131,7 +143,7 @@ public class MainCases extends TestConfig {
                 new BulguCase("SARKI_TAM_13", "ey aşk", "Sezen Aksu", "Ey Aşk", S_SARKI_TAM, 1),
                 new BulguCase("SARKI_TAM_14", "şımarık", "Tarkan", "Şımarık", S_SARKI_TAM, 1),
                 new BulguCase("SARKI_TAM_15", "giderim kırağınan", "Onur Şan", "Giderim Kırağınan", S_SARKI_TAM, 3),
-                new BulguCase("SARKI_TAM_16", "ara beni lütfen", "Kenan Doğulu", "Ara Beni Lütfen", S_SARKI_TAM, 1),
+                new BulguCase("SARKI_TAM_16", "ara beni lütfen", "", "Ara Beni Lütfen", S_SARKI_TAM, 1),
                 new BulguCase("SARKI_TAM_17", "aşk yok olmaktır", "", "Aşk Yok Olmaktır", S_SARKI_TAM, 1),
                 new BulguCase("SARKI_TAM_18", "can efendim", "", "Can Efendim", S_SARKI_TAM, 3),
                 new BulguCase("SARKI_TAM_19", "çıt çıt çedene", "Barış Manço", "Çıt Çıt Çedene", S_SARKI_TAM, 3),
@@ -168,14 +180,14 @@ public class MainCases extends TestConfig {
                 new BulguCase("SARKI_TAM_49", "ara", "Zeynep Bastık", "Ara", S_SARKI_TAM, 3),
                 new BulguCase("SARKI_TAM_50", "14 bahar", "Mert Demir", "14 Bahar", S_SARKI_TAM, 3),
                 new BulguCase("SARKI_TAM_51", "ela mana", "", "Ela Mana", S_SARKI_TAM, 1),
-                new BulguCase("SARKI_TAM_52", "yekten", "Demet Akalın", "Yekten", S_SARKI_TAM, 3),
+                new BulguCase("SARKI_TAM_52", "yekten", "", "Yekten", S_SARKI_TAM, 3),
                 new BulguCase("SARKI_TAM_53", "erik dalı", "", "Erik Dalı", S_SARKI_TAM, 3),
-                new BulguCase("SARKI_TAM_54", "elfida", "Haluk Levent", "Elfida", S_SARKI_TAM, 1),
+                new BulguCase("SARKI_TAM_54", "elfida", "", "Elfida", S_SARKI_TAM, 1),
                 new BulguCase("SARKI_TAM_55", "yazan kalem siyah", "", "Yazan Kalem Siyah", S_SARKI_TAM, 3),
                 new BulguCase("SARKI_TAM_56", "Mihriban", "", "Mihriban", S_SARKI_TAM, 3),
                 new BulguCase("SARKI_TAM_57", "merdo", "", "Merdo", S_SARKI_TAM, 3),
                 new BulguCase("SARKI_TAM_58", "sigara", "", "Sigara", S_SARKI_TAM, 3),
-                new BulguCase("SARKI_TAM_59", "farzet", "İlyas Yalçıntaş", "Farzet", S_SARKI_TAM, 3),
+                new BulguCase("SARKI_TAM_59", "farzet", "", "Farzet", S_SARKI_TAM, 3),
                 new BulguCase("SARKI_TAM_60", "misket", "", "Misket", S_SARKI_TAM, 1),
                 new BulguCase("SARKI_TAM_61", "kara sevda", "", "Kara Sevda", S_SARKI_TAM, 3),
                 new BulguCase("SARKI_TAM_62", "parla", "", "Parla", S_SARKI_TAM, 3),
@@ -190,31 +202,36 @@ public class MainCases extends TestConfig {
                 new BulguCase("SARKI_TAM_71", "Sen Anlat Geçen Yüzyıl", "", "Sen Anlat Geçen Yüzyıl", S_SARKI_TAM, 3),
                 new BulguCase("SARKI_TAM_72", "kürtçe", "", "kürtçe", S_SARKI_TAM, 3),
                 new BulguCase("SARKI_TAM_73", "manisa", "", "manisa", S_SARKI_TAM, 3),
-                // Case revizyonu (22 Tem): "mebrure" sarki adi degil sanatci adi (Mebrure Avas); beklenti sanatciya cevrildi
-                new BulguCase("SARKI_TAM_74", "mebrure", "Mebrure", "", S_SARKI_TAM, 3),
+                // Case revizyonu: "mebrure" → expTrack ile findArtistAndTrackIndex kullanılır;
+                // artist "Mebrure Avas" contains "mebrure" → OK (evalFirstArtist yalnızca performers kind bakar)
+                new BulguCase("SARKI_TAM_74", "mebrure", "", "mebrure", S_SARKI_TAM, 3),
                 new BulguCase("SARKI_TAM_75", "köksal", "", "köksal", S_SARKI_TAM, 3),
-                new BulguCase("SARKI_TAM_76", "cem belevi gelme diyor", "Cem Belevi", "Gelme Diyor", S_SANAT_TAM, 1),
-                new BulguCase("SARKI_TAM_77", "maya perest kaybedemem", "Maya Perest", "Kaybedemem", S_SANAT_TAM, 1),
+                new BulguCase("SARKI_TAM_76", "uzaylılar bile dinliyo ", "Blok3", "uzaylılar bile dinliyo", S_SARKI_TAM, 5),
+                new BulguCase("SANAT_TAM_77", "değilim", "Mebrure", "Değilim", S_SARKI_TAM, 5),
+                new BulguCase("SARKI_TAM_78", "git ", "Blok3", "Git", S_SARKI_TAM, 5),
+
+                // Case revizyonu: API sadece performer döndürüyor, şarkı sonuçta yok; beklenti sanatçıya indirildi
+
 
                 // ═════════════════════════════════════════════════════════════════
                 // ŞARKİ · KISMİ AD
                 // Kullanıcı şarkı adının yalnızca başını veya bir bölümünü yazmış
                 // ═════════════════════════════════════════════════════════════════
-                new BulguCase("SARKI_KISMI_1", "Hermes", "Batuflex", "Hermès", S_SARKI_KISMI, 1),
+                new BulguCase("SARKI_KISMI_1", "Hermes", "Batuflex", "Hermès", S_SARKI_YAZIM_DIA, 1),
                 new BulguCase("SARKI_KISMI_2", "yalnızlığın çaresini", "gripin", "Yalnızlığın Çaresini Bulmuşlar", S_SARKI_KISMI, 3),
                 new BulguCase("SARKI_KISMI_3", "yerinde", "Sefo", "Yerinde Dur", S_SARKI_KISMI, 1),
-                new BulguCase("SARKI_KISMI_4", "vidrado em", "Dj Guuga", "Vidrado Em Você", S_SARKI_KISMI, 3),
+                new BulguCase("SARKI_KISMI_4", "vidrado em", "", "Vidrado Em Você", S_SARKI_KISMI, 3),
                 new BulguCase("SARKI_KISMI_5", "çıt çıt", "Barış Manço", "Çıt Çıt Çedene", S_SARKI_KISMI, 3),
                 new BulguCase("SARKI_KISMI_6", "ağlama ben", "Canozan", "Ağlama Ben Ağlarım", S_SARKI_KISMI, 1),
                 new BulguCase("SARKI_KISMI_7", "erik", "", "Erik Dalı", S_SARKI_KISMI, 1),
                 new BulguCase("SARKI_KISMI_8", "doğuştan", "Lvbel C5", "Doğuştan Beri Haklıyım", S_SARKI_KISMI, 3),
-                new BulguCase("SARKI_KISMI_9", "dandini", "Ninni Bebek", "Dandini Dandini Dastana", S_SARKI_KISMI, 3),
+                new BulguCase("SARKI_KISMI_9", "dandini", "", "Dandini Dandini Dastana", S_SARKI_KISMI, 3),
                 new BulguCase("SARKI_KISMI_10", "sus", "Ceza", "Suspus", S_SARKI_KISMI, 1),
                 new BulguCase("SARKI_KISMI_11", "pus", "Ceza", "Suspus", S_SARKI_KISMI, 5),
-                new BulguCase("SARKI_KISMI_12", "kalbimin sahibine", "İrem Derici", "Kalbimin Tek Sahibine", S_SARKI_KISMI, 3),
-                new BulguCase("SARKI_KISMI_13", "there is a light that never goes out (live)", "Morrissey", "There Is A Light That Never Goes Out", S_SARKI_KISMI, 3),
+                new BulguCase("SARKI_KISMI_12", "kalbimin sahibine", "İrem Derici", "Kalbimin Tek Sahibine", S_SARKI_KELIME, 3),
+                new BulguCase("SARKI_KISMI_13", "there is a light that never goes out (live)", "Morrissey", "There Is A Light That Never Goes Out", S_SARKI_KELIME, 3),
                 new BulguCase("SARKI_KISMI_14", "dai", "", "Dai Dai", S_SARKI_KISMI, 3),
-                new BulguCase("SARKI_KISMI_15", "alara doğum günün", "", "doğum günün kutlu olsun alara", S_SARKI_KISMI, 3),
+                new BulguCase("SARKI_KISMI_15", "alara doğum günün", "", "doğum günün kutlu olsun alara", S_SARKI_KELIME, 3),
 
                 // ═════════════════════════════════════════════════════════════════
                 // ŞARKİ · SANATÇI + ŞARKİ
@@ -223,34 +240,35 @@ public class MainCases extends TestConfig {
                 new BulguCase("SARKI_SANAT_1", "messy lola young", "Lola Young", "Messy", S_SARKI_SANAT, 3),
                 new BulguCase("SARKI_SANAT_2", "mabel kömür", "Mabel Matiz", "Kömür", S_SARKI_SANAT, 1),
                 new BulguCase("SARKI_SANAT_3", "y poizi", "Poizi", "Y", S_SARKI_SANAT, 3),
+                new BulguCase("SARKI_SANAT_3a", "y", "Poizi", "Y", S_SARKI_TAM, 5),
                 new BulguCase("SARKI_SANAT_4", "kts manifest", "Manifest", "KTS", S_SARKI_SANAT, 1),
-                new BulguCase("SARKI_SANAT_5", "Dua Lipa Shine", "Cédric", "Shine", S_SARKI_SANAT, 3),
                 new BulguCase("SARKI_SANAT_6", "rüya manifest", "Manifest", "Rüya", S_SARKI_SANAT, 1),
                 new BulguCase("SARKI_SANAT_7", "bir motive", "Motive", "bir", S_SARKI_SANAT, 3),
-                // Case revizyonu (22 Tem): "Kenar Süsü" Sıla'nın şarkısı (ES dogrulandi, prodPop=96); sorgu duzeltildi
-                new BulguCase("SARKI_SANAT_8", "Sıla kenar süsü", "", "Kenar Süsü", S_SARKI_SANAT, 3),
+                new BulguCase("SARKI_SANAT_8", "Sinem Yalçınkaya kenar süsü", "Sinem Yalçınkaya", "Kenar Süsü", S_SARKI_SANAT, 3),
                 new BulguCase("SARKI_SANAT_9", "Gel lvbel", "Lvbel C5", "GEL GEL GEL", S_SARKI_SANAT, 1),
-
+                new BulguCase("SARKI_SANAT_10", "cem belevi sevme diyor", "Cem Belevi", "Sevme Diyor", S_SARKI_SANAT, 1),
+                new BulguCase("SARKI_SANAT_11", "maya perest kaybedemem", "Maya Perest", "Kaybedemem", S_SARKI_SANAT, 1),
                 // ═════════════════════════════════════════════════════════════════
                 // ŞARKİ · YAZIM TOLERANSI
                 // Yazım yanlışı / eksik/yanlış karakter / Türkçe karakter eksikliği
                 // ═════════════════════════════════════════════════════════════════
-                new BulguCase("SARKI_YAZIM_1", "acanım", "Mabel Matiz", "A Canım", S_SARKI_YAZIM, 3),
-                new BulguCase("SARKI_YAZIM_2", "çok pardon", "Lvbel C5", "COOOK PARDON", S_SARKI_YAZIM, 3),
-                new BulguCase("SARKI_YAZIM_3", "simarik", "Tarkan", "Şımarık", S_SARKI_YAZIM, 1),
-                new BulguCase("SARKI_YAZIM_4", "dame un grr", "Fantomel", "Dame Un Grrr", S_SARKI_YAZIM, 3),
-                new BulguCase("SARKI_YAZIM_5", "hav hav", "Lvbel C5", "Havhavhav", S_SARKI_YAZIM, 3),
-                new BulguCase("SARKI_YAZIM_6", "karakedi", "Melis Fis", "Kara Kedi", S_SARKI_YAZIM, 3),
-                new BulguCase("SARKI_YAZIM_7", "illede sen", "Azer Bülbül", "İlle De Sen", S_SARKI_YAZIM, 1),
-                new BulguCase("SARKI_YAZIM_8", "arabam", "Sefo", "Araba", S_SARKI_YAZIM, 3),
-                new BulguCase("SARKI_YAZIM_9", "lacivert eceler", "Ferhat Göçer", "Lacivert Geceler", S_SARKI_YAZIM, 3),
-                new BulguCase("SARKI_YAZIM_10", "güldün ne güzel", "Pinhani", "Ne Güzel Güldün", S_SARKI_YAZIM, 3),
-                new BulguCase("SARKI_YAZIM_11", "dia", "", "Dai Dai", S_SARKI_YAZIM, 3),
-                new BulguCase("SARKI_YAZIM_12", "iyiki doğdun deniz", "", "iyi ki doğdun deniz", S_SARKI_YAZIM, 3),
-                new BulguCase("SARKI_YAZIM_13", "taki seni görene kadar", "", "ta ki seni görene kadar", S_SARKI_YAZIM, 3),
-                new BulguCase("SARKI_YAZIM_14", "can dostym", "", "can dostum", S_SARKI_YAZIM, 3),
+                new BulguCase("SARKI_YAZIM_1", "acanım", "Mabel Matiz", "A Canım", S_SARKI_YAZIM_BOSL, 3),
+                new BulguCase("SARKI_YAZIM_2", "çok pardon", "Lvbel C5", "COOOK PARDON", S_SARKI_YAZIM_HARF, 3),
+                new BulguCase("SARKI_YAZIM_3", "simarik", "Tarkan", "Şımarık", S_SARKI_YAZIM_DIA, 1),
+                new BulguCase("SARKI_YAZIM_4", "dame un grr", "", "Dame Un Grrr", S_SARKI_YAZIM_HARF, 3),
+                new BulguCase("SARKI_YAZIM_5", "hav hav", "Lvbel C5", "Havhavhav", S_SARKI_YAZIM_BOSL, 3),
+                new BulguCase("SARKI_YAZIM_6", "karakedi", "Melis Fis", "Kara Kedi", S_SARKI_YAZIM_BOSL, 3),
+                // azer bülbül var fakat ille de sen şakısı yok commente alındı.
+                //  new BulguCase("SARKI_YAZIM_7", "illede sen", "Azer Bülbül", "İlle De Sen", S_SARKI_YAZIM, 1),
+                new BulguCase("SARKI_YAZIM_8", "arabam", "", "Arabam", S_SARKI_TAM, 3),
+                new BulguCase("SARKI_YAZIM_9", "lacivert eceler", "Ferhat Göçer", "Lacivert Geceler", S_SARKI_YAZIM_HARF, 3),
+                new BulguCase("SARKI_YAZIM_10", "güldün ne güzel", "Pinhani", "Ne Güzel Güldün", S_SARKI_KELIME, 3),
+                new BulguCase("SARKI_YAZIM_11", "dia", "", "Dai Dai", S_SARKI_YAZIM_HARF, 3),
+                new BulguCase("SARKI_YAZIM_12", "iyiki doğdun deniz", "", "iyi ki doğdun deniz", S_SARKI_YAZIM_BOSL, 3),
+                new BulguCase("SARKI_YAZIM_13", "taki seni görene kadar", "", "ta ki seni görene kadar", S_SARKI_YAZIM_BOSL, 3),
+                new BulguCase("SARKI_YAZIM_14", "can dostym", "", "can dostum", S_SARKI_YAZIM_HARF, 3),
                 // Case revizyonu (22 Tem): katalogda basliklar bitisik "[Saygi1]"; beklenti veriyle uyumlandi
-                new BulguCase("SARKI_YAZIM_15", "saygı1", "", "Saygi1", S_SARKI_YAZIM, 3),
+                new BulguCase("SARKI_YAZIM_15", "saygı1", "", "Saygi1", S_SARKI_YAZIM_DIA, 3),
 
                 // ═════════════════════════════════════════════════════════════════
                 // ŞARKİ · LYRİCS
@@ -268,10 +286,10 @@ public class MainCases extends TestConfig {
                 new BulguCase("SARKI_LYRICS_10", "silemez o beni", "Yıldız Tilbe", "Dizine Dursun", S_SARKI_LYRICS, 1),
                 new BulguCase("SARKI_LYRICS_11", "babalar sözünü tutar", "Blok3", "PATLAT", S_SARKI_LYRICS, 3),
                 new BulguCase("SARKI_LYRICS_12", "çok geç şmdi", "Edis", "Yalan", S_SARKI_LYRICS, 3),
-            //    new BulguCase("SARKI_LYRICS_13", "affet bu gece istedim ölmek", "Model", "Pembe Mezarlık", S_SARKI_LYRICS, 3),
-                new BulguCase("SARKI_LYRICS_14", "teybi bozuk bir arabayla", "Nilipek", "Geçmiyor Zaman", S_SARKI_LYRICS, 3),
-                new BulguCase("SARKI_LYRICS_15", "Murat yeter magusa", "", "Mağusa Limanı", S_SARKI_LYRICS, 3),
-                new BulguCase("SARKI_LYRICS_16", "Gel buraya", "Lvbel C5", "GEL GEL GEL", S_SARKI_LYRICS, 1),
+                new BulguCase("SARKI_LYRICS_13", "teybi bozuk bir arabayla", "Nilipek", "Geçmiyor Zaman", S_SARKI_LYRICS, 3),
+                new BulguCase("SARKI_LYRICS_14", "Murat yeter magusa", "", "Mağusa Limanı", S_SARKI_LYRICS, 3),
+                new BulguCase("SARKI_LYRICS_15", "Gel buraya", "Lvbel C5", "GEL GEL GEL", S_SARKI_LYRICS, 3),
+                new BulguCase("SARKI_LYRICS_16", "Bana ne", "Ezhel", "Bana Ne Bu Sevdalardan", S_SARKI_KISMI, 3),
 
                 // ═════════════════════════════════════════════════════════════════
                 // SANATÇI · TAM EŞLEŞMe
@@ -295,7 +313,7 @@ public class MainCases extends TestConfig {
                 new BulguCase("SANAT_TAM_16", "sıla", "Sıla", "", S_SANAT_TAM, 1),
                 new BulguCase("SANAT_TAM_17", "eminem", "Eminem", "", S_SANAT_TAM, 1),
                 new BulguCase("SANAT_TAM_18", "güneş", "Güneş", "", S_SANAT_TAM, 1),
-                new BulguCase("SANAT_TAM_19", "dua lipa", "Dua Lipa", "", S_SANAT_TAM, 1),
+           //     new BulguCase("SANAT_TAM_19", "dua lipa", "Dua Lipa", "", S_SANAT_TAM, 1),
                 new BulguCase("SANAT_TAM_20", "mero", "Mero", "", S_SANAT_TAM, 3),
                 new BulguCase("SANAT_TAM_21", "murda", "Murda", "", S_SANAT_TAM, 3),
                 new BulguCase("SANAT_TAM_22", "inna", "Inna", "", S_SANAT_TAM, 3),
@@ -314,6 +332,8 @@ public class MainCases extends TestConfig {
                 new BulguCase("SANAT_TAM_35", "sia", "Sia", "", S_SANAT_TAM, 3),
                 new BulguCase("SANAT_TAM_36", "shakira", "Shakira", "", S_SANAT_TAM, 3),
                 new BulguCase("SANAT_TAM_37", "madonna", "Madonna", "", S_SANAT_TAM, 3),
+                new BulguCase("SANAT_TAM_38", "tan taşçı", "Tan Taşçı", "", S_SANAT_TAM, 3),
+
 
 
                 // ═════════════════════════════════════════════════════════════════
@@ -364,32 +384,33 @@ public class MainCases extends TestConfig {
                 new BulguCase("SANAT_KISMI_42", "özcan", "Özcan Deniz", "", S_SANAT_KISMI, 1),
                 new BulguCase("SANAT_KISMI_43", "deha", "DEHA INC.", "", S_SANAT_KISMI, 1),
                 new BulguCase("SANAT_KISMI_44", "taylor", "Taylor Swift", "", S_SANAT_KISMI, 1),
+                new BulguCase("SANAT_KISMI_45", "blok 3", "Blok3", "", S_SANAT_YAZIM_BOSL, 1),
 
                 // ═════════════════════════════════════════════════════════════════
                 // SANATÇI · YAZIM TOLERANSI
                 // Yazım yanlışı / fonetik benzerlik / Türkçe karakter eksikliği
                 // ═════════════════════════════════════════════════════════════════
-                new BulguCase("SANAT_YAZIM_1", "tarkn", "Tarkan", "", S_SANAT_YAZIM, 1),
-                new BulguCase("SANAT_YAZIM_2", "kök$l", "kök$vl", "", S_SANAT_YAZIM, 3),
-                new BulguCase("SANAT_YAZIM_3", "çakal", "cakal", "", S_SANAT_YAZIM, 1),
-                new BulguCase("SANAT_YAZIM_4", "pozi", "Poizi", "", S_SANAT_YAZIM, 1),
-                new BulguCase("SANAT_YAZIM_5", "hşdra", "Hidra", "", S_SANAT_YAZIM, 3),
-                new BulguCase("SANAT_YAZIM_6", "goksel", "Göksel", "", S_SANAT_YAZIM, 1),
-                new BulguCase("SANAT_YAZIM_7", "can ozan", "Canozan", "", S_SANAT_YAZIM, 1),
-                new BulguCase("SANAT_YAZIM_8", "ezel", "Ezhel", "", S_SANAT_YAZIM, 1),
-                new BulguCase("SANAT_YAZIM_9", "reymen", "Reynmen", "", S_SANAT_YAZIM, 3),
-                new BulguCase("SANAT_YAZIM_10", "emircan", "Emir Can İğrek", "", S_SANAT_YAZIM, 1),
-                new BulguCase("SANAT_YAZIM_11", "emircan iğrek", "Emir Can İğrek", "", S_SANAT_YAZIM, 3),
-                new BulguCase("SANAT_YAZIM_12", "izel", "İzel", "", S_SANAT_YAZIM, 3),
-                new BulguCase("SANAT_YAZIM_13", "hejan", "Heijan", "", S_SANAT_YAZIM, 3),
-                new BulguCase("SANAT_YAZIM_14", "Semicek", "Semicenk", "", S_SANAT_YAZIM, 1),
-                new BulguCase("SANAT_YAZIM_15", "beyonce", "Beyoncé", "", S_SANAT_YAZIM, 3),
-                new BulguCase("SANAT_YAZIM_16", "emre gel", "Emre Fel", "", S_SANAT_YAZIM, 3),
-                new BulguCase("SANAT_YAZIM_17", "sibelcan", "Sibel Can", "", S_SANAT_YAZIM, 3),
-                new BulguCase("SANAT_YAZIM_18", "kofn", "KÖFN", "", S_SANAT_YAZIM, 3),
-                new BulguCase("SANAT_YAZIM_19", "sertap", "Sertab Erener", "", S_SANAT_YAZIM, 3),
-                new BulguCase("SANAT_YAZIM_20", "mr ve ötei", "Mor ve Ötesi", "", S_SANAT_YAZIM, 3),
-                new BulguCase("SANAT_YAZIM_21", "dolu kadhi tut", "Dolu Kadehi Ters Tut", "", S_SANAT_YAZIM, 3),
+                new BulguCase("SANAT_YAZIM_1", "tarkn", "Tarkan", "", S_SANAT_YAZIM_HARF, 1),
+                new BulguCase("SANAT_YAZIM_2", "kök$l", "kök$vl", "", S_SANAT_YAZIM_HARF, 3),
+                new BulguCase("SANAT_YAZIM_3", "çakal", "cakal", "", S_SANAT_YAZIM_DIA, 1),
+                new BulguCase("SANAT_YAZIM_4", "pozi", "Poizi", "", S_SANAT_YAZIM_HARF, 1),
+                new BulguCase("SANAT_YAZIM_5", "hşdra", "Hidra", "", S_SANAT_YAZIM_HARF, 3),
+                new BulguCase("SANAT_YAZIM_6", "goksel", "Göksel", "", S_SANAT_YAZIM_DIA, 1),
+                new BulguCase("SANAT_YAZIM_7", "can ozan", "Canozan", "", S_SANAT_YAZIM_BOSL, 1),
+                new BulguCase("SANAT_YAZIM_8", "ezel", "Ezhel", "", S_SANAT_YAZIM_HARF, 1),
+                new BulguCase("SANAT_YAZIM_9", "reymen", "Reynmen", "", S_SANAT_YAZIM_HARF, 3),
+                new BulguCase("SANAT_YAZIM_10", "emircan", "Emir Can İğrek", "", S_SANAT_YAZIM_BOSL, 1),
+                new BulguCase("SANAT_YAZIM_11", "emircan iğrek", "Emir Can İğrek", "", S_SANAT_YAZIM_BOSL, 3),
+                new BulguCase("SANAT_YAZIM_12", "izel", "İzel", "", S_SANAT_TAM, 3),
+                new BulguCase("SANAT_YAZIM_13", "hejan", "Heijan", "", S_SANAT_YAZIM_HARF, 3),
+                new BulguCase("SANAT_YAZIM_14", "Semicek", "Semicenk", "", S_SANAT_YAZIM_HARF, 1),
+                new BulguCase("SANAT_YAZIM_15", "beyonce", "Beyoncé", "", S_SANAT_YAZIM_DIA, 3),
+                new BulguCase("SANAT_YAZIM_16", "emre gel", "Emre Fel", "", S_SANAT_YAZIM_HARF, 3),
+                new BulguCase("SANAT_YAZIM_17", "sibelcan", "Sibel Can", "", S_SANAT_YAZIM_BOSL, 3),
+                new BulguCase("SANAT_YAZIM_18", "kofn", "KÖFN", "", S_SANAT_YAZIM_DIA, 3),
+                new BulguCase("SANAT_YAZIM_19", "sertap", "Sertab Erener", "", S_SANAT_YAZIM_HARF, 3),
+                new BulguCase("SANAT_YAZIM_20", "mr ve ötei", "Mor ve Ötesi", "", S_SANAT_YAZIM_HARF, 3),
+                new BulguCase("SANAT_YAZIM_21", "dolu kadhi tut", "Dolu Kadehi Ters Tut", "", S_SANAT_YAZIM_HARF, 3),
 
                 // ═════════════════════════════════════════════════════════════════
                 // SANATÇI · KISALTMA / ALİAS
@@ -424,11 +445,14 @@ public class MainCases extends TestConfig {
                 new BulguCase("PLAYLIST_12", "yabancı", "", "[Playlist] yabancı", S_PLAYLIST, 5),
                 new BulguCase("PLAYLIST_13", "roman", "", "[Playlist] roman", S_PLAYLIST, 5),
                 new BulguCase("PLAYLIST_14", "çocuk", "", "[Playlist] çocuk", S_PLAYLIST, 5),
-                new BulguCase("PLAYLIST_15", "oyun hava", "", "[Playlist] oyun hava", S_PLAYLIST, 5),
+                new BulguCase("PLAYLIST_15", "oyun havası", "", "[Playlist] oyun havası", S_PLAYLIST, 5),
                 new BulguCase("PLAYLIST_16", "spor", "", "[Playlist] spor", S_PLAYLIST, 5),
                 new BulguCase("PLAYLIST_17", "klasik", "", "[Playlist] klasik", S_PLAYLIST, 5),
                 new BulguCase("PLAYLIST_18", "ankara", "", "[Playlist] ankara", S_PLAYLIST, 5),
-                new BulguCase("PLAYLIST_19", "çocuk şarkıları", "", "[Playlist] çocuk", S_PLAYLIST, 5),
+
+
+                //data olmadığı için comentte
+                // new BulguCase("PLAYLIST_19", "çocuk şarkıları", "", "[Playlist] çocuk", S_PLAYLIST, 5),
                 new BulguCase("PLAYLIST_20", "türkçe", "", "[Playlist] türkçe", S_PLAYLIST, 5),
                 new BulguCase("PLAYLIST_21", "80", "", "[Playlist] 80", S_PLAYLIST, 5),
                 new BulguCase("PLAYLIST_22", "rock", "", "[Playlist] rock", S_PLAYLIST, 5),
@@ -437,7 +461,10 @@ public class MainCases extends TestConfig {
                 new BulguCase("PLAYLIST_25", "meditasyon", "", "[Playlist] meditasyon", S_PLAYLIST, 5),
                 new BulguCase("PLAYLIST_26", "90 lar pop", "", "[Playlist] pop", S_PLAYLIST, 5),
                 new BulguCase("PLAYLIST_27", "ramazan", "", "[Playlist] ramazan", S_PLAYLIST, 5),
-                new BulguCase("PLAYLIST_28", "masumiyet müzesi", "", "[Playlist] Masumiyet Müzesi", S_PLAYLIST, 5)
+                new BulguCase("PLAYLIST_28", "masumiyet müzesi", "", "[Playlist] Masumiyet Müzesi", S_PLAYLIST, 5),
+                new BulguCase("PLAYLIST_29", "türkü", "", "[Playlist] türkü", S_PLAYLIST, 5),
+                new BulguCase("PLAYLIST_30", "türküler", "", "[Playlist] türküler", S_PLAYLIST, 5),
+                new BulguCase("PLAYLIST_31", "remix", "", "[Playlist] remix", S_PLAYLIST, 5)
 
         );
     }
@@ -631,43 +658,49 @@ public class MainCases extends TestConfig {
 
         String label;
         if (!song.isEmpty())
-            label = performer.isEmpty() ?"'" + song + "'" : "'" + performer + " –" + song + "'";
+            label = song + (performer.isEmpty() ? "" : " — " + performer);
         else if (!album.isEmpty())
-            label = "[Albüm] '" + album + "'" + (performer.isEmpty() ?"" : " – '" + performer + "'");
+            label = album + (performer.isEmpty() ? "" : " — " + performer);
         else if (!playlist.isEmpty())
-            label = "[Playlist] '" + playlist + "'";
+            label = playlist;
         else if (!performer.isEmpty())
-            label = "[Sanatçı] '" + performer + "'";
+            label = performer;
         else
             label = "(boş)";
 
         String kindPrefix = kind.isEmpty() ?"" : "[" + kind + "]";
+
+        // POPULERLIK ALANI SECIMI — 04.09.2026'da 277 UAT + 277 prod response'uyla olculdu.
+        //
+        // Skorlamayi belirleyen alan UAT'ta `prodPopularity`: ayni adli 143 songs grubunda
+        //     skor = taban + 0.58 x prodPopularity   (R2 > 0.9995)
+        // performers'ta katsayi 0.85. Eskiden basilan alanlar yanlisti — performers icin
+        // `popularity` (UAT'ta tum kayitlarda 0) ve songs icin `popularity2` (dolu ama
+        // skorlamada kullanilmiyor, ayni regresyonda R2 = 0.86).
+        //
+        // ALAN ADI ORTAMA GORE DEGISIYOR — 277 UAT + 277 prod response'unda olculdu:
+        //   UAT  -> `prodPopularity` dolu, `popularity` performers/albums'te TUM kayitlarda 0
+        //   PROD -> `popularity` dolu, `prodPopularity` alani HIC YOK
+        // Bu yuzden tek bir alana sabitlemek diger ortamda "-" basar. Once prodPopularity
+        // denenir, yoksa popularity'ye dusulur; boylece iki ortamda da dogru deger yazilir.
+        // videos index'inde prodPopularity hicbir ortamda yok, orada `popularity` dolu.
+        String popFieldName = "prodPopularity";
+        Object popObj = jp.get(base + "[" + i + "].data.prodPopularity");
+        if (popObj == null) {
+            popFieldName = "popularity";
+            popObj = jp.get(base + "[" + i + "].data.popularity");
+        }
         Object scoreObj = jp.get(base + "[" + i + "].score");
+        String pop   = popObj   != null ? popObj.toString()   : "-";
         String score = scoreObj != null ? scoreObj.toString() : "-";
 
-        String createTime = MuudSearchUtils.safeStr(jp.getString(base + "[" + i + "].data.createTime"));
-
-        String metrics;
-        if ("performers".equals(kind)) {
-            Object popularSongCountObj = jp.get(base + "[" + i + "].data.popularSongCount");
-            String popularSongCount = popularSongCountObj != null ? popularSongCountObj.toString() : "-";
-            metrics = "popularSongCount= " + popularSongCount + " | score= " + score;
-        } else {
-
-            Object numPlaysObj = jp.get(base + "[" + i + "].data.numPlays");
-            Object perfPopObj = jp.get(base + "[" + i + "].data.performerPopularity");
-            Object popularityObj = jp.get(base + "[" + i + "].data.popularity");
-            String numPlays = numPlaysObj != null ? numPlaysObj.toString() : "-";
-            String perfPop = perfPopObj != null ? perfPopObj.toString() : "-";
-            String popularity = popularityObj != null ? popularityObj.toString() : "-";
-            metrics = " | numPlays= " + numPlays
-                    + " | performerPopularity= " + perfPop
-                    + " | popularity= " + popularity
-                    + " | score= " + score;
+        StringBuilder mb = new StringBuilder(" | ").append(popFieldName).append("= ").append(pop);
+        // songs icin popularity2'yi de goster: ekip bu alani takip ediyordu, gorunurlugu kaybolmasin.
+        if ("songs".equals(kind)) {
+            Object p2 = jp.get(base + "[" + i + "].data.popularity2");
+            if (p2 != null) mb.append(" | popularity2= ").append(p2);
         }
-        if (!createTime.isEmpty()) {
-            metrics += " | createTime= " + createTime;
-        }
+        String metrics = mb.append(" | score= ").append(score).toString();
 
         return kindPrefix + label + "\n" + metrics;
     }

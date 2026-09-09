@@ -1,0 +1,111 @@
+no|query|test_type|logic_category
+1|simarik|Şarkı · Yazım Toleransı|Türkçe Karakter Yok
+2|muslum gurses|Sanatçı · Yazım Toleransı|Türkçe Karakter Yok
+3|yildiz tilbe|Sanatçı · Yazım Toleransı|Türkçe Karakter Yok
+4|ebru gundes|Sanatçı · Yazım Toleransı|Türkçe Karakter Yok
+5|ibrahim tatlises|Sanatçı · Yazım Toleransı|Türkçe Karakter Yok
+6|duser aklima|Şarkı · Yazım Toleransı|Türkçe Karakter Yok
+7|baris manco|Sanatçı · Yazım Toleransı|Türkçe Karakter Yok
+8|azer bulbul|Sanatçı · Yazım Toleransı|Türkçe Karakter Yok
+9|gulsen son perde|Şarkı · Yazım Toleransı|Türkçe Karakter Yok
+10|serdar ortac|Sanatçı · Yazım Toleransı|Türkçe Karakter Yok
+11|manifst|Sanatçı · Yazım Toleransı|Harf Eksikliği
+12|ahmet kya|Sanatçı · Yazım Toleransı|Harf Eksikliği
+13|semicnk|Sanatçı · Yazım Toleransı|Harf Eksikliği
+14|hadse|Sanatçı · Yazım Toleransı|Harf Eksikliği
+15|reymen|Sanatçı · Yazım Toleransı|Harf Eksikliği
+16|szen aksu|Sanatçı · Yazım Toleransı|Harf Eksikliği
+17|pozi|Sanatçı · Yazım Toleransı|Harf Eksikliği
+18|tarkn|Sanatçı · Yazım Toleransı|Harf Eksikliği
+19|hande yner|Sanatçı · Yazım Toleransı|Harf Eksikliği
+20|bray|Sanatçı · Yazım Toleransı|Harf Eksikliği
+21|uzii|Sanatçı · Yazım Toleransı|Harf Fazlalığı
+22|tarkann|Sanatçı · Yazım Toleransı|Harf Fazlalığı
+23|dumaan|Sanatçı · Yazım Toleransı|Harf Fazlalığı
+24|emre fell|Sanatçı · Yazım Toleransı|Harf Fazlalığı
+25|cezaa|Sanatçı · Yazım Toleransı|Harf Fazlalığı
+26|blok33|Sanatçı · Yazım Toleransı|Harf Fazlalığı
+27|manifesst|Sanatçı · Yazım Toleransı|Harf Fazlalığı
+28|hadisee|Sanatçı · Yazım Toleransı|Harf Fazlalığı
+29|sefoo|Sanatçı · Yazım Toleransı|Harf Fazlalığı
+30|saggopa|Sanatçı · Yazım Toleransı|Harf Fazlalığı
+31|czea|Sanatçı · Yazım Toleransı|Harf Yer Değiştirme
+32|lbvel c5|Sanatçı · Yazım Toleransı|Harf Yer Değiştirme
+33|ezel|Sanatçı · Yazım Toleransı|Harf Yer Değiştirme
+34|ahmet kayaa|Sanatçı · Yazım Toleransı|Harf Yer Değiştirme
+35|mnifest|Sanatçı · Yazım Toleransı|Harf Yer Değiştirme
+36|sigme|Sanatçı · Yazım Toleransı|Harf Yer Değiştirme
+37|feirdi tayfur|Sanatçı · Yazım Toleransı|Harf Yer Değiştirme
+38|ylain|Sanatçı · Yazım Toleransı|Harf Yer Değiştirme
+39|muart|Sanatçı · Yazım Toleransı|Harf Yer Değiştirme
+40|demet akilan|Sanatçı · Yazım Toleransı|Harf Yer Değiştirme
+41|acanım|Şarkı · Yazım Toleransı|Kelime Birleştirme
+42|sibelcan|Sanatçı · Yazım Toleransı|Kelime Birleştirme
+43|emircan|Sanatçı · Yazım Toleransı|Kelime Birleştirme
+44|karakedi|Şarkı · Yazım Toleransı|Kelime Birleştirme
+45|lvbelc5|Sanatçı · Yazım Toleransı|Kelime Birleştirme
+46|ahmetkaya|Sanatçı · Yazım Toleransı|Kelime Birleştirme
+47|sezenaksu|Sanatçı · Yazım Toleransı|Kelime Birleştirme
+48|fereditayfur|Sanatçı · Yazım Toleransı|Kelime Birleştirme
+49|morveotesi|Sanatçı · Yazım Toleransı|Kelime Birleştirme
+50|demetakalin|Sanatçı · Yazım Toleransı|Kelime Birleştirme
+51|güldün ne güzel|Şarkı · Yazım Toleransı|Kelime Sırası Değişik
+52|perde poizi|Şarkı · Yazım Toleransı|Kelime Sırası Değişik
+53|geri ver wegh|Şarkı · Yazım Toleransı|Kelime Sırası Değişik
+54|yerinde dur sefo|Şarkı · Yazım Toleransı|Kelime Sırası Değişik
+55|dizine dursun yıldız|Şarkı · Yazım Toleransı|Kelime Sırası Değişik
+56|kusura bakma blok3|Şarkı · Yazım Toleransı|Kelime Sırası Değişik
+57|snap manifest|Şarkı · Yazım Toleransı|Kelime Sırası Değişik
+58|şımarık tarkan|Şarkı · Yazım Toleransı|Kelime Sırası Değişik
+59|suspus ceza|Şarkı · Yazım Toleransı|Kelime Sırası Değişik
+60|sigara müslüm|Şarkı · Yazım Toleransı|Kelime Sırası Değişik
+61|lacivert eceler|Şarkı · Yazım Toleransı|Fonetik Yazım
+62|ferdi taifur|Sanatçı · Yazım Toleransı|Fonetik Yazım
+63|sertap|Sanatçı · Yazım Toleransı|Fonetik Yazım
+64|çok pardon|Şarkı · Yazım Toleransı|Fonetik Yazım
+65|emre gel|Sanatçı · Yazım Toleransı|Fonetik Yazım
+66|dame un grr|Şarkı · Yazım Toleransı|Fonetik Yazım
+67|hadize|Sanatçı · Yazım Toleransı|Fonetik Yazım
+68|burey|Sanatçı · Yazım Toleransı|Fonetik Yazım
+69|tarqan|Sanatçı · Yazım Toleransı|Fonetik Yazım
+70|manga|Sanatçı · Yazım Toleransı|Fonetik Yazım
+71|BLOK3|Sanatçı · Yazım Toleransı|Büyük/Küçük Harf
+72|poizi|Sanatçı · Yazım Toleransı|Büyük/Küçük Harf
+73|SEMICENK|Sanatçı · Yazım Toleransı|Büyük/Küçük Harf
+74|manifest|Sanatçı · Yazım Toleransı|Büyük/Küçük Harf
+75|SIMGE|Sanatçı · Yazım Toleransı|Büyük/Küçük Harf
+76|tarkan|Sanatçı · Yazım Toleransı|Büyük/Küçük Harf
+77|UZI|Sanatçı · Yazım Toleransı|Büyük/Küçük Harf
+78|CEZA|Sanatçı · Yazım Toleransı|Büyük/Küçük Harf
+79|sezen aksu|Sanatçı · Yazım Toleransı|Büyük/Küçük Harf
+80|AHMET KAYA|Sanatçı · Yazım Toleransı|Büyük/Küçük Harf
+81|blok|Sanatçı · Kısmi Ad|Kısmi Ad Toleransı*
+82|ferdi|Sanatçı · Kısmi Ad|Kısmi Ad Toleransı*
+83|müslüm|Sanatçı · Kısmi Ad|Kısmi Ad Toleransı*
+84|ibrahim|Sanatçı · Kısmi Ad|Kısmi Ad Toleransı*
+85|semi|Sanatçı · Kısmi Ad|Kısmi Ad Toleransı*
+86|lvbel|Sanatçı · Kısmi Ad|Kısmi Ad Toleransı*
+87|sezen|Sanatçı · Kısmi Ad|Kısmi Ad Toleransı*
+88|ebru|Sanatçı · Kısmi Ad|Kısmi Ad Toleransı*
+89|manifes|Sanatçı · Kısmi Ad|Kısmi Ad Toleransı*
+90|azer|Sanatçı · Kısmi Ad|Kısmi Ad Toleransı*
+91|arabam|Şarkı · Yazım Toleransı|Çekim/Çoğul Farkı*
+92|illede sen|Şarkı · Yazım Toleransı|Çekim/Çoğul Farkı*
+93|maratonlar|Şarkı · Yazım Toleransı|Çekim/Çoğul Farkı*
+94|tarkanın şarkıları|Sanatçı · Yazım Toleransı|Çekim/Çoğul Farkı*
+95|hadiseden şarkılar|Sanatçı · Yazım Toleransı|Çekim/Çoğul Farkı*
+96|blok3ün şarkıları|Sanatçı · Yazım Toleransı|Çekim/Çoğul Farkı*
+97|semicenkin şarkıları|Sanatçı · Yazım Toleransı|Çekim/Çoğul Farkı*
+98|manifestin şarkıları|Sanatçı · Yazım Toleransı|Çekim/Çoğul Farkı*
+99|yıldız tilbenin şarkıları|Sanatçı · Yazım Toleransı|Çekim/Çoğul Farkı*
+100|cezanın şarkıları|Sanatçı · Yazım Toleransı|Çekim/Çoğul Farkı*
+101|can ozan|Sanatçı · Yazım Toleransı|Kelime Ayırma*
+102|blok 3|Sanatçı · Yazım Toleransı|Kelime Ayırma*
+103|lvbel c 5|Sanatçı · Yazım Toleransı|Kelime Ayırma*
+104|mani fest|Sanatçı · Yazım Toleransı|Kelime Ayırma*
+105|hav hav hav|Şarkı · Yazım Toleransı|Kelime Ayırma*
+106|semi cenk|Sanatçı · Yazım Toleransı|Kelime Ayırma*
+107|ati 242|Sanatçı · Yazım Toleransı|Kelime Ayırma*
+108|mor ve otesi|Sanatçı · Yazım Toleransı|Kelime Ayırma*
+109|ez hel|Sanatçı · Yazım Toleransı|Kelime Ayırma*
+110|u zi|Sanatçı · Yazım Toleransı|Kelime Ayırma*

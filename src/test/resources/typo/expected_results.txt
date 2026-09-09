@@ -1,0 +1,111 @@
+no|kind|rank|field1|field2
+1|song|1|Tarkan|Şımarık
+2|artist|1|Müslüm Gürses|
+3|artist|1|Yıldız Tilbe|
+4|artist|1|Ebru Gündeş|
+5|artist|1|İbrahim Tatlıses|
+6|song|3|Semicenk|Düşer Aklıma
+7|artist|1|Barış Manço|
+8|artist|1|Azer Bülbül|
+9|song|3|Gülşen|Son Perde
+10|artist|1|Serdar Ortaç|
+11|artist|1|manifest|
+12|artist|1|Ahmet Kaya|
+13|artist|1|Semicenk|
+14|artist|1|Hadise|
+15|artist|3|Reynmen|
+16|artist|1|Sezen Aksu|
+17|artist|1|Poizi|
+18|artist|1|Tarkan|
+19|artist|1|Hande Yener|
+20|artist|1|Buray|
+21|artist|1|Uzi|
+22|artist|1|Tarkan|
+23|artist|1|Duman|
+24|artist|1|Emre Fel|
+25|artist|1|Ceza|
+26|artist|1|BLOK3|
+27|artist|1|manifest|
+28|artist|1|Hadise|
+29|artist|1|Sefo|
+30|artist|1|Sagopa Kajmer|
+31|artist|1|Ceza|
+32|artist|1|Lvbel C5|
+33|artist|1|Ezhel|
+34|artist|1|Ahmet Kaya|
+35|artist|1|manifest|
+36|artist|1|Simge|
+37|artist|1|Ferdi Tayfur|
+38|artist|1|Yalın|
+39|artist|1|Murat|
+40|artist|1|Demet Akalın|
+41|song|3|Mabel Matiz|A Canım
+42|artist|3|Sibel Can|
+43|artist|1|Emir Can İğrek|
+44|song|3|Melis Fis|Kara Kedi
+45|artist|1|Lvbel C5|
+46|artist|1|Ahmet Kaya|
+47|artist|1|Sezen Aksu|
+48|artist|1|Ferdi Tayfur|
+49|artist|3|mor ve ötesi|
+50|artist|1|Demet Akalın|
+51|song|3|Pinhani|Ne Güzel Güldün
+52|song|1|Poizi|PERDE
+53|song|3|Wegh|Geri Ver
+54|song|1|Sefo|Yerinde Dur
+55|song|1|Yıldız Tilbe|Dizine Dursun
+56|song|3|BLOK3|KUSURA BAKMA
+57|song|3|manifest|Snap
+58|song|1|Tarkan|Şımarık
+59|song|3|Ceza|Suspus
+60|song|3|Müslüm Gürses|Sigara
+61|song|3|Ferhat Göçer|Lacivert Geceler
+62|artist|1|Ferdi Tayfur|
+63|artist|3|Sertab Erener|
+64|song|3|Lvbel C5|COOOK PARDON
+65|artist|3|Emre Fel|
+66|song|3|Fantomel|Dame Un Grrr
+67|artist|1|Hadise|
+68|artist|1|Buray|
+69|artist|1|Tarkan|
+70|artist|3|maNga|
+71|artist|1|BLOK3|
+72|artist|1|Poizi|
+73|artist|1|Semicenk|
+74|artist|1|manifest|
+75|artist|1|Simge|
+76|artist|1|Tarkan|
+77|artist|1|Uzi|
+78|artist|1|Ceza|
+79|artist|1|Sezen Aksu|
+80|artist|1|Ahmet Kaya|
+81|artist|1|BLOK3|
+82|artist|1|Ferdi Tayfur|
+83|artist|1|Müslüm Gürses|
+84|artist|1|İbrahim Tatlıses|
+85|artist|1|Semicenk|
+86|artist|1|Lvbel C5|
+87|artist|1|Sezen Aksu|
+88|artist|1|Ebru Gündeş|
+89|artist|1|manifest|
+90|artist|1|Azer Bülbül|
+91|song|3|Sefo|ARABA
+92|song|1|Azer Bülbül|İlle De Sen
+93|song|3|Ati242|Maraton
+94|artist_or_playlist|3|Tarkan|
+95|artist_or_playlist|3|Hadise|
+96|artist_or_playlist|3|BLOK3|
+97|artist_or_playlist|3|Semicenk|
+98|artist_or_playlist|3|manifest|
+99|artist_or_playlist|3|Yıldız Tilbe|
+100|artist_or_playlist|3|Ceza|
+101|artist|1|Canozan|
+102|artist|1|BLOK3|
+103|artist|1|Lvbel C5|
+104|artist|1|manifest|
+105|song|3|Lvbel C5|HAVHAVHAV
+106|artist|1|Semicenk|
+107|artist|1|Ati242|
+108|artist|3|mor ve ötesi|
+109|artist|1|Ezhel|
+110|artist|1|Uzi|

@@ -1,0 +1,233 @@
+MUUD — B1/B2 BULGU DOGRULAMA
+girdi klasoru: C:\Users\inomera\IdeaProjects\MuudSearchTest\reports\api-responses
+  uat   277 response dosyasi, 49080 ad alani okundu
+  prod  277 response dosyasi, 46623 ad alani okundu
+
+====================================================================================================
+B1.1  AYNI ID, FARKLI AD — diakritik kaybi
+====================================================================================================
+Yontem: iki ortamdaki performers kayitlarinin id -> performerName eslemesi kurulur.
+Ayni id'de ad FARKLI ve fark yalnizca diakritik/aksan ise listelenir.
+'Mukerrer kayit degil' iddiasinin dayanagi: ID'ler AYNI.
+
+SAYILAR
+  iki ortamda da gorulen performer id      : 3244
+  ayni id'de ad farkli                     : 42
+  farki YALNIZCA diakritik olan            : 41
+  UAT'ta diakritik VAR, PROD'da YOK        : 12
+  ters yon (PROD'da var, UAT'ta yok)       : 5
+
+  bunlardan GERCEK diakritik kaybi         : 11
+  bunlardan yalnizca NFC/NFD form farki    : 1  (gozle ayni gorunur, bkz. B1.2)
+
+LISTE A — GERCEK diakritik kaybi (PROD'da harf duz yazilmis)
+  id=1118475   UAT='Barış Çelik'                    PROD='Barış çelik'                   kaynak: prod/SANAT_TAM_10__çelik.json
+  id=617350    UAT='Beyoncé'                        PROD='Beyonce'                        kaynak: prod/SANAT_YAZIM_15__beyonce.json
+  id=663339    UAT='Gülden Karaböcek'               PROD='GULDEN KARABOCEK'               kaynak: prod/SANAT_KISMI_31__gülden.json
+  id=1131713   UAT='Rüya'                           PROD='RuYA'                           kaynak: prod/SARKI_SANAT_6__rüya_manifest.json
+  id=748468    UAT='Sena Şener'                     PROD='Sena Sener'                     kaynak: prod/SARKI_TAM_21__sen_yanlış_yaptın.json
+  id=1614865   UAT='Sôra'                           PROD='Sora'                           kaynak: prod/SARKI_TAM_47__bana_sor.json
+  id=1161825   UAT='Tunay Cöke'                     PROD='Tunay Coke'                     kaynak: prod/SARKI_LYRICS_12__çok_geç_şmdi.json
+  id=619576    UAT='Çelik'                          PROD='celik'                          kaynak: prod/SANAT_TAM_10__çelik.json
+  id=1110734   UAT='İrem'                           PROD='Irem'                           kaynak: prod/SANAT_KISMI_17__irem.json
+  id=1731246   UAT='Şebnem Qehremanova'             PROD='Sebnem Qehremanova'             kaynak: prod/SANAT_KISMI_34__şebnem.json
+  id=1127475   UAT='Şilan'                          PROD='Silan'                          kaynak: prod/SANAT_TAM_16__sıla.json
+
+LISTE B — yalnizca NFC/NFD form farki (yazim ayni)
+  id=591642    UAT uzunluk=15  PROD uzunluk=16   'Cengiz Kurtoğlu'  kaynak: prod/SANAT_KISMI_9__cengiz.json
+
+TERS YON — PROD'da diakritik var, UAT'ta yok
+  id=1458414   UAT='Doga'                           PROD='Doğa'                           kaynak: uat/SARKI_KISMI_15__alara_doğum_günün.json
+  id=555803    UAT='Emre Aydin'                     PROD='Emre Aydın'                     kaynak: uat/SANAT_YAZIM_16__emre_gel.json
+  id=1110731   UAT='Lara'                           PROD='Lára'                           kaynak: uat/PLAYLIST_7__90_lar.json
+  id=1113390   UAT='Musa'                           PROD='Müsa'                           kaynak: uat/SANAT_KISMI_18__musa.json
+  id=857098    UAT='Nalan'                          PROD='Nalân'                          kaynak: uat/SARKI_LYRICS_6__bak_ben_yara_gibiyim.json
+
+====================================================================================================
+B1.2  UNICODE NORMALIZASYON FORMU — gozle ayni, byte farkli
+====================================================================================================
+Yontem: her ad alani NFC kontrolunden gecirilir. Metin NFD ise NFC'ye esit olmaz.
+Ornek: 'g' + U+0306 (birlesik olmayan) yerine tek kod noktasi U+011F ('ğ') beklenir.
+
+SAYIM 1 — VARLIK BAZLI (index'in kendi ad alani) — RAPORDAKI SAYI
+  uat   albumName      6
+  uat   TOPLAM         6
+  prod  performerName  3
+  prod  songName       27
+  prod  albumName      19
+  prod  TOPLAM         49
+
+SAYIM 2 — KAYIT BAZLI (ad alani nerede gorunuyorsa)
+  Not: performerName sarki/album kayitlarinda da bulunur; ayni sanatci
+       birden fazla kez sayilir. Rapordaki sayi bu DEGIL.
+  uat   songName       1
+  uat   albumName      6
+  uat   TOPLAM         7
+  prod  performerName  52
+  prod  songName       29
+  prod  albumName      19
+  prod  TOPLAM         100
+
+ORNEK — ayni id, iki ortamda kod noktasi karsilastirmasi
+  uat   id=1118475   'Barış Çelik'
+        uzunluk=11  kod noktalari=[U+0042, U+0061, U+0072, U+0131, U+015F, U+0020, U+00C7, U+0065, U+006C, U+0069, U+006B]
+        kaynak: uat/SANAT_TAM_10__çelik.json
+  prod  id=1118475   'Barış çelik'
+        uzunluk=12  kod noktalari=[U+0042, U+0061, U+0072, U+0131, U+0073, U+0327, U+0020, U+00E7, U+0065, U+006C, U+0069, U+006B]
+        kaynak: prod/SANAT_TAM_10__çelik.json
+
+DIGER NFD ORNEKLERI (prod) — ilk 6
+  performerName  id=591642    'Cengiz Kurtoğlu'
+        var olan  =[U+0043, U+0065, U+006E, U+0067, U+0069, U+007A, U+0020, U+004B, U+0075, U+0072, U+0074, U+006F, U+0067, U+0306]
+        NFC hali  =[U+0043, U+0065, U+006E, U+0067, U+0069, U+007A, U+0020, U+004B, U+0075, U+0072, U+0074, U+006F, U+011F, U+006C]
+        kaynak: prod/SANAT_KISMI_9__cengiz.json
+  performerName  id=1118475   'Barış çelik'
+        var olan  =[U+0042, U+0061, U+0072, U+0131, U+0073, U+0327, U+0020, U+00E7, U+0065, U+006C, U+0069, U+006B]
+        NFC hali  =[U+0042, U+0061, U+0072, U+0131, U+015F, U+0020, U+00E7, U+0065, U+006C, U+0069, U+006B]
+        kaynak: prod/SANAT_TAM_10__çelik.json
+  performerName  id=891871    'Özkan Meydan, Emre Şakar'
+        var olan  =[U+004F, U+0308, U+007A, U+006B, U+0061, U+006E, U+0020, U+004D, U+0065, U+0079, U+0064, U+0061, U+006E, U+002C]
+        NFC hali  =[U+00D6, U+007A, U+006B, U+0061, U+006E, U+0020, U+004D, U+0065, U+0079, U+0064, U+0061, U+006E, U+002C, U+0020]
+        kaynak: prod/SANAT_YAZIM_16__emre_gel.json
+  songName       id=6658776   'Güvercin (feat. Kardeş Türküler)'
+        var olan  =[U+0047, U+0075, U+0308, U+0076, U+0065, U+0072, U+0063, U+0069, U+006E, U+0020, U+0028, U+0066, U+0065, U+0061]
+        NFC hali  =[U+0047, U+00FC, U+0076, U+0065, U+0072, U+0063, U+0069, U+006E, U+0020, U+0028, U+0066, U+0065, U+0061, U+0074]
+        kaynak: prod/PLAYLIST_30__türküler.json
+  songName       id=12970552  'AŞKIM ALLAH KURTARSIN'
+        var olan  =[U+0041, U+0053, U+0327, U+004B, U+0049, U+004D, U+0020, U+0041, U+004C, U+004C, U+0041, U+0048, U+0020, U+004B]
+        NFC hali  =[U+0041, U+015E, U+004B, U+0049, U+004D, U+0020, U+0041, U+004C, U+004C, U+0041, U+0048, U+0020, U+004B, U+0055]
+        kaynak: prod/SANAT_ALIAS_1__lvc5.json
+  songName       id=9204953   'Isyan (feat. Melike Şahin)'
+        var olan  =[U+0049, U+0073, U+0079, U+0061, U+006E, U+0020, U+0028, U+0066, U+0065, U+0061, U+0074, U+002E, U+0020, U+004D]
+        NFC hali  =[U+0049, U+0073, U+0079, U+0061, U+006E, U+0020, U+0028, U+0066, U+0065, U+0061, U+0074, U+002E, U+0020, U+004D]
+        kaynak: prod/SANAT_KISMI_11__melike.json
+
+====================================================================================================
+B1.3  KARAKTER KAYBI (?) ve GORUNMEZ KARAKTERLER
+====================================================================================================
+Yontem: ad alanlarinda regex taramasi; her bulgu kaynak dosyasiyla listelenir.
+
+  --- kelime icinde '?' — kodlanamayan harf ---
+    uat   2 farkli ad
+       songName       id=4540985   'Gymnope?die N° 1 (Erik Satie)'   (uat/SARKI_KISMI_7__erik.json)
+       performerName  id=1315647   'Romani?a'   (uat/PLAYLIST_13__roman.json)
+    prod  3 farkli ad
+       performerName  id=841690    'Ra?f'   (prod/SANAT_KISMI_23__funda.json)
+       performerName  id=1315647   'Romani?a'   (prod/PLAYLIST_13__roman.json)
+       performerName  id=1906144   'Şövk?t ?l?kb?rova'   (prod/SANAT_YAZIM_2__kökl.json)
+
+  --- sonda TAB ---
+    uat   7 farkli ad
+       performerName  id=4018407   'Asuman Krause<TAB>'   (uat/SARKI_TAM_52__yekten.json)
+       performerName  id=2012936   'Dilan Çıtak<TAB>'   (uat/SARKI_KISMI_5__çıt_çıt.json)
+       performerName  id=1988592   'Maya Perest<TAB>'   (uat/SARKI_SANAT_11__maya_perest_kaybedemem.json)
+       performerName  id=1986951   'Movie Sounds Unlimited<TAB>'   (uat/SARKI_YAZIM_4__dame_un_grr.json)
+       performerName  id=2554996   'Nahide Babashlı<TAB>'   (uat/SARKI_YAZIM_14__can_dostym.json)
+       performerName  id=12230973  'Tyla<TAB>'   (uat/SARKI_KISMI_11__pus.json)
+    prod  7 farkli ad
+       performerName  id=6229063   'Aslı Gökyokuş<TAB>'   (prod/SANAT_KISMI_35__ayaz.json)
+       performerName  id=4018407   'Asuman Krause<TAB>'   (prod/SARKI_TAM_52__yekten.json)
+       performerName  id=2012936   'Dilan Çıtak<TAB>'   (prod/SARKI_KISMI_5__çıt_çıt.json)
+       performerName  id=14786425  'Maya Perest<TAB>'   (prod/SARKI_SANAT_11__maya_perest_kaybedemem.json)
+       performerName  id=1986951   'Movie Sounds Unlimited<TAB>'   (prod/SARKI_YAZIM_4__dame_un_grr.json)
+       performerName  id=6591446   'Nahide Babashlı<TAB>'   (prod/SARKI_KISMI_6__ağlama_ben.json)
+
+  --- sonda NBSP (U+00A0) ---
+    uat   4 farkli ad
+       songName       id=3994947   'Bana Yalan Söylediler<NBSP>'   (uat/SARKI_TAM_15__giderim_kırağınan.json)
+       albumName      id=861818    'Bir Sevgin Yeter<NBSP>'   (uat/SARKI_TAM_35__sev_yeter.json)
+       albumName      id=861802    'Ela Gözlüm / Misket<NBSP>'   (uat/SARKI_TAM_60__misket.json)
+       playlistName   id=4496856   'Şişedeki Balık <NBSP>'   (uat/PLAYLIST_10__karadeniz.json)
+    prod  5 farkli ad
+       songName       id=4610958   'Al 1'de Burdan Yak<NBSP>'   (prod/SANAT_ALIAS_5__sago.json)
+       songName       id=3994947   'Bana Yalan Söylediler<NBSP>'   (prod/SARKI_LYRICS_12__çok_geç_şmdi.json)
+       albumName      id=861818    'Bir Sevgin Yeter<NBSP>'   (prod/SARKI_TAM_35__sev_yeter.json)
+       albumName      id=858506    'Yabancı<NBSP>'   (prod/PLAYLIST_12__yabancı.json)
+       playlistName   id=4496856   'Şişedeki Balık <NBSP>'   (prod/PLAYLIST_10__karadeniz.json)
+
+  --- bas veya sonda bosluk ---
+    uat   27 farkli ad
+       performerName  id=5905337   '<TAB>Emir Şamur'   (uat/SANAT_KISMI_35__ayaz.json)
+       performerName  id=6227057   '<TAB>Şahin Kendirci'   (uat/PLAYLIST_15__oyun_havası.json)
+       playlistName   id=5994665   ' Daily Pop ceren test'   (uat/PLAYLIST_18__ankara.json)
+       playlistName   id=5555969   ' Terazi - Yasemin'   (uat/SARKI_TAM_4__kusura_bakma.json)
+       playlistName   id=5969542   '2025 Türkçe Alternatif '   (uat/PLAYLIST_20__türkçe.json)
+       playlistName   id=5969577   '2025 Yılın Şarkıları '   (uat/PLAYLIST_13__roman.json)
+    prod  28 farkli ad
+       performerName  id=5905337   '<TAB>Emir Şamur'   (prod/SANAT_KISMI_35__ayaz.json)
+       performerName  id=3995162   '<TAB>Öykü Gürman'   (prod/SANAT_TAM_31__mavi.json)
+       performerName  id=6227058   '<TAB>Şahin Kendirci'   (prod/SANAT_KISMI_22__mahsun.json)
+       playlistName   id=5967884   ' 2025 Yerli En Çok Dinlenenler'   (prod/SARKI_LYRICS_8__sana_hastayım_anlasana.json)
+       playlistName   id=5555969   ' Terazi - Yasemin'   (prod/SARKI_TAM_4__kusura_bakma.json)
+       playlistName   id=5967882   '2025 Muud'da En Çok Dinlenenler '   (prod/SANAT_KISMI_35__ayaz.json)
+
+  --- cift bosluk ---
+    uat   10 farkli ad
+       songName       id=3454733   'Bunca Yıl Habersiz (Film  Versiyon-Enstrümantal)'   (uat/SARKI_TAM_39__bunca_yıl.json)
+       albumName      id=2423611   'Döndürüyor -  Anatolian Sessions Remix'   (uat/SANAT_TAM_33__adamlar.json)
+       songName       id=4004292   'Güzelliğin On Para Etmez  Gelhele'   (uat/SARKI_TAM_62__parla.json)
+       performerName  id=883730    'Les  Patrons'   (uat/SANAT_TAM_25__patron.json)
+       performerName  id=561579    'Mavi  Sakal'   (uat/SANAT_TAM_31__mavi.json)
+       albumName      id=1618912   'National Anthem of Turkey -  İstiklâl Marşı [Instrumental]'   (uat/SARKI_TAM_67__türk_marşı.json)
+    prod  12 farkli ad
+       songName       id=3454733   'Bunca Yıl Habersiz (Film  Versiyon-Enstrümantal)'   (prod/SARKI_TAM_39__bunca_yıl.json)
+       performerName  id=659362    'Geveze  & Fazla Mesai'   (prod/SARKI_TAM_48__rüya.json)
+       songName       id=4004292   'Güzelliğin On Para Etmez  Gelhele'   (prod/SARKI_TAM_62__parla.json)
+       performerName  id=6803005   'Heijan  Muti'   (prod/SANAT_YAZIM_13__hejan.json)
+       performerName  id=883730    'Les  Patrons'   (prod/SANAT_TAM_25__patron.json)
+       performerName  id=561579    'Mavi  Sakal'   (prod/SANAT_TAM_31__mavi.json)
+
+  --- cift-encode izi (Ã/Ä/Å) ---
+    uat   7 farkli ad
+       songName       id=5023702   'Ainoa elÃ¤mÃ¤'   (uat/SARKI_TAM_51__ela_mana.json)
+       performerName  id=2207461   'Aleyna KalaycÄ±oÄlu'   (uat/SANAT_KISMI_3__aleyna.json)
+       performerName  id=2023919   'BeyoncÃ©'   (uat/SANAT_YAZIM_15__beyonce.json)
+       performerName  id=2208521   'Gizel JimÃ©nez'   (uat/SANAT_YAZIM_12__izel.json)
+       performerName  id=5023702   'KyÃ¶sti MÃ¤kimattila'   (uat/SARKI_TAM_51__ela_mana.json)
+       performerName  id=2024325   'MylÃ¨ne Farmer'   (uat/SARKI_TAM_59__farzet.json)
+    prod  2 farkli ad
+       performerName  id=2207461   'Aleyna KalaycÄ±oÄlu'   (prod/SANAT_KISMI_3__aleyna.json)
+       performerName  id=2024325   'MylÃ¨ne Farmer'   (prod/SARKI_TAM_59__farzet.json)
+
+====================================================================================================
+B1.4  BOS AD
+====================================================================================================
+  uat   0 kayit (tekil 0)
+  prod  6 kayit (tekil 1)
+       playlistName   id=5491370   kaynak: prod/PLAYLIST_12__yabancı.json
+
+====================================================================================================
+B2  popularity ALANI INDEX'LER ARASINDA AYNI OLCEKTE DEGIL
+====================================================================================================
+Yontem: her (ortam, alan, index) icin TEKIL id bazinda deger toplanir; medyan ve
+maksimum hesaplanir. 'Normalize' iddiasinin dayanagi maksimumun tam 100 olmasi;
+'ham sayac' iddiasinin dayanagi maksimumun medyanin yuzlerce kati olmasi.
+
+  --- PROD ---
+    popularity          songs       n=6503   medyan=0,80      maks=2083,93    maks/medyan=2610x
+    popularity          videos      n=2438   medyan=10,90     maks=2464,20    maks/medyan=226x
+    popularity          performers  n=4834   medyan=15,00     maks=100,00     maks/medyan=7x
+    popularity          albums      n=5238   medyan=1,00      maks=100,00     maks/medyan=100x
+    popularity2         songs       n=6257   medyan=31,52     maks=100,00     maks/medyan=3x
+    popularity2         videos      n=2246   medyan=39,00     maks=63,20      maks/medyan=2x
+    performerPopularity songs       n=6367   medyan=251,00    maks=56341,00   maks/medyan=224x
+    performerPopularity videos      n=2438   medyan=739,00    maks=55282,00   maks/medyan=75x
+
+  --- UAT ---
+    popularity          songs       n=6443   medyan=0,00      maks=103,00     maks/medyan=-
+    popularity          videos      n=2582   medyan=83,00     maks=100,00     maks/medyan=1x
+    popularity          performers  n=5233   medyan=0,00      maks=100,00     maks/medyan=-
+    popularity          albums      n=6352   medyan=0,00      maks=0,00       maks/medyan=-
+    prodPopularity      songs       n=6441   medyan=30,53     maks=81,14      maks/medyan=3x
+    prodPopularity      performers  n=5233   medyan=12,00     maks=100,00     maks/medyan=8x
+    prodPopularity      albums      n=6214   medyan=90,00     maks=100,00     maks/medyan=1x
+    popularity2         songs       n=4814   medyan=2,31      maks=75,22      maks/medyan=33x
+    performerPopularity songs       n=6439   medyan=0,00      maks=3377,00    maks/medyan=-
+    performerPopularity videos      n=2582   medyan=99,00     maks=100,00     maks/medyan=1x
+
+====================================================================================================
+SON  OZET
+====================================================================================================
+Yukaridaki her sayi C:\Users\inomera\IdeaProjects\MuudSearchTest\reports\api-responses altindaki JSON dosyalarindan
+sayilarak uretildi; hicbiri elle girilmedi. Tekrar kosuldugunda ayni sonucu verir.
+Bir satiri kendiniz dogrulamak icin yaninda yazan kaynak dosyayi acip ilgili id'yi aratin.

@@ -1,0 +1,1381 @@
+<title>ddp-prod Ankara Geçişi</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+
+<style>
+  /* ---------- Tokens: light (complete palette) ---------- */
+  :root {
+    --paper:      #F6F8FA;
+    --surface:    #FFFFFF;
+    --surface-2:  #EDF1F5;
+    --ink:        #16202B;
+    --ink-2:      #4A5A6B;
+    --ink-3:      #7C8B9A;
+    --rule:       #D3DBE3;
+    --rule-2:     #E5EAEF;
+    --accent:     #1D5FA8;
+    --accent-ink: #FFFFFF;
+    --accent-wash:#E4EEF9;
+    --ok:         #17703F;
+    --ok-wash:    #E1F0E7;
+    --warn:       #9A6208;
+    --warn-wash:  #FAF0DC;
+    --stop:       #A62F26;
+    --stop-wash:  #FBE7E4;
+    --ist:        #1D5FA8;
+    --ist-wash:   #E4EEF9;
+    --ank:        #6B3FA0;
+    --ank-wash:   #EEE7F7;
+    --host:       #4A5A6B;
+    --host-wash:  #E8ECF0;
+    --term-bg:    #16202B;
+    --term-ink:   #DCE5EE;
+    --term-rule:  #2C3B4B;
+    --term-dim:   #8598AB;
+  }
+
+  /* ---------- Tokens: dark via OS (un-stamped default) ---------- */
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --paper:      #0F151B;
+      --surface:    #161E27;
+      --surface-2:  #1D2731;
+      --ink:        #DEE6ED;
+      --ink-2:      #A3B2C0;
+      --ink-3:      #748493;
+      --rule:       #2B3947;
+      --rule-2:     #222E3A;
+      --accent:     #6BA6E8;
+      --accent-ink: #0F151B;
+      --accent-wash:#17293C;
+      --ok:         #63C48D;
+      --ok-wash:    #14291D;
+      --warn:       #DFA83F;
+      --warn-wash:  #2C2314;
+      --stop:       #EB8079;
+      --stop-wash:  #2E1917;
+      --ist:        #6BA6E8;
+      --ist-wash:   #17293C;
+      --ank:        #B490E8;
+      --ank-wash:   #241B33;
+      --host:       #A3B2C0;
+      --host-wash:  #1D2731;
+      --term-bg:    #0A0F14;
+      --term-ink:   #D3DDE7;
+      --term-rule:  #263341;
+      --term-dim:   #75879A;
+    }
+  }
+
+  /* ---------- Tokens: dark via explicit toggle ---------- */
+  :root[data-theme="dark"] {
+    --paper:      #0F151B;
+    --surface:    #161E27;
+    --surface-2:  #1D2731;
+    --ink:        #DEE6ED;
+    --ink-2:      #A3B2C0;
+    --ink-3:      #748493;
+    --rule:       #2B3947;
+    --rule-2:     #222E3A;
+    --accent:     #6BA6E8;
+    --accent-ink: #0F151B;
+    --accent-wash:#17293C;
+    --ok:         #63C48D;
+    --ok-wash:    #14291D;
+    --warn:       #DFA83F;
+    --warn-wash:  #2C2314;
+    --stop:       #EB8079;
+    --stop-wash:  #2E1917;
+    --ist:        #6BA6E8;
+    --ist-wash:   #17293C;
+    --ank:        #B490E8;
+    --ank-wash:   #241B33;
+    --host:       #A3B2C0;
+    --host-wash:  #1D2731;
+    --term-bg:    #0A0F14;
+    --term-ink:   #D3DDE7;
+    --term-rule:  #263341;
+    --term-dim:   #75879A;
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    background: var(--paper);
+    color: var(--ink);
+    font-family: "IBM Plex Sans", ui-sans-serif, system-ui, sans-serif;
+    font-size: 16.5px;
+    line-height: 1.62;
+    margin: 0;
+    padding: 0 20px 96px;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .wrap { max-width: 880px; margin: 0 auto; }
+
+  /* ---------- Masthead ---------- */
+  .masthead {
+    padding: 56px 0 32px;
+    border-bottom: 2px solid var(--ink);
+    margin-bottom: 40px;
+  }
+  .eyebrow {
+    font-family: "IBM Plex Mono", ui-monospace, monospace;
+    font-size: 11.5px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--ink-3);
+    margin: 0 0 14px;
+  }
+  h1 {
+    font-family: Archivo, "Helvetica Neue", Arial, sans-serif;
+    font-weight: 700;
+    font-size: clamp(2.1rem, 5.6vw, 3.1rem);
+    line-height: 1.04;
+    letter-spacing: -0.022em;
+    text-wrap: balance;
+    margin: 0 0 18px;
+  }
+  .standfirst {
+    font-size: 1.12rem;
+    color: var(--ink-2);
+    max-width: 62ch;
+    margin: 0;
+  }
+  .meta-strip {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px 28px;
+    margin-top: 28px;
+    padding-top: 22px;
+    border-top: 1px solid var(--rule-2);
+  }
+  .meta-item { min-width: 0; }
+  .meta-item dt {
+    font-family: "IBM Plex Mono", ui-monospace, monospace;
+    font-size: 10.5px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--ink-3);
+    margin: 0 0 3px;
+  }
+  .meta-item dd {
+    margin: 0;
+    font-weight: 500;
+    font-size: 0.94rem;
+    font-variant-numeric: tabular-nums;
+  }
+
+  /* ---------- Sections ---------- */
+  section { margin: 0 0 56px; }
+
+  h2 {
+    font-family: Archivo, "Helvetica Neue", Arial, sans-serif;
+    font-weight: 600;
+    font-size: 1.62rem;
+    letter-spacing: -0.014em;
+    line-height: 1.18;
+    text-wrap: balance;
+    margin: 0 0 6px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid var(--rule);
+  }
+  h3 {
+    font-family: Archivo, "Helvetica Neue", Arial, sans-serif;
+    font-weight: 600;
+    font-size: 1.1rem;
+    letter-spacing: -0.008em;
+    margin: 32px 0 10px;
+  }
+  h2 + p, h3 + p, h2 + .lede { margin-top: 14px; }
+  p { max-width: 66ch; margin: 0 0 15px; }
+  .lede { font-size: 1.04rem; color: var(--ink-2); max-width: 64ch; }
+  ul, ol { max-width: 66ch; padding-left: 22px; margin: 0 0 16px; }
+  li { margin-bottom: 7px; }
+  strong { font-weight: 600; }
+  code:not(pre code) {
+    font-family: "IBM Plex Mono", ui-monospace, monospace;
+    font-size: 0.875em;
+    background: var(--surface-2);
+    border: 1px solid var(--rule-2);
+    border-radius: 3px;
+    padding: 0.08em 0.32em;
+    white-space: nowrap;
+  }
+
+  /* ---------- Phase rail ---------- */
+  .phase {
+    display: grid;
+    grid-template-columns: 62px 1fr;
+    gap: 0 22px;
+    padding-top: 34px;
+    border-top: 1px solid var(--rule-2);
+    margin-top: 34px;
+  }
+  .phase:first-of-type { border-top: 0; margin-top: 22px; padding-top: 0; }
+  .phase-num {
+    font-family: Archivo, sans-serif;
+    font-weight: 700;
+    font-size: 2.5rem;
+    line-height: 0.9;
+    color: var(--rule);
+    font-variant-numeric: tabular-nums;
+    text-align: right;
+  }
+  .phase-label {
+    font-family: "IBM Plex Mono", ui-monospace, monospace;
+    font-size: 9.5px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--ink-3);
+    text-align: right;
+    margin-top: 6px;
+  }
+  .phase-body { min-width: 0; }
+  .phase-body > h3:first-child { margin-top: -4px; }
+  .phase-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 7px;
+    margin: 0 0 16px;
+  }
+
+  /* ---------- Tags / pills ---------- */
+  .tag {
+    font-family: "IBM Plex Mono", ui-monospace, monospace;
+    font-size: 10.5px;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    padding: 3px 8px;
+    border-radius: 3px;
+    border: 1px solid transparent;
+    white-space: nowrap;
+    font-weight: 500;
+  }
+  .tag-ist  { background: var(--ist-wash);  color: var(--ist);  border-color: var(--ist); }
+  .tag-ank  { background: var(--ank-wash);  color: var(--ank);  border-color: var(--ank); }
+  .tag-host { background: var(--host-wash); color: var(--host); border-color: var(--host); }
+  .tag-ok   { background: var(--ok-wash);   color: var(--ok);   border-color: var(--ok); }
+  .tag-warn { background: var(--warn-wash); color: var(--warn); border-color: var(--warn); }
+  .tag-stop { background: var(--stop-wash); color: var(--stop); border-color: var(--stop); }
+  .tag-plain{ background: var(--surface-2); color: var(--ink-2); border-color: var(--rule); }
+
+  /* ---------- Command blocks: every one names its machine ---------- */
+  .cmd {
+    margin: 18px 0 22px;
+    border: 1px solid var(--term-rule);
+    border-radius: 6px;
+    overflow: hidden;
+    background: var(--term-bg);
+  }
+  .cmd-host {
+    display: flex;
+    align-items: baseline;
+    flex-wrap: wrap;
+    gap: 4px 12px;
+    padding: 9px 14px;
+    background: var(--term-bg);
+    border-bottom: 1px solid var(--term-rule);
+    font-family: "IBM Plex Mono", ui-monospace, monospace;
+    font-size: 11.5px;
+    letter-spacing: 0.04em;
+  }
+  .cmd-host .where { color: var(--term-ink); font-weight: 500; }
+  .cmd-host .what  { color: var(--term-dim); }
+  .cmd-host::before {
+    content: "";
+    width: 9px; height: 9px;
+    border-radius: 50%;
+    flex: 0 0 auto;
+    align-self: center;
+    margin-right: 2px;
+    background: var(--cmd-dot, #8598AB);
+  }
+  .cmd[data-loc="ist"]  { --cmd-dot: #6BA6E8; }
+  .cmd[data-loc="ank"]  { --cmd-dot: #B490E8; }
+  .cmd[data-loc="host"] { --cmd-dot: #8598AB; }
+  .cmd pre {
+    margin: 0;
+    padding: 14px;
+    overflow-x: auto;
+    font-family: "IBM Plex Mono", ui-monospace, monospace;
+    font-size: 13px;
+    line-height: 1.66;
+    color: var(--term-ink);
+  }
+  .cmd pre .c { color: var(--term-dim); }
+
+  /* ---------- Tables ---------- */
+  .table-scroll { overflow-x: auto; margin: 20px 0 24px; }
+  table {
+    border-collapse: collapse;
+    width: 100%;
+    min-width: 560px;
+    font-size: 0.9rem;
+    background: var(--surface);
+  }
+  caption {
+    text-align: left;
+    font-family: "IBM Plex Mono", ui-monospace, monospace;
+    font-size: 10.5px;
+    letter-spacing: 0.11em;
+    text-transform: uppercase;
+    color: var(--ink-3);
+    padding-bottom: 9px;
+  }
+  th, td {
+    text-align: left;
+    padding: 10px 13px;
+    border-bottom: 1px solid var(--rule-2);
+    vertical-align: top;
+  }
+  thead th {
+    font-family: "IBM Plex Mono", ui-monospace, monospace;
+    font-size: 10.5px;
+    letter-spacing: 0.09em;
+    text-transform: uppercase;
+    color: var(--ink-2);
+    border-bottom: 1.5px solid var(--rule);
+    white-space: nowrap;
+  }
+  tbody tr:last-child td { border-bottom: 0; }
+  td code:not(pre code) { white-space: nowrap; font-size: 0.86em; }
+  .num { font-variant-numeric: tabular-nums; }
+
+  /* ---------- Callouts ---------- */
+  .note {
+    border-left: 3px solid var(--accent);
+    background: var(--accent-wash);
+    padding: 14px 18px;
+    margin: 20px 0;
+    border-radius: 0 5px 5px 0;
+  }
+  .note.stop { border-left-color: var(--stop); background: var(--stop-wash); }
+  .note.warn { border-left-color: var(--warn); background: var(--warn-wash); }
+  .note.ok   { border-left-color: var(--ok);   background: var(--ok-wash); }
+  .note p:last-child { margin-bottom: 0; }
+  .note-title {
+    font-family: Archivo, sans-serif;
+    font-weight: 600;
+    font-size: 0.94rem;
+    margin: 0 0 5px;
+    display: block;
+  }
+
+  /* ---------- Topology schematic ---------- */
+  .topo {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    gap: 0;
+    align-items: stretch;
+    margin: 24px 0 8px;
+    border: 1px solid var(--rule);
+    border-radius: 8px;
+    overflow: hidden;
+    background: var(--surface);
+  }
+  .topo-city { padding: 20px 18px; min-width: 0; }
+  .topo-city.ank { border-left: 1px solid var(--rule); }
+  .topo-city h4 {
+    font-family: Archivo, sans-serif;
+    font-size: 0.98rem;
+    font-weight: 600;
+    margin: 0 0 3px;
+  }
+  .topo-city.ist h4 { color: var(--ist); }
+  .topo-city.ank h4 { color: var(--ank); }
+  .topo-city .sub {
+    font-family: "IBM Plex Mono", ui-monospace, monospace;
+    font-size: 10.5px;
+    color: var(--ink-3);
+    letter-spacing: 0.05em;
+    margin: 0 0 14px;
+  }
+  .node-row { display: flex; flex-direction: column; gap: 7px; }
+  .node {
+    display: flex;
+    align-items: baseline;
+    gap: 9px;
+    font-family: "IBM Plex Mono", ui-monospace, monospace;
+    font-size: 12px;
+    padding: 7px 10px;
+    border: 1px solid var(--rule);
+    border-radius: 4px;
+    background: var(--surface-2);
+  }
+  .node .role {
+    font-size: 9.5px;
+    letter-spacing: 0.09em;
+    text-transform: uppercase;
+    color: var(--ink-3);
+    flex: 0 0 44px;
+  }
+  .node .ip { color: var(--ink); font-variant-numeric: tabular-nums; }
+  .node.new  { border-color: var(--ank); background: var(--ank-wash); }
+  .node.gone { border-style: dashed; opacity: 0.6; }
+  .node.gone .ip { text-decoration: line-through; }
+  .topo-link {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0 6px;
+    background: var(--surface-2);
+    border-left: 1px solid var(--rule);
+    border-right: 1px solid var(--rule);
+  }
+  .topo-link span {
+    font-family: "IBM Plex Mono", ui-monospace, monospace;
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    color: var(--ink-2);
+    writing-mode: vertical-rl;
+    text-orientation: mixed;
+    white-space: nowrap;
+  }
+
+  /* ---------- Glossary ---------- */
+  .glossary { display: grid; gap: 0; margin: 20px 0; }
+  .gl-item {
+    display: grid;
+    grid-template-columns: 176px 1fr;
+    gap: 4px 20px;
+    padding: 13px 0;
+    border-bottom: 1px solid var(--rule-2);
+  }
+  .gl-item:last-child { border-bottom: 0; }
+  .gl-term {
+    font-family: "IBM Plex Mono", ui-monospace, monospace;
+    font-size: 12.5px;
+    font-weight: 500;
+    color: var(--accent);
+    padding-top: 2px;
+  }
+  .gl-def { margin: 0; max-width: 62ch; font-size: 0.94rem; color: var(--ink-2); }
+  .gl-def strong { color: var(--ink); }
+
+  /* ---------- Two-column signal panels ---------- */
+  .signals { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; margin: 22px 0; }
+  .signal {
+    border: 1px solid var(--rule);
+    border-top-width: 3px;
+    border-radius: 0 0 6px 6px;
+    padding: 16px 18px;
+    background: var(--surface);
+  }
+  .signal.calm { border-top-color: var(--ok); }
+  .signal.halt { border-top-color: var(--stop); }
+  .signal h4 {
+    font-family: Archivo, sans-serif;
+    font-size: 0.96rem;
+    font-weight: 600;
+    margin: 0 0 10px;
+  }
+  .signal.calm h4 { color: var(--ok); }
+  .signal.halt h4 { color: var(--stop); }
+  .signal ul { margin: 0; padding-left: 18px; font-size: 0.9rem; }
+  .signal li { margin-bottom: 6px; }
+
+  /* ---------- Checklist ---------- */
+  .check { list-style: none; padding: 0; margin: 18px 0; max-width: 68ch; }
+  .check li {
+    position: relative;
+    padding: 11px 0 11px 34px;
+    border-bottom: 1px solid var(--rule-2);
+    margin: 0;
+    font-size: 0.95rem;
+  }
+  .check li:last-child { border-bottom: 0; }
+  .check li::before {
+    content: "";
+    position: absolute;
+    left: 0; top: 15px;
+    width: 15px; height: 15px;
+    border: 1.5px solid var(--ink-3);
+    border-radius: 3px;
+  }
+
+  /* ---------- Footer ---------- */
+  footer {
+    margin-top: 64px;
+    padding-top: 26px;
+    border-top: 2px solid var(--ink);
+    font-size: 0.9rem;
+    color: var(--ink-2);
+  }
+  footer dl { display: grid; grid-template-columns: 152px 1fr; gap: 9px 20px; margin: 0 0 20px; max-width: 62ch; }
+  footer dt {
+    font-family: "IBM Plex Mono", ui-monospace, monospace;
+    font-size: 10.5px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--ink-3);
+    padding-top: 3px;
+  }
+  footer dd { margin: 0; }
+
+  a { color: var(--accent); text-decoration-thickness: 1px; text-underline-offset: 2px; }
+  :focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; border-radius: 2px; }
+
+  @media (max-width: 720px) {
+    .phase { grid-template-columns: 1fr; gap: 0; }
+    .phase-num { text-align: left; font-size: 1.7rem; }
+    .phase-label { text-align: left; margin: 2px 0 10px; }
+    .topo { grid-template-columns: 1fr; }
+    .topo-city.ank { border-left: 0; border-top: 1px solid var(--rule); }
+    .topo-link { border: 0; border-top: 1px solid var(--rule); padding: 9px; }
+    .topo-link span { writing-mode: horizontal-tb; }
+    .signals { grid-template-columns: 1fr; }
+    .gl-item { grid-template-columns: 1fr; }
+    footer dl { grid-template-columns: 1fr; gap: 2px; }
+    footer dt { margin-top: 10px; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    * { animation: none !important; transition: none !important; }
+  }
+</style>
+
+<div class="wrap">
+
+  <header class="masthead">
+    <p class="eyebrow">Operasyon Runbook · ddp-prod-cluster</p>
+    <h1>ddp-prod Ankara Geçişi</h1>
+    <p class="standfirst">
+      Elasticsearch cluster'ı tek lokasyondan (İstanbul) iki lokasyona
+      (İstanbul + Ankara) yayılıyor. Bu doküman baştan sona tek başına
+      uygulanabilecek şekilde yazıldı; her komut hangi makinede çalışacağı
+      yazılı olarak veriliyor.
+    </p>
+    <dl class="meta-strip">
+      <div class="meta-item"><dt>Cluster</dt><dd>ddp-prod-cluster</dd></div>
+      <div class="meta-item"><dt>Node sayısı</dt><dd class="num">5 → 7</dd></div>
+      <div class="meta-item"><dt>Kesinti</dt><dd>Yok</dd></div>
+      <div class="meta-item"><dt>Faz sayısı</dt><dd class="num">7 (0–6)</dd></div>
+      <div class="meta-item"><dt>Geri dönüş</dt><dd>Her fazda mümkün</dd></div>
+    </dl>
+  </header>
+
+  <!-- =================== NE YAPIYORUZ =================== -->
+  <section>
+    <h2>Ne yapıyoruz, neden</h2>
+    <p class="lede">
+      Bugün tüm veri İstanbul'da. İstanbul'u komple kaybedersek veri de gider.
+      Ankara'ya iki yeni sunucu ekleyip, her verinin bir kopyasını orada
+      tutacağız. Ayrıca Ankara'ya bir yönetici (master) sunucu ekleyip,
+      İstanbul'daki fazladan bir yöneticiyi çıkaracağız.
+    </p>
+
+    <div class="topo">
+      <div class="topo-city ist">
+        <h4>İSTANBUL</h4>
+        <p class="sub">10.95.27.x — mevcut</p>
+        <div class="node-row">
+          <div class="node"><span class="role">master</span><span class="ip">10.95.27.26</span></div>
+          <div class="node"><span class="role">master</span><span class="ip">10.95.27.27</span></div>
+          <div class="node gone"><span class="role">master</span><span class="ip">10.95.27.28</span></div>
+          <div class="node"><span class="role">data</span><span class="ip">10.95.27.29</span></div>
+          <div class="node"><span class="role">data</span><span class="ip">10.95.27.30</span></div>
+        </div>
+      </div>
+      <div class="topo-link"><span>9300 · çift yönlü</span></div>
+      <div class="topo-city ank">
+        <h4>ANKARA</h4>
+        <p class="sub">10.6.245.x — yeni</p>
+        <div class="node-row">
+          <div class="node new"><span class="role">master</span><span class="ip">10.6.245.97</span></div>
+          <div class="node new"><span class="role">data</span><span class="ip">10.6.245.99</span></div>
+          <div class="node new"><span class="role">data</span><span class="ip">10.6.245.100</span></div>
+        </div>
+      </div>
+    </div>
+    <p style="font-size:0.88rem;color:var(--ink-3);max-width:70ch;">
+      Üstü çizili <code>10.95.27.28</code> geçiş sonunda cluster'dan çıkarılıyor.
+      Mor kutular yeni kurulacak sunucular. <code>10.6.245.96</code> ve
+      <code>10.6.245.98</code> bu işte <strong>kullanılmıyor</strong> — dokunmayın.
+    </p>
+
+    <div class="note">
+      <span class="note-title">Kesinti yok</span>
+      <p>
+        Hiçbir fazda sistem kapanmıyor. Ara ara bir sunucu durdurulup tekrar
+        açılıyor; o sırada cluster <strong>yellow</strong> görünüyor ama arama ve
+        yazma çalışmaya devam ediyor. Tek istisna: yedek alınırken yazma
+        trafiği <strong>bilinçli olarak</strong> durdurulacak (Faz 2).
+      </p>
+    </div>
+  </section>
+
+  <!-- =================== SÖZLÜK =================== -->
+  <section>
+    <h2>Sözlük</h2>
+    <p class="lede">
+      Script'lerin ekrana bastığı terimler. Bu kadarı yeter.
+    </p>
+    <div class="glossary">
+      <div class="gl-item">
+        <div class="gl-term">node</div>
+        <p class="gl-def">Cluster'a dahil tek bir Elasticsearch sunucusu. Bizde 5, geçiş sonunda 7 tane.</p>
+      </div>
+      <div class="gl-item">
+        <div class="gl-term">master node</div>
+        <p class="gl-def">Yöneten sunucu. Veri tutmaz, kararı verir. <strong>3 tane olmalı</strong> — biri düşse kalan 2 iş görür. 2'nin altına inerse cluster durur.</p>
+      </div>
+      <div class="gl-item">
+        <div class="gl-term">data node</div>
+        <p class="gl-def">Veriyi tutan sunucu. Bizde şu an 2, geçiş sonunda 4 (2 İstanbul + 2 Ankara).</p>
+      </div>
+      <div class="gl-item">
+        <div class="gl-term">shard</div>
+        <p class="gl-def">Bir index'in veri parçası. Bizde her index tek parça — toplam 5 index, 5 shard.</p>
+      </div>
+      <div class="gl-item">
+        <div class="gl-term">replica</div>
+        <p class="gl-def">Bir shard'ın yedek kopyası. Bizde her shard'ın <strong>1 kopyası</strong> var, yani her veri 2 yerde duruyor.</p>
+      </div>
+      <div class="gl-item">
+        <div class="gl-term">green</div>
+        <p class="gl-def"><strong>Her şey yerinde.</strong> Bir fazı bitirmenin şartı bu. Script'ler green olmadan devam etmez.</p>
+      </div>
+      <div class="gl-item">
+        <div class="gl-term">yellow</div>
+        <p class="gl-def"><strong>Çalışıyor ama yedeksiz.</strong> Bir sunucu kapalıyken veya veri kopyalanırken normaldir. Panik yok.</p>
+      </div>
+      <div class="gl-item">
+        <div class="gl-term">red</div>
+        <p class="gl-def"><strong>Veri erişilemiyor.</strong> Bu normal değil. Görürseniz <a href="#dur">DUR</a> bölümüne bakın.</p>
+      </div>
+      <div class="gl-item">
+        <div class="gl-term">relocation</div>
+        <p class="gl-def">Verinin bir sunucudan diğerine kopyalanması. Faz 4'te İstanbul'dan Ankara'ya bu olacak — saatler sürebilir, normal.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- =================== DOSYA DAĞITIMI =================== -->
+  <section>
+    <h2>Hangi dosya hangi makineye</h2>
+    <p class="lede">
+      Geçişin tek dosya kopyalama işi bu. Ankara'daki üç sunucuya birer config
+      dosyası ve bir sertifika gidiyor. İstanbul'daki dosyalar
+      <strong>şimdilik kopyalanmıyor</strong>.
+    </p>
+
+    <h3>Zorunlu — Ankara sunucuları</h3>
+    <div class="table-scroll">
+      <table>
+        <caption>Kaynak dosya → hedef makine → hedef yol</caption>
+        <thead>
+          <tr><th>Kaynak dosya</th><th>Hedef makine</th><th>Hedef yol</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><code>config-ankara/ank-master-1.yml</code></td>
+            <td><span class="tag tag-ank">10.6.245.97</span></td>
+            <td><code>/app/elasticsearch-master/config/elasticsearch.yml</code></td>
+          </tr>
+          <tr>
+            <td><code>config-ankara/ank-data-1.yml</code></td>
+            <td><span class="tag tag-ank">10.6.245.99</span></td>
+            <td><code>/app/elasticsearch-data/config/elasticsearch.yml</code></td>
+          </tr>
+          <tr>
+            <td><code>config-ankara/ank-data-2.yml</code></td>
+            <td><span class="tag tag-ank">10.6.245.100</span></td>
+            <td><code>/app/elasticsearch-data/config/elasticsearch.yml</code></td>
+          </tr>
+          <tr>
+            <td><code>elastic-certificates.p12</code><br>
+              <span style="font-size:0.85em;color:var(--ink-3);">kaynak: 10.95.27.26 üzerindeki dosya</span></td>
+            <td><span class="tag tag-ank">üç Ankara sunucusu</span></td>
+            <td><code>&lt;kurulum&gt;/config/certs/elastic-certificates.p12</code></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="note warn">
+      <span class="note-title">Dosya adı değişiyor — dikkat</span>
+      <p>
+        Kaynak dosyanın adı <code>ank-master-1.yml</code>, hedefteki adı
+        <code>elasticsearch.yml</code>. Yani kopyalarken <strong>adını
+        değiştireceksiniz</strong>. Elasticsearch config dosyasını sadece
+        <code>elasticsearch.yml</code> adıyla okur.
+      </p>
+    </div>
+
+    <div class="note warn">
+      <span class="note-title">Kurulum yolları İstanbul ile aynı olmalı</span>
+      <p>
+        Config dosyalarının içinde <code>/app/elasticsearch-master/…</code> ve
+        <code>/data/elasticsearch-data</code> gibi yollar yazılı. Ankara'ya
+        Elasticsearch <strong>farklı bir dizine kurulduysa</strong> bu satırlar
+        çalışmaz. İki seçenek: kurulumu İstanbul'la aynı yollara yapın, ya da
+        config içindeki <code>path.data</code>, <code>path.logs</code>,
+        <code>path.repo</code> ve sertifika yollarını gerçek kuruluma göre
+        düzeltin. Emin değilseniz durun ve sorun.
+      </p>
+    </div>
+
+    <h3>Script'ler — nereye kurulacak</h3>
+    <p>
+      <code>migration/</code> klasörünün tamamı, <strong>Elasticsearch'e
+      HTTP ile erişebilen herhangi bir Linux makineye</strong> kopyalanır. Bu
+      bir jump host olabilir, İstanbul sunucularından biri de olabilir. Script'ler
+      hiçbir sunucuya SSH yapmaz; sadece <code>10.95.27.26:9200</code> adresine
+      istek atar.
+    </p>
+    <div class="table-scroll">
+      <table>
+        <caption>Script'lerin çalışacağı makinede olması gerekenler</caption>
+        <thead><tr><th>Gereksinim</th><th>Kontrol komutu</th></tr></thead>
+        <tbody>
+          <tr><td><code>bash</code> 4 veya üstü</td><td><code>bash --version</code></td></tr>
+          <tr><td><code>curl</code></td><td><code>curl --version</code></td></tr>
+          <tr><td><code>jq</code></td><td><code>jq --version</code></td></tr>
+          <tr><td>ES'e erişim</td><td>aşağıdaki komut</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="cmd" data-loc="host">
+      <div class="cmd-host"><span class="where">Script makinesi</span><span class="what">erişim testi — cluster bilgisi dönmeli</span></div>
+      <pre>curl -s -u ddpprod:'Ddp123Prod_456Elastic' http://10.95.27.26:9200</pre>
+    </div>
+
+    <div class="note stop">
+      <span class="note-title">jq kurulu değilse</span>
+      <p>
+        Script'ler <code>jq</code> olmadan çalışmaz ve ilk adımda hata verip
+        durur. <code>dnf install -y jq</code> (veya <code>yum</code>) ile kurun.
+        Prod'a paket kurmak yasaksa script'leri erişimi olan başka bir makinede
+        çalıştırın.
+      </p>
+    </div>
+
+    <h3>İstanbul config'leri — şimdi değil</h3>
+    <p>
+      <code>Toluca04–08.txt</code> dosyaları da güncellendi ama
+      <strong>bu geçiş için gerekmiyor.</strong> Bir sonraki planlı bakımda
+      dağıtılacak. Şimdi kopyalarsanız gereksiz 5 sunucu restart'ı yapmış
+      olursunuz.
+    </p>
+    <div class="table-scroll">
+      <table>
+        <caption>Sonraki bakım penceresi için — şimdi uygulanmayacak</caption>
+        <thead><tr><th>Dosya</th><th>Makine</th><th>Node adı</th></tr></thead>
+        <tbody>
+          <tr><td><code>Toluca04.txt</code></td><td><span class="tag tag-ist">10.95.27.26</span></td><td><code>ddp-prod-ist-master-1</code></td></tr>
+          <tr><td><code>Toluca05.txt</code></td><td><span class="tag tag-ist">10.95.27.27</span></td><td><code>ddp-prod-ist-master-2</code></td></tr>
+          <tr><td><code>Toluca06.txt</code></td><td><span class="tag tag-ist">10.95.27.28</span></td><td><code>ddp-prod-ist-master-3</code></td></tr>
+          <tr><td><code>Toluca07.txt</code></td><td><span class="tag tag-ist">10.95.27.29</span></td><td><code>ddp-prod-ist-data-4</code></td></tr>
+          <tr><td><code>Toluca08.txt</code></td><td><span class="tag tag-ist">10.95.27.30</span></td><td><code>ddp-prod-ist-data-5</code></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- =================== FAZLAR =================== -->
+  <section>
+    <h2>Fazlar</h2>
+    <p class="lede">
+      Sıra <strong>değiştirilemez.</strong> Her faz bir öncekinin tamamlanmış
+      olmasına dayanıyor ve script'ler bunu kontrol ediyor. Bir faz
+      tamamlanmadan sonrakine geçilmez.
+    </p>
+
+    <!-- FAZ 0 -->
+    <div class="phase">
+      <div>
+        <div class="phase-num">0</div>
+        <div class="phase-label">Hazırlık</div>
+      </div>
+      <div class="phase-body">
+        <h3>Ankara sunucularını hazırla</h3>
+        <div class="phase-tags">
+          <span class="tag tag-ank">3 Ankara sunucusu</span>
+          <span class="tag tag-plain">script yok</span>
+          <span class="tag tag-ok">cluster'a dokunulmuyor</span>
+        </div>
+        <p>
+          Bu fazda Elasticsearch cluster'ına <strong>hiç dokunulmuyor.</strong>
+          Sadece Ankara sunucuları kuruluma hazırlanıyor. Yanlış giderse
+          cluster etkilenmez.
+        </p>
+
+        <ol class="check">
+          <li><strong>Elasticsearch sürümünü öğren.</strong> İstanbul'da hangi sürüm çalışıyorsa Ankara'ya <strong>tam olarak aynısı</strong> kurulacak. Sürümü Faz 1'deki script ekrana basıyor — önce onu çalıştırıp sürümü öğrenmek en pratiği.</li>
+          <li><strong>Elasticsearch'i kur.</strong> Master sunucusu (<code>.97</code>) → <code>/app/elasticsearch-master</code>, data sunucuları (<code>.99</code>, <code>.100</code>) → <code>/app/elasticsearch-data</code>.</li>
+          <li><strong>Veri ve log dizinlerini oluştur</strong>, <code>elasticsearch</code> kullanıcısına ver.</li>
+          <li><strong>Config dosyalarını kopyala</strong> (yukarıdaki tablo). Adını <code>elasticsearch.yml</code> yap.</li>
+          <li><strong>Sertifikayı kopyala</strong> ve keystore parolalarını ekle (aşağıdaki komutlar).</li>
+          <li><strong>9300 portunu iki yönlü aç</strong> — 7 sunucunun hepsi birbirini görmeli.</li>
+          <li><strong>Servisleri BAŞLATMA.</strong> Faz 3'te söylenene kadar Ankara'da Elasticsearch açılmayacak.</li>
+        </ol>
+
+        <div class="cmd" data-loc="ist">
+          <div class="cmd-host"><span class="where">10.95.27.26</span><span class="what">sertifikayı Ankara'ya gönder</span></div>
+          <pre>cd /app/elasticsearch-master/config/certs
+
+<span class="c"># master sunucusuna</span>
+scp elastic-certificates.p12 10.6.245.97:/app/elasticsearch-master/config/certs/
+
+<span class="c"># data sunucularına</span>
+scp elastic-certificates.p12 10.6.245.99:/app/elasticsearch-data/config/certs/
+scp elastic-certificates.p12 10.6.245.100:/app/elasticsearch-data/config/certs/</pre>
+        </div>
+
+        <div class="cmd" data-loc="ank">
+          <div class="cmd-host"><span class="where">Üç Ankara sunucusunda da</span><span class="what">sertifika izinleri</span></div>
+          <pre><span class="c"># master sunucusunda "elasticsearch-master", data'larda "elasticsearch-data"</span>
+cd /app/elasticsearch-*/config/certs
+chown elasticsearch:elasticsearch elastic-certificates.p12
+chmod 640 elastic-certificates.p12</pre>
+        </div>
+
+        <div class="cmd" data-loc="ank">
+          <div class="cmd-host"><span class="where">Üç Ankara sunucusunda da</span><span class="what">sertifika parolasını tanımla</span></div>
+          <pre>cd /app/elasticsearch-*
+bin/elasticsearch-keystore add xpack.security.transport.ssl.keystore.secure_password
+bin/elasticsearch-keystore add xpack.security.transport.ssl.truststore.secure_password</pre>
+        </div>
+
+        <div class="note stop">
+          <span class="note-title">Sertifika parolasını nereden alacaksınız</span>
+          <p>
+            Yukarıdaki komut parola soruyor. Bu parola İstanbul sunucularında
+            <strong>zaten tanımlı</strong> ve dosyada yazılı değil — bilen kişiden
+            almanız gerekiyor. Parola boş olarak kullanılıyorsa bu iki komut
+            atlanır. <strong>Yanlış parola girilirse sunucu açılır ama cluster'a
+            katılamaz</strong> ve hata mesajı bunu anlatmaz
+            (<code>handshake failed</code> gibi görünür). En sık yaşanan
+            aksaklık burada.
+          </p>
+        </div>
+
+        <div class="cmd" data-loc="ank">
+          <div class="cmd-host"><span class="where">Üç Ankara sunucusunda da</span><span class="what">9300 erişimini doğrula — hepsi OK olmalı</span></div>
+          <pre>for ip in 10.95.27.26 10.95.27.27 10.95.27.29 10.95.27.30; do
+  nc -z -w 3 $ip 9300 &amp;&amp; echo "OK   $ip:9300" || echo "FAIL $ip:9300"
+done</pre>
+        </div>
+
+        <div class="cmd" data-loc="ist">
+          <div class="cmd-host"><span class="where">İstanbul sunucularında</span><span class="what">ters yönü doğrula — hepsi OK olmalı</span></div>
+          <pre>for ip in 10.6.245.97 10.6.245.99 10.6.245.100; do
+  nc -z -w 3 $ip 9300 &amp;&amp; echo "OK   $ip:9300" || echo "FAIL $ip:9300"
+done</pre>
+        </div>
+
+        <div class="note stop">
+          <span class="note-title">FAIL görürseniz devam etmeyin</span>
+          <p>
+            İstanbul <code>10.95.27.x</code>, Ankara <code>10.6.245.x</code> —
+            farklı ağlar. Aradaki yönlendirme ve firewall açılmadan Ankara
+            sunucuları cluster'a katılamaz. Ağ ekibine gidin.
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <!-- FAZ 1 -->
+    <div class="phase">
+      <div>
+        <div class="phase-num">1</div>
+        <div class="phase-label">Kontrol</div>
+      </div>
+      <div class="phase-body">
+        <h3>Hazır mıyız — rapor al</h3>
+        <div class="phase-tags">
+          <span class="tag tag-host">script makinesi</span>
+          <span class="tag tag-ok">salt okunur</span>
+          <span class="tag tag-plain">~1 dakika</span>
+        </div>
+        <p>
+          Bu script cluster'a <strong>tek satır yazmıyor</strong>, sadece
+          okuyup rapor üretiyor. On kere çalıştırılsa bir şey olmaz.
+        </p>
+
+        <div class="cmd" data-loc="host">
+          <div class="cmd-host"><span class="where">Script makinesi</span><span class="what">kontrol raporu</span></div>
+          <pre>cd migration
+./00-preflight.sh</pre>
+        </div>
+
+        <p>Ekranda göreceğiniz son satırlar:</p>
+        <div class="cmd" data-loc="host">
+          <div class="cmd-host"><span class="where">Beklenen çıktı</span><span class="what">FAIL sıfır olmalı</span></div>
+          <pre>ÖZET
+FAIL : 0
+WARN : 2</pre>
+        </div>
+
+        <ul>
+          <li><strong><code>FAIL : 0</code></strong> → devam edin.</li>
+          <li><strong><code>FAIL</code> 0'dan büyükse</strong> → durun. Rapor her FAIL'in ne olduğunu ve nasıl düzeltileceğini yazıyor.</li>
+          <li><strong><code>WARN</code></strong> → durdurucu değil, ama okuyup anlayın.</li>
+        </ul>
+
+        <p>
+          Rapor ayrıca dosyaya yazılıyor:
+          <code>migration/artifacts/preflight-&lt;tarih&gt;.txt</code>. Bu dosyayı
+          saklayın — geçiş sonrası karşılaştırma için kullanılıyor.
+        </p>
+
+        <p>
+          Raporda <strong>Elasticsearch sürümü</strong> de yazıyor. Faz 0'da
+          Ankara'ya kuracağınız sürüm bu.
+        </p>
+      </div>
+    </div>
+
+    <!-- FAZ 2 -->
+    <div class="phase">
+      <div>
+        <div class="phase-num">2</div>
+        <div class="phase-label">Yedek</div>
+      </div>
+      <div class="phase-body">
+        <h3>Geri dönüş noktası oluştur</h3>
+        <div class="phase-tags">
+          <span class="tag tag-host">script makinesi</span>
+          <span class="tag tag-ist">10.95.27.30</span>
+          <span class="tag tag-ist">10.95.27.26</span>
+          <span class="tag tag-warn">yazma trafiği durur</span>
+          <span class="tag tag-plain">6 onay noktası</span>
+        </div>
+        <p>
+          En çok elle iş bu fazda. Script duruyor, siz sunucuda komutu
+          çalıştırıyorsunuz, <code>evet</code> yazıyorsunuz, script doğrulayıp
+          devam ediyor.
+        </p>
+
+        <div class="note stop">
+          <span class="note-title">Bu faz geçmeden Faz 3'e geçilmez</span>
+          <p>
+            Faz 3'ün script'i yedek kaydını arıyor, bulamazsa çalışmayı
+            reddediyor. Yedek, geçişin tek geri dönüş noktası.
+          </p>
+        </div>
+
+        <p><strong>Öncesinde hazırlık:</strong></p>
+        <div class="cmd" data-loc="ist">
+          <div class="cmd-host"><span class="where">10.95.27.30 ve 10.95.27.26</span><span class="what">yer var mı — veri boyutu kadar gerekiyor</span></div>
+          <pre>df -h /yedek
+du -sh /data/elasticsearch-data     <span class="c"># .30 üzerinde</span>
+du -sh /data/elasticsearch-master   <span class="c"># .26 üzerinde</span></pre>
+        </div>
+        <p style="font-size:0.92rem;">
+          <code>/yedek</code> yoksa oluşturun, ya da başka bir dizin seçip
+          <code>migration/hosts.env</code> içindeki <code>BACKUP_DEST_DIR</code>
+          satırını değiştirin. Yer hiç yoksa script tar'ı doğrudan başka bir
+          sunucuya gönderen komutu da yazdırıyor.
+        </p>
+
+        <div class="cmd" data-loc="host">
+          <div class="cmd-host"><span class="where">Script makinesi</span><span class="what">yedek alma — 6 kez duracak</span></div>
+          <pre>cd migration
+./02-backup.sh</pre>
+        </div>
+
+        <div class="table-scroll">
+          <table>
+            <caption>Script ne soracak · siz ne yapacaksınız</caption>
+            <thead><tr><th>#</th><th>Soru</th><th>Yapılacak</th></tr></thead>
+            <tbody>
+              <tr>
+                <td class="num">1</td>
+                <td>Yazan servisler durduruldu mu?</td>
+                <td><strong>index-api</strong> ve <strong>cms-catalog</strong> servislerini durdurun. Varsa cron/batch işlerini de.</td>
+              </tr>
+              <tr>
+                <td class="num">2</td>
+                <td><code>ddp-prod-ist-data-5</code> durduruldu mu?</td>
+                <td><span class="tag tag-ist">.30</span> üzerinde <code>systemctl stop elasticsearch</code></td>
+              </tr>
+              <tr>
+                <td class="num">3</td>
+                <td>Kopyalama tamamlandı, boyut makul mü?</td>
+                <td><span class="tag tag-ist">.30</span> üzerinde script'in yazdırdığı <code>tar</code> komutu, sonra <code>ls -lh</code></td>
+              </tr>
+              <tr>
+                <td class="num">4</td>
+                <td><code>ddp-prod-ist-data-5</code> başlatıldı mı?</td>
+                <td><span class="tag tag-ist">.30</span> üzerinde <code>systemctl start elasticsearch</code></td>
+              </tr>
+              <tr>
+                <td class="num">5</td>
+                <td>Master kopyası alınsın mı? → durdurulup kopyalanıp başlatıldı mı?</td>
+                <td><span class="tag tag-ist">.26</span> üzerinde <code>stop</code> → <code>tar</code> → <code>start</code></td>
+              </tr>
+              <tr>
+                <td class="num">6</td>
+                <td>yaml + keystore yedeği alındı mı?</td>
+                <td><strong>5 İstanbul sunucusunun hepsinde</strong> aşağıdaki iki <code>cp</code></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="cmd" data-loc="ist">
+          <div class="cmd-host"><span class="where">5 İstanbul sunucusunun hepsinde</span><span class="what">6. onay — config yedeği</span></div>
+          <pre>cd /app/elasticsearch-*/config
+cp elasticsearch.yml      elasticsearch.yml.pre-migration-$(date +%Y%m%d)
+cp elasticsearch.keystore elasticsearch.keystore.pre-migration-$(date +%Y%m%d)</pre>
+        </div>
+
+        <div class="note ok">
+          <span class="note-title">Neden iki ayrı tar</span>
+          <p>
+            <code>.30</code>'daki kopya <strong>veriyi</strong> içeriyor.
+            <code>.26</code>'daki kopya index tanımlarını, ayarları ve
+            template'leri (<strong>cluster state</strong>) içeriyor. İkisi
+            olmadan tam geri dönüş yok. Script beşinci adımda bunu ayrıca
+            soruyor — <strong>"hayır" demeyin.</strong>
+          </p>
+        </div>
+
+        <div class="note warn">
+          <span class="note-title">İş bitince</span>
+          <p>
+            İki tar dosyasını <strong>bulundukları sunucunun dışına</strong> da
+            kopyalayın. <code>.30</code>'un yedeği <code>.30</code>'un diskinde
+            duruyorsa, o sunucu gittiğinde yedek de gider.
+          </p>
+          <p>Yazma trafiğini bu fazın sonunda geri açabilirsiniz.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- FAZ 3 -->
+    <div class="phase">
+      <div>
+        <div class="phase-num">3</div>
+        <div class="phase-label">Katılım</div>
+      </div>
+      <div class="phase-body">
+        <h3>Ankara sunucularını cluster'a kat</h3>
+        <div class="phase-tags">
+          <span class="tag tag-host">script makinesi</span>
+          <span class="tag tag-ank">3 Ankara sunucusu</span>
+          <span class="tag tag-plain">3 onay noktası</span>
+        </div>
+        <p>
+          Ankara'daki Elasticsearch servisleri <strong>ilk kez</strong> burada
+          başlatılıyor. Script her birinin cluster'a katıldığını ve doğru
+          ayarlarla geldiğini kontrol ediyor.
+        </p>
+
+        <div class="cmd" data-loc="host">
+          <div class="cmd-host"><span class="where">Script makinesi</span><span class="what">Ankara'yı kat</span></div>
+          <pre>cd migration
+./03-join-ankara.sh</pre>
+        </div>
+
+        <div class="table-scroll">
+          <table>
+            <caption>Sıra önemli — master önce, data sonra</caption>
+            <thead><tr><th>#</th><th>Soru</th><th>Yapılacak</th></tr></thead>
+            <tbody>
+              <tr><td class="num">1</td><td>Yedek dosyaları yerinde mi?</td><td>Faz 2'de aldığınız iki tar dosyasının var olduğunu gözünüzle doğrulayın</td></tr>
+              <tr><td class="num">2</td><td><code>ddp-prod-ank-master-1</code> başlatıldı mı?</td><td><span class="tag tag-ank">.97</span> üzerinde <code>systemctl start elasticsearch</code></td></tr>
+              <tr><td class="num">3</td><td>Ankara data sunucuları başlatıldı mı?</td><td><span class="tag tag-ank">.99</span> ve <span class="tag tag-ank">.100</span> üzerinde <code>systemctl start elasticsearch</code></td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="note stop">
+          <span class="note-title">Sunucu cluster'a katılmazsa</span>
+          <p>
+            Script 10 dakika bekleyip hata veriyor ve en olası üç nedeni
+            sıralıyor. Sırayla kontrol edin:
+          </p>
+          <ol style="margin-bottom:0;">
+            <li><strong>Sertifika parolası yanlış</strong> → logda <code>handshake</code> veya <code>failed to establish trust</code></li>
+            <li><strong>9300 kapalı</strong> → logda <code>connect_timeout</code> veya <code>no route to host</code></li>
+            <li><strong>Config yanlış kopyalanmış</strong> → <code>cluster.name</code> tam olarak <code>ddp-prod-cluster</code> mı?</li>
+          </ol>
+        </div>
+
+        <div class="cmd" data-loc="ank">
+          <div class="cmd-host"><span class="where">Katılmayan Ankara sunucusunda</span><span class="what">log'a bak</span></div>
+          <pre>tail -200 /app/elasticsearch-*/logs/ddp-prod-cluster.log</pre>
+        </div>
+
+        <p style="font-size:0.92rem;">
+          Faz sonunda cluster'da <strong>8 sunucu</strong> görünecek
+          (5 İstanbul + 3 Ankara). <code>.28</code> henüz çıkarılmadı.
+          Ankara sunucuları bu aşamada <strong>boş</strong> — veri Faz 4'te
+          taşınacak.
+        </p>
+      </div>
+    </div>
+
+    <!-- FAZ 4 -->
+    <div class="phase">
+      <div>
+        <div class="phase-num">4</div>
+        <div class="phase-label">Veri taşıma</div>
+      </div>
+      <div class="phase-body">
+        <h3>Veriyi Ankara'ya kopyala</h3>
+        <div class="phase-tags">
+          <span class="tag tag-host">script makinesi</span>
+          <span class="tag tag-ok">elle iş yok</span>
+          <span class="tag tag-warn">saatler sürebilir</span>
+        </div>
+        <p>
+          Bu fazda <strong>yapacağınız hiçbir şey yok.</strong> Bir onay
+          veriyorsunuz, sonra bekliyorsunuz. Elasticsearch verinin bir kopyasını
+          İstanbul'dan Ankara'ya kopyalıyor.
+        </p>
+
+        <div class="cmd" data-loc="host">
+          <div class="cmd-host"><span class="where">Script makinesi</span><span class="what">veri taşımayı başlat — 1 onay</span></div>
+          <pre>cd migration
+./04-enable-awareness.sh</pre>
+        </div>
+
+        <div class="cmd" data-loc="host">
+          <div class="cmd-host"><span class="where">Script makinesi — ikinci terminal</span><span class="what">izleme, Ctrl-C ile çıkılır</span></div>
+          <pre>cd migration
+./05-watch-relocation.sh</pre>
+        </div>
+
+        <div class="note">
+          <span class="note-title">Ne kadar sürer</span>
+          <p>
+            Veri miktarına ve İstanbul–Ankara hattının hızına bağlı. Faz 1'in
+            raporu bir tahmin veriyor. Script en fazla <strong>6 saat</strong>
+            bekliyor; süre uzarsa hata verip duruyor ama <strong>veri taşınmaya
+            devam eder</strong> — script'i tekrar çalıştırıp beklemeye devam
+            edebilirsiniz.
+          </p>
+        </div>
+
+        <div class="note warn">
+          <span class="note-title">Bu sırada sistem yavaşlarsa</span>
+          <p>
+            İstanbul–Ankara hattı doluyor ve canlı sistem etkileniyorsa fren
+            var. Aşağıdaki komutta <strong>1</strong> seçeneğini seçin — taşıma
+            fiilen durur, veri kaybı olmaz, sonra kaldığı yerden devam edilir.
+          </p>
+        </div>
+
+        <div class="cmd" data-loc="host">
+          <div class="cmd-host"><span class="where">Script makinesi</span><span class="what">acil fren — taşıma hızını kes</span></div>
+          <pre>cd migration
+./rollback.sh throttle</pre>
+        </div>
+      </div>
+    </div>
+
+    <!-- FAZ 5 -->
+    <div class="phase">
+      <div>
+        <div class="phase-num">5</div>
+        <div class="phase-label">Çıkarma</div>
+      </div>
+      <div class="phase-body">
+        <h3><code>10.95.27.28</code>'i cluster'dan çıkar</h3>
+        <div class="phase-tags">
+          <span class="tag tag-host">script makinesi</span>
+          <span class="tag tag-ist">10.95.27.28</span>
+          <span class="tag tag-plain">2 onay noktası</span>
+        </div>
+        <p>
+          Hedef yapıda İstanbul'da 2 master olacak, şu an 3 var. Fazlası
+          çıkarılıyor. Bu sunucuda <strong>veri yok</strong>, sadece yönetici
+          rolünde.
+        </p>
+
+        <div class="cmd" data-loc="host">
+          <div class="cmd-host"><span class="where">Script makinesi</span><span class="what">.28'i çıkar</span></div>
+          <pre>cd migration
+./06-decommission-ist-master-3.sh</pre>
+        </div>
+
+        <div class="table-scroll">
+          <table>
+            <caption>Script ne soracak · siz ne yapacaksınız</caption>
+            <thead><tr><th>#</th><th>Soru</th><th>Yapılacak</th></tr></thead>
+            <tbody>
+              <tr><td class="num">1</td><td>Exclusion uygulansın mı?</td><td>Sadece <code>evet</code> yazın — script yapıyor</td></tr>
+              <tr><td class="num">2</td><td><code>ddp-prod-ist-master-3</code> durduruldu mu?</td><td><span class="tag tag-ist">.28</span> üzerinde <code>systemctl stop elasticsearch</code></td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="note stop">
+          <span class="note-title">.28 üzerindeki /data/elasticsearch-master klasörünü SİLMEYİN</span>
+          <p>
+            Bu klasör, <code>.28</code>'i geri almak gerekirse tek hızlı yol.
+            Geçiş doğrulanıp birkaç gün sorunsuz çalıştıktan sonra silinebilir.
+            Script de bunu ekranda yazıyor.
+          </p>
+        </div>
+
+        <div class="note ok">
+          <span class="note-title">Neden sadece kapatmak yetmiyor</span>
+          <p>
+            Elasticsearch bir yönetici sunucuyu haber verilmeden kapatılırsa
+            hâlâ oy sahibi sayar ve karar mekanizması bozulur. Script önce
+            sunucuyu oylama listesinden düşürüyor, düştüğünü doğruluyor,
+            <strong>sonra</strong> size "durdur" diyor. Bu sırayı bozmayın —
+            sunucuyu script söylemeden kapatmayın.
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <!-- FAZ 6 -->
+    <div class="phase">
+      <div>
+        <div class="phase-num">6</div>
+        <div class="phase-label">Doğrulama</div>
+      </div>
+      <div class="phase-body">
+        <h3>Bitti mi — kontrol et</h3>
+        <div class="phase-tags">
+          <span class="tag tag-host">script makinesi</span>
+          <span class="tag tag-ok">salt okunur</span>
+        </div>
+        <p>
+          Asıl kontrol burada: <strong>her verinin hem İstanbul'da hem
+          Ankara'da kopyası var mı.</strong> Script bunu tek tek karşılaştırıyor
+          ve migration öncesi doküman sayısıyla kıyaslıyor.
+        </p>
+
+        <div class="cmd" data-loc="host">
+          <div class="cmd-host"><span class="where">Script makinesi</span><span class="what">son doğrulama</span></div>
+          <pre>cd migration
+./07-post-checks.sh</pre>
+        </div>
+
+        <p>
+          <code>FAIL : 0</code> görürseniz geçiş tamamlandı. Rapor
+          <code>migration/artifacts/post-checks-&lt;tarih&gt;.txt</code>
+          dosyasına da yazılıyor — saklayın.
+        </p>
+
+        <h3>Geçişten sonra kalan işler</h3>
+        <ol class="check">
+          <li><code>10.95.27.28:9200</code> adresine bağlanan uygulamaları güncelle — <strong>index-api</strong>, <strong>search-api</strong>, <strong>ui</strong>, Kibana, load balancer</li>
+          <li>Yazma hızını (latency) izle — veri artık Ankara'ya da yazıldığı için artabilir</li>
+          <li>İstanbul–Ankara hat kullanımını izle</li>
+          <li><strong>Birkaç gün</strong> hiçbir yedeği silme: <code>.28</code>'in veri klasörü, iki tar dosyası, <code>.pre-migration-*</code> config yedekleri</li>
+        </ol>
+      </div>
+    </div>
+  </section>
+
+  <!-- =================== NORMAL / DUR =================== -->
+  <section id="dur">
+    <h2>Normal ne, DUR ne</h2>
+    <p class="lede">
+      Elasticsearch bilmeyen biri için en zor kısım "bu normal mi" sorusu.
+      İşte cevabı.
+    </p>
+
+    <div class="signals">
+      <div class="signal calm">
+        <h4>Normal — devam edin</h4>
+        <ul>
+          <li>Bir sunucu kapalıyken cluster <strong>yellow</strong></li>
+          <li>Faz 4'te <strong>yellow</strong>, saatlerce</li>
+          <li><code>relocating</code> veya <code>initializing</code> sayısı sıfırdan büyük</li>
+          <li>Faz 4 uzun sürüyor — hattın hızı kadar sürer</li>
+          <li>Script'in <code>WARN</code> yazması</li>
+          <li>Faz 3'te sunucu sayısının 8 olması (<code>.28</code> henüz çıkmadı)</li>
+          <li>Ankara sunucularının Faz 3'te boş olması</li>
+        </ul>
+      </div>
+      <div class="signal halt">
+        <h4>DUR — devam etmeyin</h4>
+        <ul>
+          <li>Cluster <strong>red</strong></li>
+          <li>Script <code>FAIL</code> yazdı</li>
+          <li>Doküman sayısı <strong>azaldı</strong></li>
+          <li>Sunucu 10 dakikada cluster'a katılmadı</li>
+          <li>tar dosyası 0 byte veya beklenenden çok küçük</li>
+          <li>İstanbul sunucularından biri kendi kendine düştü</li>
+          <li>Canlı sistem yavaşladı / hata veriyor</li>
+        </ul>
+      </div>
+    </div>
+
+    <p><strong>DUR durumunda ilk yapılacak:</strong> durumu kaydedin, kimseye komut vermeden.</p>
+
+    <div class="cmd" data-loc="host">
+      <div class="cmd-host"><span class="where">Script makinesi</span><span class="what">durum fotoğrafı — hiçbir şeyi değiştirmez</span></div>
+      <pre>cd migration
+./rollback.sh status
+
+<span class="c"># neden takıldığını Elasticsearch'ün kendisi açıklıyor:</span>
+curl -s -u ddpprod:'Ddp123Prod_456Elastic' \
+  'http://10.95.27.26:9200/_cluster/allocation/explain?pretty'</pre>
+    </div>
+
+    <h3>Geri alma komutları</h3>
+    <p>
+      Hepsi <code>migration/</code> içinden çalışır. Detaylı açıklamaları
+      <code>ROLLBACK.md</code> dosyasında R1–R7 olarak yazılı.
+    </p>
+    <div class="table-scroll">
+      <table>
+        <caption>Hangi durumda ne — hiçbiri veri kaybettirmez</caption>
+        <thead><tr><th>Durum</th><th>Komut</th><th>Ne yapar</th></tr></thead>
+        <tbody>
+          <tr>
+            <td>Hat doldu, sistem yavaşladı</td>
+            <td><code>./rollback.sh throttle</code></td>
+            <td>Veri taşımayı yavaşlatır veya fiilen durdurur</td>
+          </tr>
+          <tr>
+            <td>Faz 4 sonrası yellow'da takıldı</td>
+            <td><code>./rollback.sh awareness</code></td>
+            <td>"Kopyalar iki lokasyona dağılsın" kuralını kaldırır</td>
+          </tr>
+          <tr>
+            <td>Ankara'dan tamamen vazgeçildi</td>
+            <td><code>./rollback.sh drain-ankara</code></td>
+            <td>Veriyi İstanbul'a geri toplar, sonra Ankara kapatılabilir</td>
+          </tr>
+          <tr>
+            <td><code>.28</code> geri gerekiyor</td>
+            <td><code>./rollback.sh readd-master3</code></td>
+            <td>Oylama listesini temizler, sunucu geri katılabilir</td>
+          </tr>
+          <tr>
+            <td>Bir kilit açık kalmış</td>
+            <td><code>./rollback.sh unlock</code></td>
+            <td>Veri yerleştirme kilitlerini varsayılana döndürür</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="note stop">
+      <span class="note-title">Yedekten geri yükleme — kendi başınıza yapmayın</span>
+      <p>
+        <code>restore-from-backup.sh</code> tüm cluster'ı kapatıp yedeği geri
+        yazıyor ve <strong>yedek anından sonraki tüm veriyi silerek</strong>
+        çalışıyor. Yukarıdaki komutların hiçbiri işe yaramadıysa ve veri
+        gerçekten bozulduysa kullanılır. Öncesinde sorumluyu arayın.
+      </p>
+    </div>
+  </section>
+
+  <footer>
+    <dl>
+      <dt>Cluster</dt><dd><code>ddp-prod-cluster</code> · <code>http://10.95.27.26:9200</code></dd>
+      <dt>Script'ler</dt><dd><code>migration/</code> klasörü</dd>
+      <dt>Detaylı doküman</dt><dd><code>migration/README.md</code> · <code>migration/ROLLBACK.md</code></dd>
+      <dt>Onay şekli</dt><dd>Script'ler tam olarak <code>evet</code> bekler — <code>y</code> veya Enter kabul edilmez</dd>
+      <dt>Takılırsanız</dt><dd>Durumu kaydedin, komut vermeyin, sorumluyu arayın</dd>
+    </dl>
+    <p style="max-width:66ch;margin:0;">
+      Script'ler hiçbir sunucuya SSH yapmaz ve kendi başına sunucu
+      durdurup başlatmaz. Her yıkıcı adım için <code>evet</code> onayı ister ve
+      sonucu doğrulamadan ilerlemez.
+    </p>
+  </footer>
+
+</div>

@@ -1,0 +1,43 @@
+[
+  {
+    "caseId": "SARKI_TAM_42",
+    "aktif": true,
+    "durum": "BLOCKED",
+    "kategori": "YANLIS_BEKLENTI",
+    "aciklama": "'DEHA INC.' – 'Phonk' prod ortamında bulunmadığı için prodPopularity 0 geliyor ve case koşulamıyor. Bu bir arama motoru bulgusu değil.",
+    "karar": "Ekip notu, 04.08.2026 koşusu",
+    "gecerlilik": "İçerik prod'a yüklendiğinde bu satır silinmeli ve case yeniden değerlendirilmeli."
+  },
+  {
+    "caseId": "",
+    "aktif": false,
+    "aciklama": "--- ASAGIDAKILER ONERI. aktif:false oldugu icin su an hicbir etkisi yok. Incelenip karar verildiginde aktif:true yapin. ---"
+  },
+  {
+    "caseId": "SANAT_KISMI_37",
+    "aktif": false,
+    "durum": "YANLIS_BEKLENTI",
+    "kategori": "YANLIS_BEKLENTI",
+    "aciklama": "Test 'Aynur Aydın'ı 1. sırada bekliyor, ancak katalog popülerliği (37) rakiplerinden düşük: 'Aynur' 40, 'Aynur Haşhaş' 42, 'Aynur Polat' 46. Beklenti veriyle çelişiyor.",
+    "karar": "ÖNERİ — iş birimi onayı bekliyor",
+    "gecerlilik": "Aynur Aydın editoryal olarak öncelikliyse popülerlikten bağımsız bir editorial_boost alanı gerekir; o zaman bu istisna kaldırılıp gerçek bulgu olarak açılmalı."
+  },
+  {
+    "caseId": "SARKI_KISMI_10",
+    "aktif": false,
+    "durum": "YANLIS_BEKLENTI",
+    "kategori": "YANLIS_BEKLENTI",
+    "aciklama": "'sus' (3 harf) sorgusunun 'Suspus'u Top-1'e getirmesi bekleniyor; oysa ilk 5 sonucun hepsi adı birebir 'Sus' olan şarkılar. Kısa sorguda infix eşleşmeyi birebir eşleşmenin önüne almak genel precision'ı bozar.",
+    "karar": "ÖNERİ — test sahibi onayı bekliyor",
+    "gecerlilik": "Beklenti 'Top-10 içinde' olarak gevşetilirse bu istisna kaldırılabilir."
+  },
+  {
+    "caseId": "SARKI_KISMI_11",
+    "aktif": false,
+    "durum": "YANLIS_BEKLENTI",
+    "kategori": "YANLIS_BEKLENTI",
+    "aciklama": "'pus' sorgusu için de aynı durum: hedef 'Suspus'un içinde geçiyor ama ilk 5 sonuç birebir 'Pus' adlı şarkılar.",
+    "karar": "ÖNERİ — test sahibi onayı bekliyor",
+    "gecerlilik": "SARKI_KISMI_10 ile birlikte değerlendirilmeli."
+  }
+]

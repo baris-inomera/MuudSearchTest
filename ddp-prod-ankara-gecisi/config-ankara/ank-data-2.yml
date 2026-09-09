@@ -1,0 +1,65 @@
+# ======================== Elasticsearch Configuration =========================
+#
+# ddp-prod-ank-data-2  -  NEW NODE (Ankara)
+#
+# Modelled on the existing Istanbul data config (Toluca07/08) so that the only
+# intentional differences are node.name, node.attr.rack and network.host.
+#
+# BEFORE DEPLOYING: see the checklist at the top of ank-master-1.yml.
+# Disk sizing: this node will hold roughly half of one full copy of the data.
+#
+# ---------------------------------- Cluster -----------------------------------
+#
+cluster.name: ddp-prod-cluster
+#
+# ------------------------------------ Node ------------------------------------
+#
+node.name: ddp-prod-ank-data-2
+#
+# Awareness attribute - places this node in the Ankara zone. Verified by
+# 03-join-ankara.sh; a typo here silently breaks the two-location guarantee.
+#
+node.attr.rack: ddp-ankara
+#
+# ----------------------------------- Paths ------------------------------------
+#
+path.data: /data/elasticsearch-data
+#
+path.logs: /app/elasticsearch-data/logs
+#
+path.repo: ["/backup/elasticsearch-snapshots"]
+#
+# ----------------------------------- Memory -----------------------------------
+#
+bootstrap.memory_lock: true
+#
+# ---------------------------------- Network -----------------------------------
+#
+network.host: 10.6.245.100
+#
+#network.publish_host: <<ANK_DATA_2_PUBLIC_IP>>   # only if NAT is in the path
+#
+http.port: 9200
+transport.port: 9300
+#
+# --------------------------------- Discovery ----------------------------------
+#
+discovery.seed_hosts: ["10.95.27.26:9300", "10.95.27.27:9300", "10.6.245.97:9300"]
+#
+# cluster.initial_master_nodes IS DELIBERATELY ABSENT - this node joins an
+# EXISTING cluster. See ank-master-1.yml for the full explanation.
+#
+# ---------------------------------- Various -----------------------------------
+#
+xpack.security.enabled: true
+
+xpack.security.transport.ssl.enabled: true
+xpack.security.transport.ssl.verification_mode: certificate
+xpack.security.transport.ssl.keystore.path: /app/elasticsearch-data/config/certs/elastic-certificates.p12
+xpack.security.transport.ssl.truststore.path: /app/elasticsearch-data/config/certs/elastic-certificates.p12
+
+ingest.geoip.downloader.enabled: false
+
+node.roles: [ data ]
+#xpack.security.http.ssl.enabled: true
+#xpack.security.http.ssl.keystore.path: /app/elasticsearch-data/config/certs/elastic-certificates.p12
