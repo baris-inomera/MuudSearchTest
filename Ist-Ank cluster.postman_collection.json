@@ -1,0 +1,182 @@
+{
+  "info": {
+    "_postman_id": "a465e32e-65b7-4439-8ec8-fe6886c52fbb",
+    "name": "Ist-Ank clust",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "1 - Cluster Health",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:9200/_cluster/health?pretty",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "9200",
+          "path": ["_cluster", "health"],
+          "query": [{"key": "pretty", "value": ""}]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "2 - Node Listesi (kim ayakta, rolü ne)",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:9200/_cat/nodes?v&h=name,ip,node.role,master,heap.percent,disk.used_percent",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "9200",
+          "path": ["_cat", "nodes"],
+          "query": [
+            {"key": "v", "value": ""},
+            {"key": "h", "value": "name,ip,node.role,master,heap.percent,disk.used_percent"}
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "3 - Master Node Kontrolu (aktif master kim)",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:9200/_cat/master?v",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "9200",
+          "path": ["_cat", "master"],
+          "query": [{"key": "v", "value": ""}]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "4 - Shard Durumu (UNASSIGNED var mi)",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:9200/_cat/shards?v&h=index,shard,prirep,state,node&s=state",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "9200",
+          "path": ["_cat", "shards"],
+          "query": [
+            {"key": "v", "value": ""},
+            {"key": "h", "value": "index,shard,prirep,state,node"},
+            {"key": "s", "value": "state"}
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "5 - Index Saglik (hangi index yellow-red)",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:9200/_cat/indices?v&s=health",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "9200",
+          "path": ["_cat", "indices"],
+          "query": [
+            {"key": "v", "value": ""},
+            {"key": "s", "value": "health"}
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "6 - Istanbul Nodelar Stats (T5 - ank kapaninca)",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:9200/_nodes/toluca04,toluca05,toluca06,toluca07,toluca08/stats?pretty",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "9200",
+          "path": ["_nodes", "toluca04,toluca05,toluca06,toluca07,toluca08", "stats"],
+          "query": [{"key": "pretty", "value": ""}]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "7 - Ankara Nodelar Stats (T4 - ist kapaninca)",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:9200/_nodes/davraz12,davraz13,davraz14,davraz15,davraz16/stats?pretty",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "9200",
+          "path": ["_nodes", "davraz12,davraz13,davraz14,davraz15,davraz16", "stats"],
+          "query": [{"key": "pretty", "value": ""}]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "8 - Capraz Yazma Testi (T7 - yaz)",
+      "request": {
+        "method": "POST",
+        "header": [{"key": "Content-Type", "value": "application/json"}],
+        "body": {
+          "mode": "raw",
+          "raw": "{\"songName\": \"geo-test\", \"isActive\": true}",
+          "options": {"raw": {"language": "json"}}
+        },
+        "url": {
+          "raw": "http://localhost:9200/muud_song_nospace_v2/_doc/geo-test-001",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "9200",
+          "path": ["muud_song_nospace_v2", "_doc", "geo-test-001"]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "9 - Capraz Okuma Testi (T7 - yazdigini oku)",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:9200/muud_song_nospace_v2/_doc/geo-test-001",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "9200",
+          "path": ["muud_song_nospace_v2", "_doc", "geo-test-001"]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "10 - Unassigned Shard Detayi (yellow-red ise neden)",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:9200/_cluster/allocation/explain?pretty",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "9200",
+          "path": ["_cluster", "allocation", "explain"],
+          "query": [{"key": "pretty", "value": ""}]
+        }
+      },
+      "response": []
+    }
+  ]
+}

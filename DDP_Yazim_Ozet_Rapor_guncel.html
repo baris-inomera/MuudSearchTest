@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<title>DDP Yazım Toleransı — Test Özet Raporu</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Segoe UI', Arial, sans-serif; background: #f5f6f8; color: #1a1a1a; font-size: 14px; line-height: 1.6; }
+  .page { max-width: 920px; margin: 0 auto; padding: 32px 24px; }
+
+  /* Header */
+  .header { background: #1e2b3c; color: #fff; border-radius: 10px; padding: 28px 32px; margin-bottom: 24px; }
+  .header h1 { font-size: 22px; font-weight: 600; margin-bottom: 6px; }
+  .header .meta { font-size: 13px; color: #94a3b8; display: flex; gap: 24px; flex-wrap: wrap; margin-top: 10px; }
+  .header .meta span { display: flex; align-items: center; gap: 6px; }
+
+  /* Score cards */
+  .scorecards { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; margin-bottom: 24px; }
+  .card { background: #fff; border-radius: 10px; padding: 18px 20px; border: 1px solid #e5e7eb; }
+  .card .label { font-size: 12px; color: #6b7280; font-weight: 500; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 6px; }
+  .card .value { font-size: 28px; font-weight: 700; }
+  .card .sub { font-size: 12px; color: #9ca3af; margin-top: 2px; }
+  .c-green { color: #16a34a; }
+  .c-red { color: #dc2626; }
+  .c-amber { color: #d97706; }
+  .c-blue { color: #2563eb; }
+
+  /* Section breakdown */
+  .section-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin-bottom: 24px; }
+  .sec-card { background: #fff; border-radius: 10px; padding: 16px 18px; border: 1px solid #e5e7eb; }
+  .sec-card .sec-title { font-size: 13px; font-weight: 600; margin-bottom: 8px; color: #374151; }
+  .progress-bar { height: 8px; background: #f3f4f6; border-radius: 4px; overflow: hidden; margin-bottom: 6px; }
+  .progress-fill { height: 100%; border-radius: 4px; }
+  .fill-100 { background: #16a34a; width: 100%; }
+  .fill-97  { background: #16a34a; width: 97%; }
+  .fill-80  { background: #16a34a; width: 80%; }
+  .fill-78  { background: #f59e0b; width: 78%; }
+  .fill-65  { background: #f59e0b; width: 65%; }
+  .sec-stats { font-size: 12px; color: #6b7280; display: flex; justify-content: space-between; }
+  .sec-stats .ok { color: #16a34a; font-weight: 600; }
+  .sec-stats .nok { color: #dc2626; font-weight: 600; }
+
+  /* Bug blocks */
+  h2 { font-size: 16px; font-weight: 700; color: #1e2b3c; margin: 28px 0 14px; padding-left: 4px; border-left: 4px solid #2563eb; padding-left: 12px; }
+  .bug-block { background: #fff; border-radius: 10px; border: 1px solid #e5e7eb; margin-bottom: 16px; overflow: hidden; }
+  .bug-header { display: flex; align-items: center; gap: 12px; padding: 14px 18px; border-bottom: 1px solid #f3f4f6; }
+  .bug-badge { font-size: 11px; font-weight: 700; padding: 3px 10px; border-radius: 20px; flex-shrink: 0; }
+  .badge-red { background: #fee2e2; color: #b91c1c; }
+  .badge-amber { background: #fef3c7; color: #92400e; }
+  .badge-blue { background: #dbeafe; color: #1d4ed8; }
+  .bug-title { font-size: 14px; font-weight: 600; color: #111827; }
+  .bug-body { padding: 14px 18px; }
+  .bug-body p { color: #4b5563; font-size: 13px; margin-bottom: 10px; }
+  table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  th { background: #f9fafb; color: #374151; font-weight: 600; text-align: left; padding: 8px 12px; border-bottom: 1px solid #e5e7eb; }
+  td { padding: 7px 12px; border-bottom: 1px solid #f3f4f6; color: #374151; }
+  tr:last-child td { border-bottom: none; }
+  .tag-ok   { display: inline-block; background: #dcfce7; color: #15803d; font-size: 11px; padding: 1px 7px; border-radius: 10px; font-weight: 600; }
+  .tag-nok  { display: inline-block; background: #fee2e2; color: #b91c1c; font-size: 11px; padding: 1px 7px; border-radius: 10px; font-weight: 600; }
+  .tag-warn { display: inline-block; background: #fef9c3; color: #854d0e; font-size: 11px; padding: 1px 7px; border-radius: 10px; font-weight: 600; }
+  code { background: #f3f4f6; padding: 1px 6px; border-radius: 4px; font-size: 12px; font-family: 'Consolas', monospace; color: #374151; }
+
+  /* DDP-369 table */
+  .ngram-example { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; margin-top: 8px; }
+  .ngram-box { background: #f9fafb; border: 1px solid #e5e7eb; border-radius: 8px; padding: 10px 12px; }
+  .ngram-box .nb-label { font-size: 11px; color: #9ca3af; margin-bottom: 4px; }
+  .ngram-box .nb-val { font-size: 13px; font-weight: 600; }
+  .nb-ok { color: #16a34a; }
+  .nb-nok { color: #dc2626; }
+
+  /* Footer */
+  .footer { text-align: center; color: #9ca3af; font-size: 12px; margin-top: 36px; padding-top: 20px; border-top: 1px solid #e5e7eb; }
+  .akciones { background: #eff6ff; border: 1px solid #bfdbfe; border-radius: 10px; padding: 16px 20px; margin-top: 24px; }
+  .akciones h3 { font-size: 13px; font-weight: 700; color: #1d4ed8; margin-bottom: 10px; }
+  .akciones ul { list-style: none; padding: 0; }
+  .akciones ul li { padding: 4px 0; font-size: 13px; color: #1e40af; display: flex; gap: 8px; }
+  .akciones ul li::before { content: "→"; font-weight: 700; }
+  .id-chip { background: #e0f2fe; color: #0369a1; font-family: 'Consolas', monospace; font-size: 11px; padding: 1px 6px; border-radius: 4px; font-weight: 600; }
+  .collector-badge { background: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 6px; padding: 6px 10px; font-size: 12px; color: #15803d; margin-top: 10px; display: inline-block; }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <div class="header">
+    <h1>DDP Yazım Toleransı — Test Özet Raporu</h1>
+    <div class="meta">
+      <span>📅 23 Eylül 2026</span>
+      <span>🌐 Ortam: UAT</span>
+      <span>🧪 DDP-366 · 367 · 368 · 369</span>
+      <span>🤖 Otomatik test: DdpYazimTest.java (v3 — genişletilmiş DDP-369)</span>
+    </div>
+  </div>
+
+  <!-- Score cards -->
+  <div class="scorecards">
+    <div class="card">
+      <div class="label">Toplam Case</div>
+      <div class="value c-blue">195</div>
+      <div class="sub">5 bölüm</div>
+    </div>
+    <div class="card">
+      <div class="label">OK</div>
+      <div class="value c-green">160</div>
+      <div class="sub">%82 başarı</div>
+    </div>
+    <div class="card">
+      <div class="label">NOK</div>
+      <div class="value c-red">35</div>
+      <div class="sub">%18 hata</div>
+    </div>
+    <div class="card">
+      <div class="label">Gerçek Bug</div>
+      <div class="value c-amber">13</div>
+      <div class="sub">Correction 9 + Sıralama 4</div>
+    </div>
+  </div>
+
+  <!-- Section breakdown -->
+  <div class="section-grid">
+    <div class="sec-card">
+      <div class="sec-title">Regresyon</div>
+      <div class="progress-bar"><div class="progress-fill fill-100"></div></div>
+      <div class="sec-stats"><span class="ok">12 OK</span><span>12 case</span><span>%100</span></div>
+    </div>
+    <div class="sec-card">
+      <div class="sec-title">DDP-367 · Özel Karakter</div>
+      <div class="progress-bar"><div class="progress-fill fill-100"></div></div>
+      <div class="sec-stats"><span class="ok">7 OK</span><span>7 case</span><span>%100</span></div>
+    </div>
+    <div class="sec-card">
+      <div class="sec-title">DDP-366 · Boşluk Toleransı</div>
+      <div class="progress-bar"><div class="progress-fill fill-97"></div></div>
+      <div class="sec-stats"><span class="ok">76 OK</span><span class="nok">2 NOK</span><span>%97</span></div>
+    </div>
+    <div class="sec-card">
+      <div class="sec-title">DDP-369 · Klavye Hatası</div>
+      <div class="progress-bar"><div class="progress-fill fill-65"></div></div>
+      <div class="sec-stats"><span class="ok">58 OK</span><span class="nok">31 NOK</span><span>%65</span></div>
+    </div>
+    <div class="sec-card">
+      <div class="sec-title">DDP-368 · Versiyon Etiketi</div>
+      <div class="progress-bar"><div class="progress-fill fill-78"></div></div>
+      <div class="sec-stats"><span class="ok">7 OK</span><span class="nok">2 NOK</span><span>%78</span></div>
+    </div>
+  </div>
+
+  <!-- BUG 1: DDP-369 -->
+  <h2>DDP-369 · Klavye Yazım Düzeltme Algoritması — 89 case, 58 OK, 31 NOK (%65)</h2>
+
+  <div class="bug-block">
+    <div class="bug-header">
+      <span class="bug-badge badge-red">BACKEND BUG</span>
+      <span class="bug-title">Correction algoritması sanatçı adı yerine yanlış kelime öneriyor (9 case)</span>
+    </div>
+    <div class="bug-body">
+      <p>
+        <code>correction=true</code> ile yapılan aramada API, <code>suggestedText</code> alanında
+        sanatçı adı yerine başka bir kelime döndürüyor ve aramayı o kelime üzerinden yapıyor.
+        Sonuç: arama tamamen farklı içeriğe yönleniyor.
+      </p>
+      <table>
+        <tr><th>Aranan</th><th>Beklenen sanatçı</th><th>Performer ID</th><th>API'nin yanlış önerisi</th><th>Durum</th></tr>
+        <tr><td><code>tarksn</code></td><td>Tarkan</td><td><span class="id-chip">564733</span></td><td><strong>talkin</strong></td><td><span class="tag-nok">NOK</span></td></tr>
+        <tr><td><code>poizş</code></td><td>Poizi</td><td><span class="id-chip">1729927</span></td><td><strong>point</strong></td><td><span class="tag-nok">NOK</span></td></tr>
+        <tr><td><code>piozi</code></td><td>Poizi</td><td><span class="id-chip">1729927</span></td><td><strong>pizzi</strong></td><td><span class="tag-nok">NOK</span></td></tr>
+        <tr><td><code>ezheıl</code></td><td>Ezhel</td><td><span class="id-chip">1619028</span></td><td><strong>ethel</strong></td><td><span class="tag-nok">NOK</span></td></tr>
+        <tr><td><code>ryenmen</code></td><td>Reynmen</td><td><span class="id-chip">849269</span></td><td><strong>rennen</strong></td><td><span class="tag-nok">NOK</span></td></tr>
+        <tr><td><code>hidrs</code></td><td>Hidra</td><td><span class="id-chip">866602</span></td><td><strong>hides</strong></td><td><span class="tag-nok">NOK</span></td></tr>
+        <tr><td><code>grpin</code></td><td>Gripin</td><td><span class="id-chip">663080</span></td><td><strong>grain</strong></td><td><span class="tag-nok">NOK</span></td></tr>
+        <tr><td><code>eninem</code></td><td>Eminem</td><td><span class="id-chip">1113054</span></td><td><strong>annem</strong> 🇹🇷</td><td><span class="tag-nok">NOK</span></td></tr>
+        <tr><td><code>the weernd</code></td><td>The Weeknd</td><td><span class="id-chip">1751262</span></td><td><strong>the weekend</strong></td><td><span class="tag-nok">NOK</span></td></tr>
+      </table>
+      <div class="collector-badge">✅ Tüm performer ID'leri DdpKanitCollector ile UAT'tan doğrulanmıştır (normal ad araması pos 1/50)</div>
+      <p style="margin-top:12px; font-size:12px; color:#6b7280;">
+        Kök neden: Correction modelinin dictionary'sinde sanatçı isimleri düşük öncelikli veya eksik.
+        Dikkat çekici: <code>eninem</code> → <strong>annem</strong> (Türkçe kelime!), <code>the weernd</code> → <strong>the weekend</strong> (The Weeknd'in adında gerçekten 'a' yok).
+      </p>
+    </div>
+  </div>
+
+  <div class="bug-block">
+    <div class="bug-header">
+      <span class="bug-badge badge-amber">SIRALAMА SORUNU</span>
+      <span class="bug-title">Yazım hataları düzeltilse de sanatçı sıralamada çok geride kalıyor (4 case)</span>
+    </div>
+    <div class="bug-body">
+      <p>
+        Correction devreye girmiyor (<code>corrected=false</code>) fakat sanatçı Top-N dışında kalıyor.
+        Popülarite veya skor hesabı yeterli boost sağlamıyor.
+      </p>
+      <table>
+        <tr><th>Aranan</th><th>Beklenen sanatçı</th><th>Performer ID</th><th>Bulunan konum</th><th>Durum</th></tr>
+        <tr><td><code>şebmem ferah</code></td><td>Şebnem Ferah</td><td><span class="id-chip">663329</span></td><td><span class="tag-warn">pos 48/50</span></td><td><span class="tag-nok">NOK</span></td></tr>
+        <tr><td><code>haluk levnt</code></td><td>Haluk Levent</td><td><span class="id-chip">663115</span></td><td><span class="tag-warn">pos 8/50</span></td><td><span class="tag-nok">NOK</span></td></tr>
+        <tr><td><code>haluk lrvent</code></td><td>Haluk Levent</td><td><span class="id-chip">663115</span></td><td><span class="tag-warn">pos 8/50</span></td><td><span class="tag-nok">NOK</span></td></tr>
+        <tr><td><code>billie eilish</code></td><td>Billie Eilish</td><td><span class="id-chip">1986920</span></td><td><span class="tag-warn">pos 2/50</span></td><td><span class="tag-nok">NOK</span></td></tr>
+      </table>
+      <p style="margin-top:8px; font-size:12px; color:#6b7280;">
+        Not: Billie Eilish baseline (doğru ad) aramasında pos 2'de — "!!!!!!!" (Billie Eilish şarkısı) pos 1'e geçiyor. Şarkı adı arama performer kaydını bastırıyor olabilir.
+      </p>
+    </div>
+  </div>
+
+  <div class="bug-block">
+    <div class="bug-header">
+      <span class="bug-badge badge-blue">BİLGİ — UAT DATA EKSİK</span>
+      <span class="bug-title">18 case'de sanatçı yazım hatalı aranınca UAT indeksinde bulunamadı</span>
+    </div>
+    <div class="bug-body">
+      <p>
+        Bu sanatçılar normal adlarıyla UAT'ta mevcut, ancak yazım hatalı sorguda Top-50'ye giremiyor.
+        Correction da devreye girmiyor (<code>corrected=false, suggestedText=""</code>).
+        Index yeterli varyasyon/alias içermiyor olabilir; UAT ile PROD indeks farkı da etken olabilir.
+      </p>
+      <table>
+        <tr><th>Sanatçı</th><th>Performer ID</th><th>Aranan (hatalı)</th><th>Durum</th></tr>
+        <tr><td>KÖFN</td><td><span class="id-chip">1124216</span></td><td><code>kövn</code></td><td><span class="tag-nok">TOP-50'DE YOK</span></td></tr>
+        <tr><td>Dolu Kadehi Ters Tut</td><td>—</td><td><code>dilu kadehi ters tut</code></td><td><span class="tag-nok">TOP-50'DE YOK</span></td></tr>
+        <tr><td>Sıla</td><td><span class="id-chip">887299</span></td><td><code>sıks</code></td><td><span class="tag-nok">TOP-50'DE YOK</span></td></tr>
+        <tr><td>Gülşen</td><td><span class="id-chip">617373</span></td><td><code>gülşem</code></td><td><span class="tag-nok">TOP-50'DE YOK</span></td></tr>
+        <tr><td>Norm Ender</td><td><span class="id-chip">1385115</span></td><td><code>norm endr / norm rnder</code></td><td><span class="tag-nok">TOP-50'DE YOK</span></td></tr>
+        <tr><td>Ben Fero</td><td><span class="id-chip">1153274</span></td><td><code>ben fro / ben fwro</code></td><td><span class="tag-nok">TOP-50'DE YOK</span></td></tr>
+        <tr><td>Gripin</td><td><span class="id-chip">663080</span></td><td><code>gripen</code></td><td><span class="tag-nok">TOP-50'DE YOK</span></td></tr>
+        <tr><td>Ceza</td><td><span class="id-chip">624977</span></td><td><code>cza / cesa</code></td><td><span class="tag-nok">TOP-50'DE YOK</span></td></tr>
+        <tr><td>maNga</td><td><span class="id-chip">617337</span></td><td><code>mabga</code></td><td><span class="tag-nok">TOP-50'DE YOK</span></td></tr>
+        <tr><td>Eminem</td><td><span class="id-chip">1113054</span></td><td><code>eminim</code></td><td><span class="tag-nok">TOP-50'DE YOK</span></td></tr>
+        <tr><td>The Weeknd</td><td><span class="id-chip">1751262</span></td><td><code>the weekd</code></td><td><span class="tag-nok">TOP-50'DE YOK</span></td></tr>
+        <tr><td>Drake</td><td><span class="id-chip">2319890</span></td><td><code>draje / drske</code></td><td><span class="tag-nok">TOP-50'DE YOK</span></td></tr>
+        <tr><td>Ed Sheeran</td><td><span class="id-chip">617354</span></td><td><code>ed sheran / ed sheerab</code></td><td><span class="tag-nok">TOP-50'DE YOK</span></td></tr>
+        <tr><td>Dua Lipa</td><td>—</td><td><code>dua lipa (baseline!)</code></td><td><span class="tag-nok">PERFORMER KAYDI UAT'TA YOK</span></td></tr>
+      </table>
+      <div class="collector-badge">⚠️ Dua Lipa: DdpKanitCollector UAT'ta performer kaydı bulamadı — PROD'da mevcut olabilir</div>
+    </div>
+  </div>
+
+  <!-- BUG 2: DDP-366 -->
+  <h2>DDP-366 · Boşluk Toleransı — 2 Gerçek Bug</h2>
+
+  <div class="bug-block">
+    <div class="bug-header">
+      <span class="bug-badge badge-blue">BİLGİ</span>
+      <span class="bug-title">23.09 güncellemesi: Bitişik yazım büyük ölçüde çalışıyor — önceki NOK'lar test kodu hatasıydı</span>
+    </div>
+    <div class="bug-body">
+      <p>
+        22.09 raporundaki 26 DDP-366 NOK'unun büyük çoğunluğu (24 case) test kodundaki bir
+        eşleşme hatasından kaynaklanıyordu: <code>evalAbsolute()</code> fonksiyonu
+        <code>expArtist=""</code> + <code>expTrack≠""</code> kombinasyonunda <code>findArtistIndex</code>
+        çağırıyordu; bu fonksiyon yalnızca <code>kind="performers"</code> kayıtlara bakıyor,
+        şarkı sonuçlarını atlıyordu. Düzeltilen test v2 ile yeniden koşuldu.
+      </p>
+      <p style="margin-top:8px;">
+        <strong>Gerçek durum:</strong> 3-4-5 kelimeli bitişik yazımlar (arabenilütfen, çıkmazbirsokakta,
+        ağlamabenağlarım, iyikidoğdundeniz vb.) UAT'ta doğru çalışıyor — test v2'de tümü OK.
+        Türkçe partikül birleşimleri (ölekmı, iyikidoğdundeniz) de OK.
+      </p>
+    </div>
+  </div>
+
+  <div class="bug-block">
+    <div class="bug-header">
+      <span class="bug-badge badge-amber">SIRALAMА SORUNU</span>
+      <span class="bug-title">"duydunmu" aramasında Yusuf Güney şarkısı Nigar Muharrem tarafından eziliyor</span>
+    </div>
+    <div class="bug-body">
+      <p>
+        Kullanıcı "Duydun Mu?" şarkısını bitişik ("duydunmu") aradığında Nigar Muharrem'in
+        tam title eşleşmesi olan "Duydunmu" şarkısı ilk 7 sonuçta yer alıyor,
+        Yusuf Güney versiyonu pos 12'de kalıyor.
+      </p>
+      <table>
+        <tr><th>Arama terimi</th><th>1. Sonuç</th><th>Yusuf Güney konumu</th></tr>
+        <tr>
+          <td><code>duydunmu</code></td>
+          <td>Duydunmu — Nigar Muharrem (exact title match)</td>
+          <td><span class="tag-warn">pos 12/50</span></td>
+        </tr>
+      </table>
+      <p style="margin-top:8px; font-size:12px; color:#6b7280;">
+        Not: Nigar Muharrem'in şarkısı gerçekten "Duydunmu" (bitişik) olarak indexlenmiş — bu disambiguation
+        sorunu olup kesin bug olarak değerlendirilip değerlendirilmeyeceği product kararına bırakılmıştır.
+      </p>
+    </div>
+  </div>
+
+  <!-- BUG 3: DDP-367 -->
+  <h2>DDP-367 · Özel Karakter Normalizasyonu — 2 Gerçek Bug</h2>
+
+  <div class="bug-block">
+    <div class="bug-header">
+      <span class="bug-badge badge-red">BACKEND BUG</span>
+      <span class="bug-title">$ karakteri olmadan KÖK$VL araması sonuç döndürmüyor</span>
+    </div>
+    <div class="bug-body">
+      <p>
+        KÖK$VL sanatçısının adındaki $ karakteri kaldırılarak arama yapıldığında sonuç gelmiyor.
+        DDP-367 "$" karakterini normal bir harf gibi normalleştirmeyi veya görmezden gelmeyi hedefliyor.
+      </p>
+      <table>
+        <tr><th>Yazım</th><th>Song ID</th><th>Sonuç</th></tr>
+        <tr><td><code>kok$vl</code> (orijinal)</td><td><span class="id-chip">1148439</span></td><td><span class="tag-ok">OK — KÖK$VL bulundu (pos 1/50)</span></td></tr>
+        <tr><td><code>kokvl</code> ($ kaldırıldı)</td><td>—</td><td><span class="tag-nok">API boş döndü</span></td></tr>
+        <tr><td><code>kökvl</code> (TR + $ kaldırıldı)</td><td>—</td><td><span class="tag-nok">API boş döndü</span></td></tr>
+      </table>
+      <div class="collector-badge">✅ ID 1148439 DdpKanitCollector ile UAT'tan doğrulandı</div>
+    </div>
+  </div>
+
+  <!-- BUG 4: DDP-368 -->
+  <h2>DDP-368 · Versiyon Etiketi — Sıralama Sorunu</h2>
+
+  <div class="bug-block">
+    <div class="bug-header">
+      <span class="bug-badge badge-amber">SIRALAMА SORUNU</span>
+      <span class="bug-title">"tarkan live" araması live içeriği top-5'e getiremiyor</span>
+    </div>
+    <div class="bug-body">
+      <p>
+        Kullanıcı açıkça "live" etiketi ile arama yaptığında live versiyonun üstte gelmesi bekleniyor.
+        Ancak Tarkan'ın performer kartı ve popüler şarkıları live içeriğin önüne geçiyor.
+      </p>
+      <table>
+        <tr><th>Arama terimi</th><th>1. Sonuç</th><th>Live içerik konumu</th></tr>
+        <tr><td><code>tarkan live</code></td><td>Tarkan — Tarkan (performer)</td><td><span class="tag-warn">pos 7/50</span></td></tr>
+        <tr><td><code>tarkan [live]</code></td><td>Tarkan — Tarkan (performer)</td><td><span class="tag-warn">pos 7/50</span></td></tr>
+      </table>
+    </div>
+  </div>
+
+  <!-- Bilgi: DDP-366 OK Cases -->
+  <h2>Bilgi Notu — DDP-366 Boşluk Toleransı Onaylı Çalışan Senaryolar</h2>
+
+  <div class="bug-block">
+    <div class="bug-header">
+      <span class="bug-badge badge-blue">BİLGİ</span>
+      <span class="bug-title">3-4-5 kelimeli bitişik yazımlar ve Türkçe partikül birleşimleri test v2'de OK</span>
+    </div>
+    <div class="bug-body">
+      <p>
+        23.09.2026 test v2 koşusunda DDP-366 için aşağıdaki senaryolar başarıyla geçti.
+        Song ID'ler DdpKanitCollector ile UAT'tan doğrulanmıştır.
+      </p>
+      <table>
+        <tr><th>Şarkı</th><th>Sanatçı</th><th>Song ID</th><th>Bitişik form</th><th>Sonuç</th></tr>
+        <tr><td>Çıkmaz Bir Sokakta</td><td>Semicenk</td><td><span class="id-chip">13274917</span></td><td><code>çıkmazbirsokakta</code></td><td><span class="tag-ok">OK</span></td></tr>
+        <tr><td>Ara Beni Lütfen</td><td>Kenan Doğulu</td><td><span class="id-chip">10685288</span></td><td><code>arabenilütfen</code></td><td><span class="tag-ok">OK</span></td></tr>
+        <tr><td>Adına Bir Çizik Çektim</td><td>Engin Nurşani</td><td><span class="id-chip">3431212</span></td><td><code>adinabircizikçektim</code></td><td><span class="tag-ok">OK</span></td></tr>
+        <tr><td>İyi ki Doğdun Deniz</td><td>Erman Tazegül</td><td><span class="id-chip">10341334</span></td><td><code>iyikidoğdundeniz</code></td><td><span class="tag-ok">OK</span></td></tr>
+        <tr><td>Ağlama ben ağlarım</td><td>Canozan</td><td><span class="id-chip">11080978</span></td><td><code>ağlamabenağlarım</code></td><td><span class="tag-ok">OK</span></td></tr>
+        <tr><td>Ölek mi?</td><td>Milat</td><td><span class="id-chip">14087331</span></td><td><code>ölekmı / olekmi</code></td><td><span class="tag-ok">OK</span></td></tr>
+        <tr><td>Sana Güvenmiyorum</td><td>Dedublüman</td><td><span class="id-chip">12235152</span></td><td><code>sanagüvenmiyorum</code></td><td><span class="tag-ok">OK</span></td></tr>
+      </table>
+    </div>
+  </div>
+
+  <!-- Aksiyon listesi -->
+  <div class="akciones">
+    <h3>🎯 Backend Ekibine Aksiyon Listesi</h3>
+    <ul>
+      <li>DDP-369 Correction: Model dictionary'sine Türkçe + yabancı sanatçı isimleri eklenmeli / önceliği artırılmalı (9 case — tarksn→talkin, poizş→point, ezheıl→ethel, ryenmen→rennen, hidrs→hides, grpin→grain, eninem→annem, the weernd→the weekend + piozi→pizzi)</li>
+      <li>DDP-369 Sıralama: Yazım hatalı aramada sanatçı sıralama boost'u eksik — Şebnem Ferah pos 48, Haluk Levent pos 8, Billie Eilish baseline'da pos 2</li>
+      <li>DDP-369 UAT Data: Yabancı/bazı Türk sanatçılar (Drake, Ed Sheeran, Eminem, The Weeknd, Dua Lipa vb.) yazım hatalı aramada bulunamıyor — UAT indeks eksikliği veya PROD ile fark araştırılmalı; Dua Lipa performer kaydı UAT'ta hiç yok</li>
+      <li>DDP-368: "live", "akustik", "remix" etiketli içerik, bu kelimeler sorguya dahilse sıralama boost'u almalı (tarkan live → live içerik pos 7'de kalıyor)</li>
+      <li>DDP-367: $ karakteri silinerek arama yapıldığında (kokvl, kökvl) KÖK$VL bulunamaması — normalizasyon veya wildcard desteği gerekiyor</li>
+      <li>DDP-366: "duydunmu" aramasında disambiguation — Nigar Muharrem exact title vs Yusuf Güney intent farkı (product kararına bırakılmıştır)</li>
+    </ul>
+  </div>
+
+  <div class="footer">
+    Otomatik test: DdpYazimTest.java v3 · 195 case · Ortam: UAT · 23.09.2026 10:21<br>
+    Performer ID kanıtları: DdpKanitCollector.java · 23.09.2026 10:22<br>
+    DDP-369: 89 case (18 aile TR + 6 yabancı sanatçı dahil) · Correction bug 9 · Sıralama 4 · UAT data 18
+  </div>
+
+</div>
+</body>
+</html>

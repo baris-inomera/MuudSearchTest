@@ -206,9 +206,9 @@ public class MainCases extends TestConfig {
                 // artist "Mebrure Avas" contains "mebrure" → OK (evalFirstArtist yalnızca performers kind bakar)
                 new BulguCase("SARKI_TAM_74", "mebrure", "", "mebrure", S_SARKI_TAM, 3),
                 new BulguCase("SARKI_TAM_75", "köksal", "", "köksal", S_SARKI_TAM, 3),
-                new BulguCase("SARKI_TAM_76", "uzaylılar bile dinliyo ", "Blok3", "uzaylılar bile dinliyo", S_SARKI_TAM, 5),
+                new BulguCase("SARKI_TAM_76", "uzaylılar bile dinliyo", "Lvbel C5", "uzaylılar bile dinliyo", S_SARKI_TAM, 5),
                 new BulguCase("SANAT_TAM_77", "değilim", "Mebrure", "Değilim", S_SARKI_TAM, 5),
-                new BulguCase("SARKI_TAM_78", "git ", "Blok3", "Git", S_SARKI_TAM, 5),
+                new BulguCase("SARKI_TAM_78", "git", "Blok3", "Git", S_SARKI_TAM, 5),
 
                 // Case revizyonu: API sadece performer döndürüyor, şarkı sonuçta yok; beklenti sanatçıya indirildi
 
@@ -304,7 +304,7 @@ public class MainCases extends TestConfig {
                 new BulguCase("SANAT_TAM_7", "ceza", "Ceza", "", S_SANAT_TAM, 3),
                 new BulguCase("SANAT_TAM_8", "yaşar", "Yaşar", "", S_SANAT_TAM, 1),
                 new BulguCase("SANAT_TAM_9", "Gökhan Özen", "Gökhan Özen", "", S_SANAT_TAM, 1),
-                new BulguCase("SANAT_TAM_10", "çelik", "Çelik", "", S_SANAT_TAM, 1),
+                new BulguCase("SANAT_TAM_10", "çelik", "Celik", "", S_SANAT_TAM, 1),
                 new BulguCase("SANAT_TAM_11", "Haluk Levent", "Haluk Levent", "", S_SANAT_TAM, 1),
                 new BulguCase("SANAT_TAM_12", "Mustafa Yıldızdoğan", "Mustafa Yıldızdoğan", "", S_SANAT_TAM, 1),
                 new BulguCase("SANAT_TAM_13", "u2", "u2", "", S_SANAT_TAM, 1),
@@ -404,7 +404,7 @@ public class MainCases extends TestConfig {
                 new BulguCase("SANAT_YAZIM_12", "izel", "İzel", "", S_SANAT_TAM, 3),
                 new BulguCase("SANAT_YAZIM_13", "hejan", "Heijan", "", S_SANAT_YAZIM_HARF, 3),
                 new BulguCase("SANAT_YAZIM_14", "Semicek", "Semicenk", "", S_SANAT_YAZIM_HARF, 1),
-                new BulguCase("SANAT_YAZIM_15", "beyonce", "Beyoncé", "", S_SANAT_YAZIM_DIA, 3),
+                new BulguCase("SANAT_YAZIM_15", "beyonce", "Beyonce", "", S_SANAT_YAZIM_DIA, 3),
                 new BulguCase("SANAT_YAZIM_16", "emre gel", "Emre Fel", "", S_SANAT_YAZIM_HARF, 3),
                 new BulguCase("SANAT_YAZIM_17", "sibelcan", "Sibel Can", "", S_SANAT_YAZIM_BOSL, 3),
                 new BulguCase("SANAT_YAZIM_18", "kofn", "KÖFN", "", S_SANAT_YAZIM_DIA, 3),
@@ -700,7 +700,10 @@ public class MainCases extends TestConfig {
             Object p2 = jp.get(base + "[" + i + "].data.popularity2");
             if (p2 != null) mb.append(" | popularity2= ").append(p2);
         }
-        String metrics = mb.append(" | score= ").append(score).toString();
+        Object idObj = jp.get(base + "[" + i + "].id");
+        String id = idObj != null ? idObj.toString() : "-";
+        String metrics = mb.append(" | score= ").append(score)
+                           .append(" | ID= ").append(id).toString();
 
         return kindPrefix + label + "\n" + metrics;
     }

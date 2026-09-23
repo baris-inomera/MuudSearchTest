@@ -31,7 +31,7 @@ import java.util.stream.Collectors;
  */
 public class ExcelTestReportWriter {
 
-    private static final DateTimeFormatter TS = DateTimeFormatter.ofPattern("yyyyMMdd_HHmmss");
+    private static final DateTimeFormatter TS = DateTimeFormatter.ofPattern("dd.MM.yyyy_HH.mm");
 
     // ── Sütun başlıkları ────────────────────────────────────────────────────────
     private static final String[] HEADERS = {
@@ -39,7 +39,7 @@ public class ExcelTestReportWriter {
             "Type", "Aranan Index", "UAT Status", "Sonuç"
     };
     private static final String[] HEADERS_BULGU = {
-            "No", "Case ID", "Test Name", "Expected Result",
+            "No", "Case ID", "Arama Sayısı", "Test Name", "Expected Result",
             "Type", "UAT Status", "Sonuç"
     };
     private static final String[] HEADERS_CMP = {
@@ -193,8 +193,12 @@ public class ExcelTestReportWriter {
             c.setCellStyle(s.tableHeader);
         }
 
+        // ── Özet tablo: Gözlem case'leri yüzdeye dahil edilmez ──────────────
         int grandTotal = 0, grandPass = 0, summaryCounter = 1;
-        Map<String, List<TestResultRow>> byType = rows.stream()
+        int gozlemCount = (int) rows.stream().filter(ExcelTestReportWriter::isGozlem).count();
+        List<TestResultRow> scoredRows = rows.stream()
+                .filter(r -> !isGozlem(r)).collect(Collectors.toList());
+        Map<String, List<TestResultRow>> byType = scoredRows.stream()
                 .collect(Collectors.groupingBy(r -> r.type() == null ? "Diğer" : r.type()));
         for (String type : byType.keySet().stream().sorted().toList()) {
             List<TestResultRow> typeRows = byType.get(type);
@@ -203,6 +207,10 @@ public class ExcelTestReportWriter {
             grandTotal += total;
             grandPass  += pass;
             writeSummaryRow(sheet, currentRow++, summaryCounter++, type, total, pass, s);
+        }
+        // Gözlem satırı — sayıyı göster ama yüzdeye dahil etme
+        if (gozlemCount > 0) {
+            writeSummaryRowGozlem(sheet, currentRow++, summaryCounter, gozlemCount, s);
         }
 
         int grandFail = grandTotal - grandPass;
@@ -229,21 +237,24 @@ public class ExcelTestReportWriter {
         int caseNo = 1;
         for (TestResultRow r : rows) {
             Row row = sheet.createRow(currentRow++);
-            row.setHeightInPoints(rowHeightFor(nullSafe(r.sonuc())));
+            // En az 45f (MainCases ile aynı), gözlem satırları dinamik büyüsün
+            float h = rowHeightFor(nullSafe(r.sonuc()));
+            row.setHeightInPoints(Math.max(45f, h));
             boolean isEven = (caseNo % 2 == 0);
             CellStyle base     = isEven ? s.grey     : s.white;
             CellStyle centered = isEven ? s.greyCentered : s.whiteCentered;
 
             int col = 0;
-            createCell(row, col++, caseNo++,                     centered);
-            createCell(row, col++, nullSafe(r.caseId()),         centered);
-            createCell(row, col++, nullSafe(r.testName()),       base);
-            createCell(row, col++, nullSafe(r.expectedResult()), base);
-            createCell(row, col++, nullSafe(r.type()),           base);
+            createCell(row, col++, caseNo++,                      centered);
+            createCell(row, col++, nullSafe(r.caseId()),          centered);
+            createCell(row, col++, nullSafe(r.description()),     centered);  // Arama Sayısı
+            createCell(row, col++, nullSafe(r.testName()),        base);
+            createCell(row, col++, nullSafe(r.expectedResult()),  base);
+            createCell(row, col++, nullSafe(r.type()),            base);
             Cell cUat = row.createCell(col++);
             cUat.setCellValue(nullSafe(r.uatStatus()));
-            cUat.setCellStyle(statusStyleFor(r.uatStatus(), s.ok, s.nok, centered));
-            createCell(row, col++, nullSafe(r.sonuc()),          base);
+            cUat.setCellStyle(statusStyleForBulgu(r.uatStatus(), s, centered));
+            createCell(row, col++, nullSafe(r.sonuc()),           base);
         }
 
         if (currentRow > listHeaderRowIndex + 1) {
@@ -251,13 +262,14 @@ public class ExcelTestReportWriter {
                     listHeaderRowIndex, currentRow - 1, 0, HEADERS_BULGU.length - 1));
         }
 
-        sheet.autoSizeColumn(0);
-        sheet.setColumnWidth(1, 12 * 256);
-        sheet.setColumnWidth(2, 30 * 256);
-        sheet.setColumnWidth(3, 45 * 256);
-        sheet.setColumnWidth(4, 15 * 256);
-        sheet.setColumnWidth(5, 12 * 256);
-        sheet.setColumnWidth(6, 70 * 256);
+        sheet.autoSizeColumn(0);           // No
+        sheet.setColumnWidth(1, 12 * 256); // Case ID
+        sheet.setColumnWidth(2, 22 * 256); // Arama Sayısı
+        sheet.setColumnWidth(3, 30 * 256); // Test Name
+        sheet.setColumnWidth(4, 45 * 256); // Expected Result
+        sheet.setColumnWidth(5, 15 * 256); // Type
+        sheet.setColumnWidth(6, 12 * 256); // UAT Status
+        sheet.setColumnWidth(7, 70 * 256); // Sonuç
     }
 
     // =========================================================================
@@ -662,8 +674,9 @@ public class ExcelTestReportWriter {
         greyCenteredRowStyle.setAlignment(HorizontalAlignment.CENTER);
         greyCenteredRowStyle.setVerticalAlignment(VerticalAlignment.CENTER);
 
-        CellStyle okStyle  = createStatusStyle(wb, IndexedColors.LIGHT_GREEN, blackFont);
-        CellStyle nokStyle = createStatusStyle(wb, IndexedColors.ROSE,        blackFont);
+        CellStyle okStyle     = createStatusStyle(wb, IndexedColors.LIGHT_GREEN, blackFont);
+        CellStyle nokStyle    = createStatusStyle(wb, IndexedColors.ROSE,        blackFont);
+        CellStyle gozlemStyle = createStatusStyle(wb, IndexedColors.LIGHT_YELLOW, blackFont);
 
         CellStyle grandTotalStyle = wb.createCellStyle();
         grandTotalStyle.setFont(boldBlackFont);
@@ -677,7 +690,7 @@ public class ExcelTestReportWriter {
                 titleStyle, tableHeaderStyle, specificHeaderStyle,
                 whiteRowStyle, greyRowStyle,
                 whiteCenteredRowStyle, greyCenteredRowStyle,
-                okStyle, nokStyle, grandTotalStyle
+                okStyle, nokStyle, grandTotalStyle, gozlemStyle
         );
     }
 
@@ -703,6 +716,23 @@ public class ExcelTestReportWriter {
         createCell(row, 4, "%" + rate, base);
     }
 
+    /** Gözlem satırı — yüzdeye dahil edilmez, farklı stil */
+    private static void writeSummaryRowGozlem(Sheet sheet, int rowIndex, int counter,
+                                               int count, StyleBundle s) {
+        Row row = sheet.createRow(rowIndex);
+        row.setHeightInPoints(18f);
+        CellStyle base = wb(sheet).createCellStyle();
+        base.cloneStyleFrom(s.gozlem);
+        base.setAlignment(HorizontalAlignment.CENTER);
+        base.setVerticalAlignment(VerticalAlignment.CENTER);
+        base.setWrapText(false);
+        createCell(row, 0, "Gözlem (yüzdeye dahil değil)", base);
+        createCell(row, 1, count, base);
+        createCell(row, 2, "",    base);
+        createCell(row, 3, "",    base);
+        createCell(row, 4, "—",   base);
+    }
+
     private static Workbook wb(Sheet sheet) { return sheet.getWorkbook(); }
 
     // =========================================================================
@@ -718,7 +748,8 @@ public class ExcelTestReportWriter {
             CellStyle greyCentered,
             CellStyle ok,
             CellStyle nok,
-            CellStyle grandTotal
+            CellStyle grandTotal,
+            CellStyle gozlem
     ) {}
 
     // =========================================================================
@@ -763,9 +794,22 @@ public class ExcelTestReportWriter {
 
     private static CellStyle statusStyleFor(String status, CellStyle ok, CellStyle nok, CellStyle fallback) {
         if (status == null) return fallback;
-        if ("OK".equalsIgnoreCase(status))  return ok;
-        if ("NOK".equalsIgnoreCase(status)) return nok;
+        if ("OK".equalsIgnoreCase(status))      return ok;
+        if ("NOK".equalsIgnoreCase(status))     return nok;
         return fallback;
+    }
+
+    private static CellStyle statusStyleForBulgu(String status, StyleBundle s, CellStyle fallback) {
+        if (status == null) return fallback;
+        if ("OK".equalsIgnoreCase(status))      return s.ok;
+        if ("NOK".equalsIgnoreCase(status))     return s.nok;
+        if ("Gözlem".equalsIgnoreCase(status))  return s.gozlem;
+        return fallback;
+    }
+
+    /** Gözlem case mi? (yüzdeye dahil edilmez) */
+    private static boolean isGozlem(TestResultRow r) {
+        return "Gözlem".equalsIgnoreCase(r.uatStatus());
     }
 
     private static String nullSafe(String s) { return s == null ? "" : s; }

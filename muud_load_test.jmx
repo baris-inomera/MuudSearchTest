@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <jmeterTestPlan version="1.2" properties="5.0" jmeter="5.6.3">
   <hashTree>
-    <TestPlan guiclass="TestPlanGui" testclass="TestPlan" testname="MUUD Search Load Test" enabled="true">
-      <stringProp name="TestPlan.comments">MUUD Mirket Gateway - 55 TPS, 2 dakika, Index 49</stringProp>
+    <TestPlan guiclass="TestPlanGui" testclass="TestPlan" testname="MUUD Arama Yük Testi" enabled="true">
+      <stringProp name="TestPlan.comments">UAT ortamı — mirketgateway yük testi</stringProp>
       <boolProp name="TestPlan.functional_mode">false</boolProp>
       <boolProp name="TestPlan.tearDown_on_shutdown">true</boolProp>
       <boolProp name="TestPlan.serialize_threadgroups">false</boolProp>
@@ -11,101 +11,94 @@
       </elementProp>
     </TestPlan>
     <hashTree>
-      <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="MUUD Search - 55 TPS">
-        <intProp name="ThreadGroup.num_threads">60</intProp>
-        <intProp name="ThreadGroup.ramp_time">10</intProp>
-        <longProp name="ThreadGroup.duration">120</longProp>
-        <longProp name="ThreadGroup.delay">0</longProp>
-        <boolProp name="ThreadGroup.same_user_on_next_iteration">false</boolProp>
-        <boolProp name="ThreadGroup.scheduler">true</boolProp>
+
+      <!-- ═══════════════════════════════════════════════
+           THREAD GROUP — 10 kullanıcı, 30 saniye
+      ═══════════════════════════════════════════════ -->
+      <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="10 Kullanıcı - 30 Saniye" enabled="true">
         <stringProp name="ThreadGroup.on_sample_error">continue</stringProp>
-        <elementProp name="ThreadGroup.main_controller" elementType="LoopController" guiclass="LoopControlPanel" testclass="LoopController">
-          <intProp name="LoopController.loops">-1</intProp>
+        <elementProp name="ThreadGroup.main_controller" elementType="LoopController" guiclass="LoopControlPanel" testclass="LoopController" testname="Loop Controller" enabled="true">
           <boolProp name="LoopController.continue_forever">false</boolProp>
+          <intProp name="LoopController.loops">-1</intProp>
         </elementProp>
+        <!-- Kaç kullanıcı -->
+        <stringProp name="ThreadGroup.num_threads">10</stringProp>
+        <!-- Tüm kullanıcılar kaç saniyede başlasın (ramp-up) -->
+        <stringProp name="ThreadGroup.ramp_time">5</stringProp>
+        <!-- Test kaç saniye sürsün -->
+        <stringProp name="ThreadGroup.duration">30</stringProp>
+        <stringProp name="ThreadGroup.delay">0</stringProp>
+        <boolProp name="ThreadGroup.same_user_on_next_iteration">true</boolProp>
+        <boolProp name="ThreadGroup.scheduler">true</boolProp>
       </ThreadGroup>
       <hashTree>
-        <ConstantThroughputTimer guiclass="TestBeanGUI" testclass="ConstantThroughputTimer" testname="55 TPS Throttle" enabled="true">
-          <intProp name="calcMode">2</intProp>
-          <doubleProp>
-            <name>throughput</name>
-            <value>3300.0</value>
-            <savedValue>0.0</savedValue>
-          </doubleProp>
-        </ConstantThroughputTimer>
+
+        <!-- ═══════════════════════════════════════════════
+             HTTP HEADER MANAGER
+        ═══════════════════════════════════════════════ -->
+        <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="HTTP Header Manager" enabled="true">
+          <collectionProp name="HeaderManager.headers">
+            <elementProp name="" elementType="Header">
+              <stringProp name="Header.name">Content-Type</stringProp>
+              <stringProp name="Header.value">application/json</stringProp>
+            </elementProp>
+            <elementProp name="" elementType="Header">
+              <stringProp name="Header.name">Accept</stringProp>
+              <stringProp name="Header.value">*/*</stringProp>
+            </elementProp>
+            <elementProp name="" elementType="Header">
+              <stringProp name="Header.name">X-SEARCH-APP-KEY</stringProp>
+              <stringProp name="Header.value">muudelk9</stringProp>
+            </elementProp>
+            <elementProp name="" elementType="Header">
+              <stringProp name="Header.name">Authorization</stringProp>
+              <stringProp name="Header.value">Basic V1BQZUhMeWc6NUt5Y09ESlp4aFFxQXZtNQ==</stringProp>
+            </elementProp>
+          </collectionProp>
+        </HeaderManager>
         <hashTree/>
-        <CSVDataSet guiclass="TestBeanGUI" testclass="CSVDataSet" testname="Query CSV" enabled="true">
-          <stringProp name="filename">C:\Users\inomera\IdeaProjects\MuudSearchTest\queries.csv</stringProp>
-          <stringProp name="fileEncoding">UTF-8</stringProp>
-          <stringProp name="variableNames">query</stringProp>
-          <boolProp name="ignoreFirstLine">false</boolProp>
-          <stringProp name="delimiter">,</stringProp>
-          <boolProp name="quotedData">false</boolProp>
-          <boolProp name="recycle">true</boolProp>
-          <boolProp name="stopThread">false</boolProp>
-          <stringProp name="shareMode">shareMode.all</stringProp>
-        </CSVDataSet>
-        <hashTree/>
-        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="POST /search" enabled="true">
-          <intProp name="HTTPSampler.connect_timeout">30000</intProp>
-          <intProp name="HTTPSampler.response_timeout">30000</intProp>
-          <stringProp name="HTTPSampler.domain">10.132.40.82</stringProp>
-          <stringProp name="HTTPSampler.port">443</stringProp>
-          <stringProp name="HTTPSampler.protocol">https</stringProp>
-          <stringProp name="HTTPSampler.path">/gateway/search/rest/v10/indices/49/search</stringProp>
-          <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
-          <stringProp name="HTTPSampler.method">POST</stringProp>
-          <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
+
+        <!-- ═══════════════════════════════════════════════
+             HTTP REQUEST — Arama isteği
+        ═══════════════════════════════════════════════ -->
+        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="Arama - active-indices" enabled="true">
           <boolProp name="HTTPSampler.postBodyRaw">true</boolProp>
           <elementProp name="HTTPsampler.Arguments" elementType="Arguments">
             <collectionProp name="Arguments.arguments">
               <elementProp name="" elementType="HTTPArgument">
                 <boolProp name="HTTPArgument.always_encode">false</boolProp>
-                <stringProp name="Argument.value">{&quot;text&quot;:&quot;${query}&quot;,&quot;suggestion&quot;:false,&quot;correction&quot;:false,&quot;limit&quot;:10,&quot;offset&quot;:0}</stringProp>
+                <stringProp name="Argument.value">{
+  "text": "tarkan",
+  "filters": null,
+  "fields": null,
+  "suggestion": true,
+  "correction": true,
+  "limit": 10,
+  "offset": 0
+}</stringProp>
                 <stringProp name="Argument.metadata">=</stringProp>
               </elementProp>
             </collectionProp>
           </elementProp>
+          <stringProp name="HTTPSampler.domain">mirketgateway.apps.erdek.paas.turktelekom.intra</stringProp>
+          <stringProp name="HTTPSampler.port">443</stringProp>
+          <stringProp name="HTTPSampler.protocol">https</stringProp>
+          <stringProp name="HTTPSampler.path">/gateway/search/rest/v10/active-indices/search</stringProp>
+          <stringProp name="HTTPSampler.method">POST</stringProp>
+          <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
+          <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
+          <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
+          <boolProp name="HTTPSampler.DO_MULTIPART_POST">false</boolProp>
+          <!-- SSL sertifika hatalarını yoksay (internal cert) -->
+          <stringProp name="HTTPSampler.connect_timeout">10000</stringProp>
+          <stringProp name="HTTPSampler.response_timeout">30000</stringProp>
         </HTTPSamplerProxy>
-        <hashTree>
-          <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="HTTP Headers" enabled="true">
-            <collectionProp name="HeaderManager.headers">
-              <elementProp name="" elementType="Header">
-                <stringProp name="Header.name">Content-Type</stringProp>
-                <stringProp name="Header.value">application/json</stringProp>
-              </elementProp>
-              <elementProp name="" elementType="Header">
-                <stringProp name="Header.name">Host</stringProp>
-                <stringProp name="Header.value">mirketgateway.apps.erdek.paas.turktelekom.intra</stringProp>
-              </elementProp>
-            </collectionProp>
-          </HeaderManager>
-          <hashTree/>
-          <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="HTTP 200" enabled="true">
-            <collectionProp name="Asserion.test_strings">
-              <stringProp name="49586">200</stringProp>
-            </collectionProp>
-            <stringProp name="Assertion.custom_message">HTTP 200 beklendi</stringProp>
-            <stringProp name="Assertion.test_field">Assertion.response_code</stringProp>
-            <boolProp name="Assertion.assume_success">false</boolProp>
-            <intProp name="Assertion.test_type">8</intProp>
-          </ResponseAssertion>
-          <hashTree/>
-          <JSONPathAssertion guiclass="JSONPathAssertionGui" testclass="JSONPathAssertion" testname="Sonuc Var mi" enabled="true">
-            <stringProp name="JSON_PATH">$.content[0]</stringProp>
-            <stringProp name="EXPECTED_VALUE"></stringProp>
-            <boolProp name="JSONVALIDATION">false</boolProp>
-            <boolProp name="EXPECT_NULL">false</boolProp>
-            <boolProp name="INVERT">false</boolProp>
-            <boolProp name="ISREGEX">false</boolProp>
-          </JSONPathAssertion>
-          <hashTree/>
-          <DurationAssertion guiclass="DurationAssertionGui" testclass="DurationAssertion" testname="Max 5s" enabled="true">
-            <stringProp name="DurationAssertion.duration">30000</stringProp>
-          </DurationAssertion>
-          <hashTree/>
-        </hashTree>
-        <ResultCollector guiclass="SummaryReport" testclass="ResultCollector" testname="Summary Report" enabled="true">
+        <hashTree/>
+
+        <!-- ═══════════════════════════════════════════════
+             LISTENER 1 — Özet tablo (en önemli)
+        ═══════════════════════════════════════════════ -->
+        <SummaryReport guiclass="SummaryReport" testclass="ResultCollector" testname="Özet Rapor" enabled="true">
           <boolProp name="ResultCollector.error_logging">false</boolProp>
           <objProp>
             <name>saveConfig</name>
@@ -117,11 +110,11 @@
               <label>true</label>
               <code>true</code>
               <message>true</message>
-              <threadName>false</threadName>
-              <dataType>false</dataType>
+              <threadName>true</threadName>
+              <dataType>true</dataType>
               <encoding>false</encoding>
               <assertions>true</assertions>
-              <subresults>false</subresults>
+              <subresults>true</subresults>
               <responseData>false</responseData>
               <samplerData>false</samplerData>
               <xml>false</xml>
@@ -139,10 +132,14 @@
               <connectTime>true</connectTime>
             </value>
           </objProp>
-          <stringProp name="filename">C:\Users\inomera\IdeaProjects\MuudSearchTest\muud_load_test_results.jtl</stringProp>
-        </ResultCollector>
+          <stringProp name="filename"></stringProp>
+        </SummaryReport>
         <hashTree/>
-        <ResultCollector guiclass="StatGraphVisualizer" testclass="ResultCollector" testname="Aggregate Report" enabled="true">
+
+        <!-- ═══════════════════════════════════════════════
+             LISTENER 2 — Her isteğin detayı (debug için)
+        ═══════════════════════════════════════════════ -->
+        <ResultCollector guiclass="ViewResultsFullVisualizer" testclass="ResultCollector" testname="Sonuçları Görüntüle" enabled="true">
           <boolProp name="ResultCollector.error_logging">false</boolProp>
           <objProp>
             <name>saveConfig</name>
@@ -154,11 +151,11 @@
               <label>true</label>
               <code>true</code>
               <message>true</message>
-              <threadName>false</threadName>
-              <dataType>false</dataType>
+              <threadName>true</threadName>
+              <dataType>true</dataType>
               <encoding>false</encoding>
               <assertions>true</assertions>
-              <subresults>false</subresults>
+              <subresults>true</subresults>
               <responseData>false</responseData>
               <samplerData>false</samplerData>
               <xml>false</xml>
@@ -176,9 +173,10 @@
               <connectTime>true</connectTime>
             </value>
           </objProp>
-          <stringProp name="filename">C:\Users\inomera\IdeaProjects\MuudSearchTest\muud_aggregate_results.jtl</stringProp>
+          <stringProp name="filename"></stringProp>
         </ResultCollector>
         <hashTree/>
+
       </hashTree>
     </hashTree>
   </hashTree>

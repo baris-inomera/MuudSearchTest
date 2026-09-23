@@ -442,10 +442,9 @@ public class SpotifyComparisonTest {
             }
         }
 
-        // 2. MainCases (playlist section hariç)
+        // 2. MainCases (tüm section'lar dahil)
         try {
             List<String> kws = MainCases.cases()
-                    .filter(c -> !"Playlist".equals(c.section()))
                     .map(MainCases.BulguCase::term)
                     .filter(t -> t != null && !t.isBlank())
                     .distinct()

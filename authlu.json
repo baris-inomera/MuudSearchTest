@@ -1,0 +1,483 @@
+{
+  "info": {
+    "_postman_id": "a465e32e-65b7-4439-8ec8-fe6886c52fbb",
+    "name": "Ist-Ank clust PROD",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "52021635",
+    "_collection_link": "https://go.postman.co/collection/52021635-a465e32e-65b7-4439-8ec8-fe6886c52fbb?source=collection_link"
+  },
+  "item": [
+    {
+      "name": "Cluster Health",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Basic ZGRwcHJvZDpEZHBfMTIzUHJvZF80NTZNb25nbw=="
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://localhost:9200/_cluster/health?pretty=",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "9200",
+          "path": [
+            "_cluster",
+            "health"
+          ],
+          "query": [
+            {
+              "key": "pretty",
+              "value": ""
+            }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Node Listesi",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Basic ZGRwcHJvZDpEZHBfMTIzUHJvZF80NTZNb25nbw=="
+          }
+        ],
+        "url": {
+          "raw": "http://localhost:9200/_cat/nodes?v=&h=name,ip,node.role,master,heap.percent,disk.used_percent",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "9200",
+          "path": [
+            "_cat",
+            "nodes"
+          ],
+          "query": [
+            {
+              "key": "v",
+              "value": ""
+            },
+            {
+              "key": "h",
+              "value": "name,ip,node.role,master,heap.percent,disk.used_percent"
+            }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Shard Durumu",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Basic ZGRwcHJvZDpEZHBfMTIzUHJvZF80NTZNb25nbw=="
+          }
+        ],
+        "url": {
+          "raw": "http://localhost:9200/_cat/shards?v&h=index,shard,prirep,state,node&s=state",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "9200",
+          "path": [
+            "_cat",
+            "shards"
+          ],
+          "query": [
+            {
+              "key": "v",
+              "value": ""
+            },
+            {
+              "key": "h",
+              "value": "index,shard,prirep,state,node"
+            },
+            {
+              "key": "s",
+              "value": "state"
+            }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Index Saglik",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Basic ZGRwcHJvZDpEZHBfMTIzUHJvZF80NTZNb25nbw=="
+          }
+        ],
+        "url": {
+          "raw": "http://localhost:9200/_cat/indices?v&s=health",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "9200",
+          "path": [
+            "_cat",
+            "indices"
+          ],
+          "query": [
+            {
+              "key": "v",
+              "value": ""
+            },
+            {
+              "key": "s",
+              "value": "health"
+            }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Master Node Kontrolu",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Basic ZGRwcHJvZDpEZHBfMTIzUHJvZF80NTZNb25nbw=="
+          }
+        ],
+        "url": {
+          "raw": "http://localhost:9200/_cat/master?v",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "9200",
+          "path": [
+            "_cat",
+            "master"
+          ],
+          "query": [
+            {
+              "key": "v",
+              "value": ""
+            }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "İstanbul Node'larına Direkt Sorgu (ank kapanınca)",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Basic ZGRwcHJvZDpEZHBfMTIzUHJvZF80NTZNb25nbw=="
+          }
+        ],
+        "url": {
+          "raw": "http://localhost:9200/_nodes/toluca04,toluca05,toluca06,toluca07,toluca08/stats?pretty",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "9200",
+          "path": [
+            "_nodes",
+            "toluca04,toluca05,toluca06,toluca07,toluca08",
+            "stats"
+          ],
+          "query": [
+            {
+              "key": "pretty",
+              "value": ""
+            }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Ankara Node'larına Direkt Sorgu (ist kapanınca)",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Basic ZGRwcHJvZDpEZHBfMTIzUHJvZF80NTZNb25nbw=="
+          }
+        ],
+        "url": {
+          "raw": "http://localhost:9200/_nodes/davraz12,davraz13,davraz14,davraz15,davraz16/stats?pretty",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "9200",
+          "path": [
+            "_nodes",
+            "davraz12,davraz13,davraz14,davraz15,davraz16",
+            "stats"
+          ],
+          "query": [
+            {
+              "key": "pretty",
+              "value": ""
+            }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Çapraz Yazma Testi",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Basic ZGRwcHJvZDpEZHBfMTIzUHJvZF80NTZNb25nbw=="
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n    \"songName\": \"geo-test\",\r\n    \"isActive\": true\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://localhost:9200/muud_song_nospace_v2/_doc/geo-test-001",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "9200",
+          "path": [
+            "muud_song_nospace_v2",
+            "_doc",
+            "geo-test-001"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Çapraz Okuma Testi (yazdıktan sonra)",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Basic ZGRwcHJvZDpEZHBfMTIzUHJvZF80NTZNb25nbw=="
+          }
+        ],
+        "url": {
+          "raw": "http://localhost:9200/muud_song_nospace_v2/_doc/geo-test-001",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "9200",
+          "path": [
+            "muud_song_nospace_v2",
+            "_doc",
+            "geo-test-001"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Unassigned Shard Detayı (herhangi bir senaryo sonrası yellow/red ise)",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Basic ZGRwcHJvZDpEZHBfMTIzUHJvZF80NTZNb25nbw=="
+          }
+        ],
+        "url": {
+          "raw": "http://localhost:9200/_cluster/allocation/explain?pretty",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "9200",
+          "path": [
+            "_cluster",
+            "allocation",
+            "explain"
+          ],
+          "query": [
+            {
+              "key": "pretty",
+              "value": ""
+            }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "toluca04",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Basic ZGRwcHJvZDpEZHBfMTIzUHJvZF80NTZNb25nbw=="
+          }
+        ],
+        "url": {
+          "raw": "http://localhost:9200/_nodes/toluca04/stats",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "9200",
+          "path": [
+            "_nodes",
+            "toluca04",
+            "stats"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "toluca05",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Basic ZGRwcHJvZDpEZHBfMTIzUHJvZF80NTZNb25nbw=="
+          }
+        ],
+        "url": {
+          "raw": "http://localhost:9200/_nodes/toluca05/stats",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "9200",
+          "path": [
+            "_nodes",
+            "toluca05",
+            "stats"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "davraz12",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Basic ZGRwcHJvZDpEZHBfMTIzUHJvZF80NTZNb25nbw=="
+          }
+        ],
+        "url": {
+          "raw": "http://localhost:9200/_nodes/davraz12/stats",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "9200",
+          "path": [
+            "_nodes",
+            "davraz12",
+            "stats"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "davraz13",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Basic ZGRwcHJvZDpEZHBfMTIzUHJvZF80NTZNb25nbw=="
+          }
+        ],
+        "url": {
+          "raw": "http://localhost:9200/_nodes/davraz13/stats",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "9200",
+          "path": [
+            "_nodes",
+            "davraz13",
+            "stats"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Hangi Node Ayakta",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Basic ZGRwcHJvZDpEZHBfMTIzUHJvZF80NTZNb25nbw=="
+          }
+        ],
+        "url": {
+          "raw": "http://localhost:9200/_cat/nodes?v",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "9200",
+          "path": [
+            "_cat",
+            "nodes"
+          ],
+          "query": [
+            {
+              "key": "v",
+              "value": ""
+            }
+          ]
+        }
+      },
+      "response": []
+    }
+  ]
+}

@@ -1,8 +1,8 @@
 // ============================================================
-//  MuudSearchApi — PROD ORTAMI
+//  MuudSearchApi — UAT ORTAMI
 //  Bu dosyanin TAMAMINI src/test/java/client/MuudSearchApi.java
 //  uzerine kopyala. Baska hicbir yeri degistirmen gerekmiyor;
-//  rapor adi (TestReport_<zaman>_PROD.xlsx) BASE_URL'den otomatik gelir.
+//  rapor adi (TestReport_<zaman>_UAT.xlsx) BASE_URL'den otomatik gelir.
 // ============================================================
 package client;
 
@@ -11,7 +11,7 @@ import io.restassured.response.Response;
 
 public class MuudSearchApi {
 
-    private static final String BASE_URL = "https://searchapi.turktelekom.com.tr";
+    private static final String BASE_URL = "https://mirketgateway.apps.erdek.paas.turktelekom.intra";
 
     // ------------------------------------------------------------------
     // Ortam etiketi — rapor dosya adinda kullanilir:
@@ -45,7 +45,17 @@ public class MuudSearchApi {
         return "BILINMEYEN";
     }
 
+    /** correction=true ile ara (eski davranış, geriye dönük uyumlu). */
     public Response search(String term, String indexId, int limit) {
+        return search(term, indexId, limit, true);
+    }
+
+    /**
+     * correction parametresi ayarlanabilir arama.
+     * DDP-366/367/368: correction=false (n-gram / özel karakter / etiket — doğrudan arama)
+     * DDP-369:         correction=true  (klavye yazım düzeltme aktif)
+     */
+    public Response search(String term, String indexId, int limit, boolean correction) {
 
         String path;
         if ("active-indices".equals(indexId)) {
@@ -57,7 +67,6 @@ public class MuudSearchApi {
         String new_path = BASE_URL + path;
         int safeLimit = limit <= 0 ? 10 : limit;
 
-        // İŞTE ÇÖZÜM BURADA: Basit replace yerine, görünmez karakterleri ezen metodumuzu kullanıyoruz!
         String safeTerm = escapeJsonForApi(term);
 
         String apiQueryBody = "{\n" +
@@ -65,7 +74,7 @@ public class MuudSearchApi {
                 "  \"filters\": null,\n" +
                 "  \"fields\": null,\n" +
                 "  \"suggestion\": true,\n" +
-                "  \"correction\": true,\n" +
+                "  \"correction\": " + correction + ",\n" +
                 "  \"limit\": " + safeLimit + ",\n" +
                 "  \"offset\": 0\n" +
                 "}";
@@ -75,11 +84,13 @@ public class MuudSearchApi {
                 .relaxedHTTPSValidation()
                 .header("Content-Type", "application/json")
                 .header("Accept", "*/*")
-                .header("X-SEARCH-APP-KEY","muud")
-                // PROD gateway. Kimlik: consumer "Muud" (Basic kullanici BDGU79km).
-                // Gateway tenant secimini Basic auth uzerinden yapiyor;
+                .header("X-SEARCH-APP-KEY","muudelk9")
+                // UAT (mirket) gateway. Kimlik: Basic kullanici WPPeHLyg.
+                // NOT: kendi notuna gore WPPeHLyg = consumer "Muud" -> tenant muud;
+                // consumer "MuudElk9" -> tenant hmuud. hmuud'a gitmesi gerekiyorsa
+                // bu Basic degeri MuudElk9 consumer'inin degeriyle guncellenmeli.
                 // X-SEARCH-APP-KEY header'i tenant secimini ETKILEMEZ.
-                .header("Authorization", "Basic QkRHVTc5a206ckpnNzBZaTd6VGxreVF2UQ==")
+                .header("Authorization", "Basic V1BQZUhMeWc6NUt5Y09ESlp4aFFxQXZtNQ==")
                 .body(apiQueryBody)
                 .when()
                 .post(new_path)
