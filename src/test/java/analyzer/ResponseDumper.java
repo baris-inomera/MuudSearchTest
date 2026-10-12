@@ -67,7 +67,7 @@ public final class ResponseDumper {
     private static final Pattern QUERY = Pattern.compile("\"([^\"]+)\"");
 
     public static void main(String[] args) throws Exception {
-        String reportDir = args.length > 0 ? args[0] : "reports/main-cases";
+        String reportDir = args.length > 0 ? args[0] : "reports/arama-kalitesi";
 
         // ORTAM ARGUMANI ZORUNLU. Eskiden verilmezse sessizce "uat"a dusuyordu ve
         // prod bekleyen kullanici UAT'a istek attigini fark etmiyordu — o tuzagi kaldirdik.

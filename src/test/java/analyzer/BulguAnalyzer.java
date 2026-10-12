@@ -61,17 +61,22 @@ public final class BulguAnalyzer {
     }
 
     /**
-     * Yalnizca "TestReport_" ile baslayan ve .xlsx ile biten dosyalari rapor sayar.
-     * ONEMLI: eskiden filtre sadece ".xlsx" bakiyordu; klasore elle konan
-     * "prod.xlsx" / "uat.xlsx" gibi dosyalar sozluk siralamasinda "TestReport_"
-     * onekinin USTUNE cikip "en yeni rapor" olarak secilebiliyordu. Bu yuzden
-     * yeni kosunun raporu analiz edilmeden kalabiliyordu.
+     * Rapor dosyasi olarak kabul edilen xlsx'leri filtreler.
+     * Kural: .xlsx ile bitmeli, Excel temp dosyasi (~$) olmamali,
+     * ve "_PROD.xlsx" / "_UAT.xlsx" / "_LOCAL.xlsx" gibi ortam etiketi icermeli.
+     * Bu sayede "prod.xlsx" veya "uat.xlsx" gibi elle konulan dosyalar
+     * ortam etiket formatina uymadigi icin annotateLatest() tarafindan atlanir.
+     * Prefix (TestReport_, AramaKalitesiTest_, vb.) artik kisitlanmiyor.
      */
     private static boolean raporMu(Path p) {
         String ad = p.getFileName().toString();
-        return ad.startsWith("TestReport_")
-                && ad.toLowerCase().endsWith(".xlsx")
-                && !ad.startsWith("~$");
+        String lower = ad.toLowerCase();
+        if (!lower.endsWith(".xlsx") || ad.startsWith("~$")) return false;
+        // Ortam etiketi icermeli: _PROD.xlsx, _UAT.xlsx, _LOCAL.xlsx, _UAT-HMUUD.xlsx
+        return lower.endsWith("_prod.xlsx")
+                || lower.endsWith("_uat.xlsx")
+                || lower.endsWith("_local.xlsx")
+                || lower.contains("_uat-") && lower.endsWith(".xlsx");
     }
 
     /** Verilen klasordeki EN YENI TestReport_*.xlsx dosyasini analiz eder (ortam ayrimi yok). */
@@ -100,14 +105,18 @@ public final class BulguAnalyzer {
                         .toLowerCase(java.util.Locale.ROOT);
             List<Path> reports;
             try (var s = Files.list(dir)) {
-                // Dosya adina gore sirala (TestReport_YYYYMMDD_HHMMSS[_ORTAM].xlsx -> sozluk sirasi = kronolojik).
-                // mtime kullanilamaz: analyzer raporu yeniden yazdigi icin eski bir raporun mtime'i
-                // yeni bir rapordan sonra gelebilir ve "onceki kosu" yanlis secilir.
+                // Timestamp kismina gore sirala: dosya adi <Prefix>_dd.MM.yyyy_HH.mm_ORTAM.xlsx
+                // formatinda oldugu icin ilk '_' sonrasini karsilastirmak prefix'ten bagimsiz
+                // kronolojik sira verir. mtime kullanilamaz: analyzer raporu yeniden yazdigi
+                // icin eski bir raporun mtime'i yeni bir rapordan sonra gelebilir.
                 reports = s.filter(BulguAnalyzer::raporMu)
                            .filter(p -> son == null
                                      || p.getFileName().toString().toLowerCase().endsWith(son))
-                           .sorted(Comparator.comparing((Path p) -> p.getFileName().toString())
-                                             .reversed())
+                           .sorted(Comparator.comparing((Path p) -> {
+                               String n = p.getFileName().toString();
+                               int i = n.indexOf('_');
+                               return i >= 0 ? n.substring(i) : n;
+                           }).reversed())
                            .toList();
             }
             if (reports.isEmpty()) {

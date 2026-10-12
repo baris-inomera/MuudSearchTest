@@ -45,7 +45,17 @@ public class MuudSearchApi {
         return "BILINMEYEN";
     }
 
+    /** correction=true ile ara (eski davranış, geriye dönük uyumlu). */
     public Response search(String term, String indexId, int limit) {
+        return search(term, indexId, limit, true);
+    }
+
+    /**
+     * correction parametresi ayarlanabilir arama.
+     * correction=false → n-gram / özel karakter / etiket — doğrudan arama
+     * correction=true  → klavye yazım düzeltme aktif
+     */
+    public Response search(String term, String indexId, int limit, boolean correction) {
 
         String path;
         if ("active-indices".equals(indexId)) {
@@ -54,10 +64,9 @@ public class MuudSearchApi {
             path = "/gateway/search/rest/v10/indices/" + indexId + "/search";
         }
 
-        String new_path = BASE_URL + path;
+        String newPath = BASE_URL + path;
         int safeLimit = limit <= 0 ? 10 : limit;
 
-        // İŞTE ÇÖZÜM BURADA: Basit replace yerine, görünmez karakterleri ezen metodumuzu kullanıyoruz!
         String safeTerm = escapeJsonForApi(term);
 
         String apiQueryBody = "{\n" +
@@ -65,7 +74,7 @@ public class MuudSearchApi {
                 "  \"filters\": null,\n" +
                 "  \"fields\": null,\n" +
                 "  \"suggestion\": true,\n" +
-                "  \"correction\": true,\n" +
+                "  \"correction\": " + correction + ",\n" +
                 "  \"limit\": " + safeLimit + ",\n" +
                 "  \"offset\": 0\n" +
                 "}";
@@ -82,7 +91,47 @@ public class MuudSearchApi {
                 .header("Authorization", "Basic QkRHVTc5a206ckpnNzBZaTd6VGxreVF2UQ==")
                 .body(apiQueryBody)
                 .when()
-                .post(new_path)
+                .post(newPath)
+                .then()
+                .log().ifError()
+                .extract().response();
+    }
+
+    /**
+     * Tek bir term filtresiyle arama — örn. itemKind=playlistGroup.
+     * correction=false, suggestion=false (filtreli arama için standart).
+     */
+    public Response searchFiltered(String term, String indexId, int limit,
+                                   String filterField, String filterValue) {
+        String path = "active-indices".equals(indexId)
+                ? "/gateway/search/rest/v10/active-indices/search"
+                : "/gateway/search/rest/v10/indices/" + indexId + "/search";
+
+        String newPath = BASE_URL + path;
+        int safeLimit = limit <= 0 ? 10 : limit;
+        String safeTerm = escapeJsonForApi(term);
+
+        String apiQueryBody = "{\n" +
+                "  \"text\": \"" + safeTerm + "\",\n" +
+                "  \"filters\": [{\"type\": \"term\", \"field\": \"" + filterField
+                                + "\", \"value\": \"" + filterValue + "\"}],\n" +
+                "  \"fields\": null,\n" +
+                "  \"suggestion\": false,\n" +
+                "  \"correction\": false,\n" +
+                "  \"limit\": " + safeLimit + ",\n" +
+                "  \"offset\": 0\n" +
+                "}";
+
+        return RestAssured
+                .given()
+                .relaxedHTTPSValidation()
+                .header("Content-Type", "application/json")
+                .header("Accept", "*/*")
+                .header("X-SEARCH-APP-KEY","muud")
+                .header("Authorization", "Basic QkRHVTc5a206ckpnNzBZaTd6VGxreVF2UQ==")
+                .body(apiQueryBody)
+                .when()
+                .post(newPath)
                 .then()
                 .log().ifError()
                 .extract().response();

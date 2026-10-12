@@ -4,8 +4,8 @@ import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.ss.util.CellRangeAddress;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
-import tests.GurultuAnalizi;
-import tests.GurultuAnalizi.GurultuRow;
+import tests.analiz.GurultuAnalizi;
+import tests.analiz.GurultuAnalizi.GurultuRow;
 
 import java.io.*;
 import java.nio.file.*;
@@ -28,7 +28,7 @@ import java.util.stream.*;
  */
 public class GurultuReportWriter {
 
-    private static final DateTimeFormatter TS = DateTimeFormatter.ofPattern("yyyyMMdd_HHmmss");
+    private static final DateTimeFormatter TS = DateTimeFormatter.ofPattern("dd.MM.yyyy_HH.mm");
 
     private static final String[] DETAIL_HEADERS = {
             "Case ID", "Arama Terimi", "Bölüm",

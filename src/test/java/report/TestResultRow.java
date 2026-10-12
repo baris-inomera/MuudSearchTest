@@ -4,8 +4,8 @@ package report;
  * Excel raporunda tek bir satırı temsil eder.
  *
  * Karşılaştırma alanları (specificType … specificSonuc):
- *   - Sadece MuudSearchApiAktifIndexTest'in sub-sheet satırlarında doldurulur (G1–G10).
- *   - G11 ve MuudSearchApiTekliTest satırlarında null olarak kalır.
+ *   - Sadece active-indices + tekli index karşılaştırma modunda doldurulur.
+ *   - Diğer satırlarda null olarak kalır.
  *   - ExcelTestReportWriter bu alanlara bakarak "karşılaştırma modu"nu otomatik devreye alır.
  */
 public record TestResultRow(
@@ -17,14 +17,14 @@ public record TestResultRow(
         String indexName,      // Genel test indeks adı
         String uatStatus,      // Genel test sonucu: "OK" / "NOK"
         String sonuc,          // Genel test detay mesajı
-        // ---- Karşılaştırma alanları (AktifIndexTest sub-sheetleri için) ----
+        // ---- Karşılaştırma alanları (aktif-indeks alt-tabloları için) ----
         String specificType,        // "performer" / "songs" / "playlist"  (null = yok)
         String specificIndexName,   // "3" / "5" / "4" (Mayıs 2026 güncel ID'leri)
         String specificStatus,      // "OK" / "NOK"
         String specificSonuc        // Tekli test detay mesajı
 ) {
     /**
-     * TekliTest ve G11 satırları için 8-parametreli kısaltılmış constructor.
+     * Tekli-index ve G11 satırları için 8-parametreli kısaltılmış constructor.
      * Karşılaştırma alanları otomatik olarak null atanır.
      */
     public TestResultRow(String caseId, String testName, String description,

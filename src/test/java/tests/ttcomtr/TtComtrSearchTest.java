@@ -1,5 +1,6 @@
 package tests.ttcomtr;
 
+import client.MuudSearchApi;
 import client.TtComtrSearchApi;
 import config.TestConfig;
 import io.restassured.path.json.JsonPath;
@@ -59,7 +60,7 @@ public class TtComtrSearchTest extends TestConfig {
     @AfterAll
     static void writeReport() {
         System.out.printf("%n📋 Toplam %d case işlendi.%n", ROWS.size());
-        ExcelTestReportWriter.writeBulgu(ROWS, "reports/ttcomtr");
+        ExcelTestReportWriter.writeBulgu(ROWS, "reports/ttcomtr", MuudSearchApi.ortam(), "TtComtrSearchTest");
     }
 
     // =========================================================================

@@ -89,6 +89,20 @@ public class MuudSearchUtils {
     }
 
     /**
+     * Playlist adını okur: playlistName boşsa itemName'e düşer.
+     * UAT playlist kayıtlarında ad yalnızca itemName alanında geliyor.
+     * itemName yalnızca kind=playlists kayıtlarında okunur; şarkı/albüm
+     * kayıtları playlist eşleşmesine karışmaz.
+     */
+    public static String getPlaylistName(JsonPath jp, String dataPath) {
+        String name = safeStr(jp.getString(dataPath + ".playlistName"));
+        if (name.isEmpty() && "playlists".equalsIgnoreCase(safeStr(jp.getString(dataPath + ".kind")))) {
+            name = safeStr(jp.getString(dataPath + ".itemName"));
+        }
+        return name;
+    }
+
+    /**
      * Büyük/küçük harf DUYARSIZ ama karakter DUYARLI karşılaştırma.
      *
      * Türkçe locale kullanılır:

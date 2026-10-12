@@ -17,7 +17,8 @@ data:
     from collections import Counter
     warnings.filterwarnings("ignore")
 
-    API_URL = "https://mirketgateway.apps.erdek.paas.turktelekom.intra/gateway/search/rest/v10/active-indices/search"
+    API_URL          = "https://mirketgateway.apps.erdek.paas.turktelekom.intra/gateway/search/rest/v10/active-indices/search"
+    PLAYLIST_API_URL = "https://mirketgateway.apps.erdek.paas.turktelekom.intra/gateway/search/rest/v10/indices/4/search"
     HEADERS = {
         "Content-Type": "application/json",
         "Accept": "*/*",
@@ -348,6 +349,19 @@ data:
             print(f"  API HATA '{term}': {e}")
             return None
 
+    def search_playlist_api(term, n):
+        # Playlist-specific index (indices/4 = muud_playlist_all_v2).
+        # correction=false: n-gram / playlistGroup aramalari icin standart.
+        body = {"text": term, "filters": None, "fields": None,
+                "suggestion": False, "correction": False, "limit": n, "offset": 0}
+        try:
+            r = requests.post(PLAYLIST_API_URL, json=body, headers=HEADERS, verify=False, timeout=15)
+            d = r.json()
+            return d.get("topHits") or d.get("content") or []
+        except Exception as e:
+            print(f"  PLAYLIST API HATA '{term}': {e}")
+            return None
+
     def find_artist(items, n, exp):
         for i, it in enumerate(items[:n]):
             d = it.get("data", {})
@@ -372,10 +386,10 @@ data:
         return -1
 
     def find_playlist(items, n, kw):
-        # Java ile birebir: sadece playlistName alanini kontrol et (albumName/songName degil)
+        # playlistName (eski schema) ve itemName (yeni schema: muud_playlist_all_v2) her ikisini kontrol et
         for i, it in enumerate(items[:n]):
             d = it.get("data", {})
-            pl = d.get("playlistName") or ""
+            pl = d.get("playlistName") or d.get("itemName") or ""
             if pl and contains_tr(pl, kw): return i
         return -1
 
@@ -578,7 +592,10 @@ data:
         print(f"MUUD Test basliyor - {len(CASES)} case - {datetime.datetime.now()}")
         results = []
         for i, (cid, term, exp_a, exp_t, section, top_n) in enumerate(CASES):
-            items = search_api(term, max(top_n + 5, TOP_N))
+            if exp_t.startswith("[Playlist] "):
+                items = search_playlist_api(term, max(top_n + 5, TOP_N))
+            else:
+                items = search_api(term, max(top_n + 5, TOP_N))
             status, detail = evaluate(cid, term, exp_a, exp_t, section, top_n, items)
             results.append((cid, term, exp_a, exp_t, section, top_n, status, detail))
             if (i + 1) % 20 == 0:

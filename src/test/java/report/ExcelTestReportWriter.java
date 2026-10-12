@@ -15,19 +15,23 @@ import java.util.stream.Collectors;
 /**
  * Excel raporu üretici.
  *
- * TekliTest / AktifIndexTest → write(rows)
+ * writeBulgu(rows, subDir, ortam)
+ *   → Tüm test sınıfları bu metodla rapor yazar (AramaKalitesiTest, PlaylistGroupTest vb.)
+ *   → "Tüm Testler" sheetinde daraltılmış sütunlar, tip bazlı özet
+ *
+ * write(rows) — karşılaştırma modu (active-indices vs tekli index yan yana)
  *   - "Tüm Testler"      → tüm caseler, tip bazlı özet
  *   - "Sanatçı Aramaları" → G1–G4
  *   - "Şarkı Aramaları"   → G8–G10
  *   - "Albüm & Playlist"  → G5–G7
  *
- * KapsayiciTest → writeKapsayici(rows)
- *   - "Tüm Testler"        → tüm 203 case, G1–G20 grup bazlı özet
- *   - "Sanatçı Aramaları"  → G1–G4 + G14 + G15 + G18, kıyas (general vs performer)
- *   - "Kategori & Playlist"→ G5–G7, kıyas (general vs playlist)
- *   - "Albüm"              → G12, kıyas (general vs album)
- *   - "Şarkı & Kombine"    → G8–G10 + G13, kıyas (general vs songs)
- *   - "Kenar Durumlar"     → G11 + G16 + G17 + G19 + G20, normal mod
+ * writeKapsayici(rows) — geniş karşılaştırma modu (G1–G20)
+ *   - "Tüm Testler"        → tüm caseler, G1–G20 grup bazlı özet
+ *   - "Sanatçı Aramaları"  → G1–G4 + G14 + G15 + G18
+ *   - "Kategori & Playlist"→ G5–G7
+ *   - "Albüm"              → G12
+ *   - "Şarkı & Kombine"    → G8–G10 + G13
+ *   - "Kenar Durumlar"     → G11 + G16 + G17 + G19 + G20
  */
 public class ExcelTestReportWriter {
 
@@ -36,11 +40,11 @@ public class ExcelTestReportWriter {
     // ── Sütun başlıkları ────────────────────────────────────────────────────────
     private static final String[] HEADERS = {
             "No", "Case ID", "Test Name", "Description", "Expected Result",
-            "Type", "Aranan Index", "UAT Status", "Sonuç"
+            "Type", "Aranan Index", "Durum", "Sonuç"
     };
     private static final String[] HEADERS_BULGU = {
             "No", "Case ID", "Arama Sayısı", "Test Name", "Expected Result",
-            "Type", "UAT Status", "Sonuç"
+            "Type", "Durum", "Sonuç"
     };
     private static final String[] HEADERS_CMP = {
             "No", "Case ID", "Test Name", "Description", "Expected Result",
@@ -75,7 +79,7 @@ public class ExcelTestReportWriter {
             {"G20_", "G20 — Anlamsız Sorgu  [YENİ]"},
     };
 
-    // ── caseId routing — mevcut (TekliTest / AktifIndexTest) ─────────────────────
+    // ── caseId routing — write() modu ────────────────────────────────────────────
     private static boolean isPerformerCase(String id) {
         return id != null && (id.startsWith("G1_") || id.startsWith("G2_")
                 || id.startsWith("G3_") || id.startsWith("G4_"));
@@ -87,7 +91,7 @@ public class ExcelTestReportWriter {
         return id != null && (id.startsWith("G8_") || id.startsWith("G9_") || id.startsWith("G10_"));
     }
 
-    // ── caseId routing — KapsayiciTest ────────────────────────────────────────────
+    // ── caseId routing — writeKapsayici() modu ────────────────────────────────────
     /** G1-G4 + G14 (büyük/küçük) + G15 (ASCII alternatif) + G18 (extra karakter) */
     private static boolean isPerformerKapsayici(String id) {
         return id != null && (id.startsWith("G1_") || id.startsWith("G2_")
@@ -119,7 +123,7 @@ public class ExcelTestReportWriter {
     }
 
     // =========================================================================
-    // ENTRY POINT — BulguFinal / BulguFinal2 (yalnızca "Tüm Testler", daraltılmış sütunlar)
+    // ENTRY POINT — writeBulgu (yalnızca "Tüm Testler", daraltılmış sütunlar)
     // =========================================================================
     /**
      * Raporu belirtilen alt klasöre kaydeder.
@@ -131,14 +135,23 @@ public class ExcelTestReportWriter {
     }
 
     /**
-     * Ortam etiketli sürüm. Dosya adı: TestReport_<zaman>_<ORTAM>.xlsx
-     * Etiket SONA eklenir; böylece "TestReport_" öneki ve sözlük sırası = kronolojik
-     * sıra korunur (analyzer en yeni raporu ada göre seçiyor).
+     * Ortam etiketli sürüm. Dosya adı: <filePrefix>_<zaman>_<ORTAM>.xlsx
+     * Etiket SONA eklenir (BulguAnalyzer ortam filtresi için zorunlu).
      */
     public static void writeBulgu(List<TestResultRow> rows, String subDir, String ortamEtiketi) {
+        writeBulgu(rows, subDir, ortamEtiketi, "TestReport");
+    }
+
+    /**
+     * Prefix'li sürüm — her test sınıfı kendi adını prefix olarak geçirir.
+     * Örnek: writeBulgu(rows, "reports/arama-kalitesi", ortam, "AramaKalitesiTest")
+     */
+    public static void writeBulgu(List<TestResultRow> rows, String subDir,
+                                  String ortamEtiketi, String filePrefix) {
         String ek = (ortamEtiketi == null || ortamEtiketi.isBlank())
                 ? "" : "_" + ortamEtiketi.trim().toUpperCase(Locale.ROOT);
-        String fileName = "TestReport_" + LocalDateTime.now().format(TS) + ek + ".xlsx";
+        String prefix = (filePrefix == null || filePrefix.isBlank()) ? "TestReport" : filePrefix;
+        String fileName = prefix + "_" + LocalDateTime.now().format(TS) + ek + ".xlsx";
         Path dir = Path.of(System.getProperty("user.dir"), subDir);
         try { Files.createDirectories(dir); } catch (Exception e) { /* zaten var */ }
         Path outPath = dir.resolve(fileName);
@@ -268,12 +281,12 @@ public class ExcelTestReportWriter {
         sheet.setColumnWidth(3, 30 * 256); // Test Name
         sheet.setColumnWidth(4, 45 * 256); // Expected Result
         sheet.setColumnWidth(5, 15 * 256); // Type
-        sheet.setColumnWidth(6, 12 * 256); // UAT Status
+        sheet.setColumnWidth(6, 12 * 256); // Durum
         sheet.setColumnWidth(7, 70 * 256); // Sonuç
     }
 
     // =========================================================================
-    // ENTRY POINT 1 — TekliTest / AktifIndexTest (mevcut davranış, DEĞİŞMEDİ)
+    // ENTRY POINT 1 — write() — karşılaştırma modu (active-indices vs tekli index)
     // =========================================================================
     public static void write(List<TestResultRow> rows) {
         String fileName = "TestReport_" + LocalDateTime.now().format(TS) + ".xlsx";
@@ -314,7 +327,7 @@ public class ExcelTestReportWriter {
     }
 
     // =========================================================================
-    // ENTRY POINT 2 — KapsayiciTest (yeni sheet yapısı, G1–G20 grup bazlı)
+    // ENTRY POINT 2 — writeKapsayici() — geniş karşılaştırma modu (G1–G20)
     // =========================================================================
     public static void writeKapsayici(List<TestResultRow> rows) {
         String fileName = "TestReport_Kapsayici_" + LocalDateTime.now().format(TS) + ".xlsx";
@@ -472,7 +485,7 @@ public class ExcelTestReportWriter {
     }
 
     // =========================================================================
-    // TEK SHEET YAZICI — normal veya karşılaştırma modunda (AktifIndexTest + alt sheetler)
+    // TEK SHEET YAZICI — normal veya karşılaştırma modunda
     // =========================================================================
     private static void writeSheet(Workbook wb, String sheetName,
                                    List<TestResultRow> rows, StyleBundle s,

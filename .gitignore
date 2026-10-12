@@ -44,3 +44,17 @@ reports/.analyzer-cache.json
 
 # ResponseDumper ile toplanan ham API cevaplari (buyuk, versiyonlanmamali)
 reports/api-responses/
+
+# Üretilen Excel raporları (versiyonlanmaz, her çalıştırmada yeniden üretilir)
+reports/arama-kalitesi/
+reports/gürültü-analizi/
+reports/discovery/
+reports/ddp-yazim/
+
+# Spotify önbelleği (operasyonel, versiyonlanmaz)
+spotify_cache.json
+
+# Kisisel calisma klasoru (TKR, sizma formlari, veri dogrulama scriptleri) - takima gitmez
+_kisisel-calisma/
+~$*
+__pycache__/
